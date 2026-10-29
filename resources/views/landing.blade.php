@@ -341,99 +341,146 @@
   </section>
 
   <!-- =====================================================================
-       SECTION 3: 3 CORE PRODUCTS OVERVIEW
-       (Sesuai Sketsa Halaman 2 & Figma Section 5)
+       SECTION 3: BCA-STYLE INTERACTIVE PRODUCT SHOWCASE
+       (Tabungan, Deposito, Kredit - Mengacu pada Desain Produk Resmi BCA)
        ===================================================================== -->
-  <section class="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center max-w-3xl mx-auto mb-14">
-      <span class="text-xs font-bold text-bpr-blue uppercase tracking-wider">Solusi Perbankan Terpadu</span>
-      <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-2 tracking-tight">Pilihan Produk Sesuai Rencana Anda</h2>
-      <p class="text-slate-600 text-sm sm:text-base mt-2 leading-relaxed">
+  <section id="produk" class="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-3xl mx-auto mb-10">
+      <span class="text-xs font-bold text-bpr-blue uppercase tracking-wider bg-blue-50 px-3.5 py-1.5 rounded-full inline-block mb-2">Solusi Perbankan Terpadu</span>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Pilihan Produk Sesuai Rencana Anda</h2>
+      <p class="text-slate-600 text-sm sm:text-base mt-2.5 leading-relaxed">
         Ketahui pilihan produk simpanan dan pinjaman resmi secara transparan. Didampingi petugas profesional di 12 kantor kas se-Kabupaten Majalengka.
       </p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      
-      <!-- Card 1: Tabungan Rakyat -->
-      <div class="bg-white rounded-2xl p-7 card-shadow card-shadow-hover flex flex-col justify-between">
-        <div>
-          <div class="w-14 h-14 rounded-2xl bg-blue-50 text-bpr-blue flex items-center justify-center mb-6 shadow-sm">
-            <svg class="w-7 h-7 text-bpr-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-          </div>
-          <span class="text-xs font-bold text-bpr-blue uppercase tracking-wider">Simpanan Harian</span>
-          <h3 class="text-2xl font-extrabold text-slate-900 mt-1 mb-3">Tabungan Rakyat</h3>
-          <p class="text-slate-600 text-sm leading-relaxed mb-6">
-            Solusi simpanan terpercaya untuk segala kebutuhan keluarga: tabungan harian, persiapan hari raya, qurban, pendidikan anak, hingga pensiun dengan setoran terjangkau dan bebas biaya administrasi memberatkan.
-          </p>
-          <div class="space-y-2.5 pt-2 text-xs font-semibold text-slate-700">
-            <p class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> Rencana dana keluarga & masa depan</p>
-            <p class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> Setoran ringan & aman terjamin LPS</p>
-            <p class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> TAHARA, TIARA, KOTAK MAS, SIDASI, SIMPEL</p>
-          </div>
-        </div>
-        <div class="pt-8">
-          <button onclick="openProductCatalog('tabungan')" class="w-full py-3.5 px-4 bg-bpr-blue hover:bg-bpr-blue-hover text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center">
-            Kenali Tabungan ({{ count($productsByCat['tabungan'] ?? []) }} Produk)
-          </button>
-        </div>
+    <!-- 1. Interactive Category Tabs (Pill Navigation di atas Grid) & Live Search ala BCA -->
+    <div class="mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <!-- Pill Tabs -->
+      <div class="flex flex-wrap items-center justify-center gap-2 p-1.5 bg-slate-100 rounded-2xl w-full md:w-auto" id="product-showcase-tabs" role="tablist">
+        <button type="button" data-category="all" class="product-showcase-tab px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm bg-bpr-blue text-white" aria-selected="true">
+          Semua Produk ({{ count($allProducts) }})
+        </button>
+        <button type="button" data-category="tabungan" class="product-showcase-tab px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900 hover:bg-white/60" aria-selected="false">
+          <span>Tabungan ({{ count($productsByCat['tabungan'] ?? []) }})</span>
+          <span class="sr-only">Kenali Tabungan ({{ count($productsByCat['tabungan'] ?? []) }} Produk)</span>
+        </button>
+        <button type="button" data-category="deposito" class="product-showcase-tab px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900 hover:bg-white/60" aria-selected="false">
+          <span>Deposito ({{ count($productsByCat['deposito'] ?? []) }})</span>
+          <span class="sr-only">Kenali Deposito ({{ count($productsByCat['deposito'] ?? []) }} Pilihan)</span>
+        </button>
+        <button type="button" data-category="kredit" class="product-showcase-tab px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900 hover:bg-white/60" aria-selected="false">
+          <span>Kredit ({{ count($productsByCat['kredit'] ?? []) }})</span>
+          <span class="sr-only">Kenali Kredit ({{ count($productsByCat['kredit'] ?? []) }} Kategori)</span>
+        </button>
       </div>
 
-      <!-- Card 2: Deposito Berjangka -->
-      <div class="bg-white rounded-2xl p-7 card-shadow card-shadow-hover flex flex-col justify-between">
-        <div>
-          <div class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mb-6 shadow-sm">
-            <svg class="w-7 h-7 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-          </div>
-          <span class="text-xs font-bold text-amber-600 uppercase tracking-wider">Bunga Menarik LPS</span>
-          <h3 class="text-2xl font-extrabold text-slate-900 mt-1 mb-3">Deposito Berjangka</h3>
-          <p class="text-slate-600 text-sm leading-relaxed mb-6">
-            Maksimalkan imbal hasil simpanan secara aman dan terencana dengan suku bunga kompetitif dijamin LPS hingga 2 Miliar rupiah. Tersedia opsi Automatic Roll Over (ARO) dan program hadiah langsung tanpa diundi.
-          </p>
-          <div class="space-y-2.5 pt-2 text-xs font-semibold text-slate-700">
-            <p class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> Pilihan tenor fleksibel 1, 3, 6, 12 Bulan</p>
-            <p class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> Deposito Suka-Suka (Hadiah langsung tanpa diundi)</p>
-            <p class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> Dapat dijadikan jaminan agunan kredit</p>
-          </div>
+      <!-- Search Input ala BCA -->
+      <div class="relative w-full md:w-80">
+        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
         </div>
-        <div class="pt-8">
-          <button onclick="openProductCatalog('deposito')" class="w-full py-3.5 px-4 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center">
-            Kenali Deposito ({{ count($productsByCat['deposito'] ?? []) }} Pilihan)
-          </button>
-        </div>
+        <input type="text" id="product-showcase-search" placeholder="Cari produk simpanan atau pinjaman..." class="w-full pl-10 pr-9 py-2.5 bg-white border border-slate-200/90 rounded-xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-bpr-blue/30 focus:border-bpr-blue transition-all shadow-sm">
+        <button type="button" id="product-showcase-search-clear" class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors" title="Hapus pencarian">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
       </div>
+    </div>
 
-      <!-- Card 3: Kredit & Pembiayaan Usaha -->
-      <div class="bg-white rounded-2xl p-7 card-shadow card-shadow-hover flex flex-col justify-between">
-        <div>
-          <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-6 shadow-sm">
-            <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <!-- 2. BCA-Style Product Card Grid (3 Kolom di Desktop) -->
+    <div id="product-showcase-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @foreach($allProducts as $product)
+        @php
+          $isKredit = $product->category === 'kredit';
+          $isDeposito = $product->category === 'deposito';
+          $badgeCategory = $isDeposito ? 'Deposito Berjangka' : ($isKredit ? 'Kredit Usaha' : 'Tabungan');
+          $badgeClass = $isDeposito ? 'bg-amber-50 text-amber-700' : ($isKredit ? 'bg-emerald-50 text-emerald-700' : 'bg-blue-50 text-bpr-blue');
+          
+          $benefit1 = !empty($product->ketentuan) && isset($product->ketentuan[0]) ? $product->ketentuan[0] : 'Layanan cepat dan proses mudah di 12 kantor kas';
+          $benefit2 = !empty($product->ketentuan) && isset($product->ketentuan[1]) ? $product->ketentuan[1] : 'Aman dan dijamin Lembaga Penjamin Simpanan (LPS)';
+          
+          $waOfficial = preg_replace('/[^0-9]/', '', $settings['whatsapp_official'] ?? '6281111116526');
+          if (empty($waOfficial)) { $waOfficial = '6281111116526'; }
+          $waUrl = 'https://wa.me/' . $waOfficial . '?text=' . urlencode('Halo Perumda BPR Majalengka, saya tertarik untuk membuka / konsultasi produk ' . $product->name . ' (' . $product->code . '). Mohon informasi persyaratan dan pembukaan rekening.');
+        @endphp
+
+        <!-- Card Container BCA-Style -->
+        <div class="product-showcase-card bg-white rounded-2xl p-6 border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-bpr-blue/50 transition-all flex flex-col justify-between group"
+             data-category="{{ $product->category }}"
+             data-name="{{ strtolower($product->name . ' ' . $product->code . ' ' . $product->short_desc) }}">
+          <div>
+            <!-- Header Card: Badge Kategori & Kode Produk -->
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="{{ $badgeClass }} font-bold text-xs px-2.5 py-1 rounded-lg">{{ $badgeCategory }}</span>
+              <span class="font-mono text-xs text-slate-400 font-medium">{{ $product->code }}</span>
+            </div>
+
+            <!-- Image Container: Soft rounded container -->
+            <div class="h-44 rounded-xl bg-slate-50 flex items-center justify-center p-4 my-4 overflow-hidden group-hover:scale-[1.02] transition-transform">
+              <img src="{{ asset($product->image ?: 'assets/img/logo.png') }}" alt="{{ $product->name }}" class="object-contain max-h-full max-w-full" onerror="this.src='assets/img/logo.png'">
+            </div>
+
+            <!-- Nama Produk: Heading tegas & elegan -->
+            <h3 class="text-lg font-extrabold text-slate-900 group-hover:text-bpr-blue transition-colors line-clamp-1" title="{{ $product->name }}">
+              {{ $product->name }}
+            </h3>
+
+            <!-- Deskripsi Singkat: Nilai manfaat produk -->
+            <p class="text-xs text-slate-600 line-clamp-2 mt-1 mb-4 leading-relaxed">
+              {{ $product->short_desc }}
+            </p>
+
+            <!-- Keunggulan Utama (Key Benefits ala BCA): 2 poin checklist hijau -->
+            <div class="space-y-2 mb-6 pt-1 border-t border-slate-100/80">
+              <div class="text-xs text-slate-700 flex items-start gap-2">
+                <svg class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span class="line-clamp-1">{{ $benefit1 }}</span>
+              </div>
+              <div class="text-xs text-slate-700 flex items-start gap-2">
+                <svg class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span class="line-clamp-1">{{ $benefit2 }}</span>
+              </div>
+            </div>
           </div>
-          <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Solusi Pembiayaan</span>
-          <h3 class="text-2xl font-extrabold text-slate-900 mt-1 mb-3">Kredit & Usaha</h3>
-          <p class="text-slate-600 text-sm leading-relaxed mb-6">
-            Dukungan permodalan UMKM, ASN, pensiunan, pertanian, pedagang pasar, hingga proyek konstruksi daerah dengan proses kilat, suku bunga ringan bersaing, dan agunan yang fleksibel.
-          </p>
-          <div class="space-y-2.5 pt-2 text-xs font-semibold text-slate-700">
-            <p class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> Plafon s/d ratusan juta rupiah</p>
-            <p class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> Proses persetujuan cepat (1-3 hari kerja)</p>
-            <p class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> {{ count($productsByCat['kredit'] ?? []) }} Kategori Kredit Resmi BPR Majalengka</p>
+
+          <!-- Action Footer (Dual Action ala BCA) -->
+          <div class="pt-4 mt-auto border-t border-slate-100 flex flex-col gap-2.5">
+            @if($isKredit)
+              <button type="button" onclick="openFormPengajuan(null, null, '{{ addslashes($product->name) }}')" class="w-full py-2.5 px-4 bg-bpr-blue hover:bg-bpr-blue-hover text-white font-bold text-xs rounded-xl shadow-sm hover:shadow transition-all text-center flex items-center justify-center gap-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                <span>Ajukan Pinjaman</span>
+              </button>
+            @else
+              <a href="{{ $waUrl }}" target="_blank" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm hover:shadow transition-all text-center flex items-center justify-center gap-1.5">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+                <span>Buka Rekening</span>
+              </a>
+            @endif
+            <button type="button" onclick="showProductDetail('{{ $product->code }}')" class="w-full py-1.5 text-xs font-bold text-bpr-blue hover:text-bpr-navy transition-colors flex items-center justify-center gap-1 group-hover:underline">
+              <span>Pelajari Lebih Lanjut</span>
+              <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
           </div>
         </div>
-        <div class="pt-8">
-          <button onclick="openProductCatalog('kredit')" class="w-full py-3.5 px-4 bg-bpr-navy hover:bg-bpr-navy-light text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center">
-            Kenali Kredit ({{ count($productsByCat['kredit'] ?? []) }} Kategori)
-          </button>
-        </div>
+      @endforeach
+    </div>
+
+    <!-- Empty State for Search / Filter ala BCA -->
+    <div id="product-showcase-empty" class="hidden py-16 text-center">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-blue-50 text-bpr-blue flex items-center justify-center">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
       </div>
-
+      <h4 class="font-bold text-slate-800 text-lg mb-1">Produk Tidak Ditemukan</h4>
+      <p class="text-sm text-slate-500 max-w-md mx-auto">Tidak ada produk simpanan atau pinjaman yang cocok dengan kata kunci pencarian Anda. Silakan coba kata kunci lain atau tampilkan semua produk.</p>
+      <button type="button" onclick="resetProductFilter()" class="mt-4 px-5 py-2.5 bg-bpr-blue text-white rounded-xl text-xs font-bold hover:bg-bpr-blue-hover transition-colors shadow-sm">
+        Tampilkan Semua Produk
+      </button>
     </div>
 
     <!-- Catatan Penjelasan Produk (Sesuai Sketsa Halaman 2) -->
-    <div class="mt-8 text-center">
+    <div class="mt-12 text-center">
       <div class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100/80 text-xs text-slate-600 max-w-2xl text-left sm:text-center">
         <svg class="w-4 h-4 text-bpr-blue flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        <span><strong class="text-slate-700">Catatan:</strong> Informasi di atas merupakan pengantar produk. Syarat, biaya, dan ketentuan berlaku pada masing-masing produk perbankan.</span>
+        <span><strong class="text-slate-700">Catatan:</strong> Informasi di atas merupakan pengantar produk resmi Perumda BPR Majalengka. Syarat, biaya, dan ketentuan berlaku pada masing-masing produk perbankan.</span>
       </div>
     </div>
 

@@ -179,6 +179,29 @@ const testInvalidNik = '321012';
 assert(/^\d{16}$/.test(testValidNik), 'Valid NIK with 16 numeric digits passes regex');
 assert(!/^\d{16}$/.test(testInvalidNik), 'Invalid short NIK correctly fails regex');
 
+console.log('\n--- 7. Testing BCA-Style Product Showcase Elements & Tabs ---');
+const showcaseRequiredElements = [
+  'product-showcase-tabs',
+  'product-showcase-search',
+  'product-showcase-grid',
+  'product-showcase-empty'
+];
+showcaseRequiredElements.forEach(id => {
+  assert(indexHtml.includes(`id="${id}"`), `HTML contains showcase element with id="${id}"`);
+});
+
+assert(indexHtml.includes('Semua Produk (24)'), 'Showcase tabs include "Semua Produk (24)"');
+assert(indexHtml.includes('Tabungan (10)'), 'Showcase tabs include "Tabungan (10)"');
+assert(indexHtml.includes('Deposito (2)'), 'Showcase tabs include "Deposito (2)"');
+assert(indexHtml.includes('Kredit (12)'), 'Showcase tabs include "Kredit (12)"');
+assert(indexHtml.includes('Cari produk simpanan atau pinjaman...'), 'Showcase includes search input placeholder');
+
+const cardCount = (indexHtml.match(/class="[^"]*product-showcase-card[^"]*"/g) || []).length;
+assert(cardCount === 24, `Showcase contains exactly 24 pre-rendered BCA product cards (actual: ${cardCount})`);
+
+assert(appJs.includes('initProductShowcase'), 'app.js includes initProductShowcase()');
+assert(appJs.includes('resetProductFilter'), 'app.js includes resetProductFilter()');
+
 console.log('\n======================================================');
 console.log(`Verification Summary: Passed: ${passedTests}, Failed: ${failedTests}`);
 if (failedTests > 0) {

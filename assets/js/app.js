@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initNavbar();
   initKolomTanya();
+  initProductShowcase();
   initSimulator();
   initFormPengajuan();
   initProductModals();
@@ -35,6 +36,7 @@ window.openFormPengajuan = function(p, t, pr) { if (typeof openFormPengajuan ===
 window.showPengajuanSuccessModal = function(d, r) { if (typeof showPengajuanSuccessModal === 'function') return showPengajuanSuccessModal(d, r); };
 window.openProfilBpr = function() { if (typeof openProfilBpr === 'function') return openProfilBpr(); };
 window.openContactOptions = function() { if (typeof openContactOptions === 'function') return openContactOptions(); };
+window.resetProductFilter = function() { if (typeof resetProductFilter === 'function') return resetProductFilter(); };
 
 window.openProductCatalog = function(category = 'all') {
   const modal = document.getElementById('modal-product-catalog');
@@ -91,7 +93,7 @@ window.openProductCatalog = function(category = 'all') {
 window.showProductDetail = function(product) {
   if (typeof product === 'string') {
     for (const cat of ['tabungan', 'deposito', 'kredit']) {
-      const found = PRODUCTS_DATA[cat]?.find(p => p.id === product || p.code === product);
+      const found = PRODUCTS_DATA[cat]?.find(p => p.id === product || p.code === product || p.slug === product);
       if (found) { product = found; break; }
     }
   }
@@ -1364,6 +1366,203 @@ function showPengajuanSuccessModal(data, serverRefCode) {
       document.body.classList.remove('overflow-hidden');
     };
   }
+}
+
+/* ==========================================================================
+   6B. BCA-STYLE INTERACTIVE PRODUCT SHOWCASE (TABS, SEARCH & GRID)
+   ========================================================================== */
+function initProductShowcase() {
+  const tabs = document.querySelectorAll('.product-showcase-tab');
+  const searchInput = document.getElementById('product-showcase-search');
+  const clearBtn = document.getElementById('product-showcase-search-clear');
+  const grid = document.getElementById('product-showcase-grid');
+  const emptyState = document.getElementById('product-showcase-empty');
+
+  if (!grid) return;
+
+  let activeCategory = 'all';
+  let searchQuery = '';
+
+  const getWaUrl = (prod) => {
+    const defaultWa = '6281111116526';
+    const waNumber = (window.DYNAMIC_SETTINGS && window.DYNAMIC_SETTINGS.whatsapp_official ? window.DYNAMIC_SETTINGS.whatsapp_official : defaultWa).replace(/[^0-9]/g, '');
+    const waMsg = encodeURIComponent(`Halo Perumda BPR Majalengka, saya tertarik untuk membuka / konsultasi produk ${prod.name} (${prod.code}). Mohon informasi persyaratan dan pembukaan rekening.`);
+    return `https://wa.me/${waNumber}?text=${waMsg}`;
+  };
+
+  const createCardHtml = (prod) => {
+    const isKredit = prod.category === 'kredit';
+    const isDeposito = prod.category === 'deposito';
+    const badgeCategory = isDeposito ? 'Deposito Berjangka' : (isKredit ? 'Kredit Usaha' : 'Tabungan');
+    const badgeClass = isDeposito 
+      ? 'bg-amber-50 text-amber-700' 
+      : (isKredit 
+        ? 'bg-emerald-50 text-emerald-700' 
+        : 'bg-blue-50 text-bpr-blue');
+    
+    const benefit1 = Array.isArray(prod.ketentuan) && prod.ketentuan[0] 
+      ? prod.ketentuan[0] 
+      : 'Layanan cepat dan proses mudah di 12 kantor kas';
+    const benefit2 = Array.isArray(prod.ketentuan) && prod.ketentuan[1] 
+      ? prod.ketentuan[1] 
+      : 'Aman dan dijamin Lembaga Penjamin Simpanan (LPS)';
+
+    const actionPrimary = isKredit
+      ? `<button type="button" onclick="openFormPengajuan(null, null, '${prod.name.replace(/'/g, "\\'")}')" class="w-full py-2.5 px-4 bg-bpr-blue hover:bg-bpr-blue-hover text-white font-bold text-xs rounded-xl shadow-sm hover:shadow transition-all text-center flex items-center justify-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <span>Ajukan Pinjaman</span>
+        </button>`
+      : `<a href="${getWaUrl(prod)}" target="_blank" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm hover:shadow transition-all text-center flex items-center justify-center gap-1.5">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+          <span>Buka Rekening</span>
+        </a>`;
+
+    return `
+      <div class="product-showcase-card bg-white rounded-2xl p-6 border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-bpr-blue/50 transition-all flex flex-col justify-between group"
+           data-category="${prod.category}"
+           data-name="${(prod.name + ' ' + prod.code + ' ' + (prod.shortDesc || prod.short_desc || '')).toLowerCase()}">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="${badgeClass} font-bold text-xs px-2.5 py-1 rounded-lg">${badgeCategory}</span>
+            <span class="font-mono text-xs text-slate-400 font-medium">${prod.code}</span>
+          </div>
+
+          <div class="h-44 rounded-xl bg-slate-50 flex items-center justify-center p-4 my-4 overflow-hidden group-hover:scale-[1.02] transition-transform">
+            <img src="${prod.image}" alt="${prod.name}" class="object-contain max-h-full max-w-full" onerror="this.src='assets/img/logo.png'">
+          </div>
+
+          <h3 class="text-lg font-extrabold text-slate-900 group-hover:text-bpr-blue transition-colors line-clamp-1" title="${prod.name}">
+            ${prod.name}
+          </h3>
+
+          <p class="text-xs text-slate-600 line-clamp-2 mt-1 mb-4 leading-relaxed">
+            ${prod.shortDesc || prod.short_desc || ''}
+          </p>
+
+          <div class="space-y-2 mb-6 pt-1 border-t border-slate-100/80">
+            <div class="text-xs text-slate-700 flex items-start gap-2">
+              <svg class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+              <span class="line-clamp-1">${benefit1}</span>
+            </div>
+            <div class="text-xs text-slate-700 flex items-start gap-2">
+              <svg class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+              <span class="line-clamp-1">${benefit2}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-4 mt-auto border-t border-slate-100 flex flex-col gap-2.5">
+          ${actionPrimary}
+          <button type="button" onclick="showProductDetail('${prod.code}')" class="w-full py-1.5 text-xs font-bold text-bpr-blue hover:text-bpr-navy transition-colors flex items-center justify-center gap-1 group-hover:underline">
+            <span>Pelajari Lebih Lanjut</span>
+            <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    `;
+  };
+
+  const existingCards = grid.querySelectorAll('.product-showcase-card');
+  if (existingCards.length === 0) {
+    const allProds = [
+      ...PRODUCTS_DATA.tabungan,
+      ...PRODUCTS_DATA.deposito,
+      ...PRODUCTS_DATA.kredit
+    ];
+    grid.innerHTML = allProds.map(createCardHtml).join('');
+  }
+
+  const filterCards = () => {
+    const cards = grid.querySelectorAll('.product-showcase-card');
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+      const cardCategory = card.dataset.category;
+      const cardName = card.dataset.name || '';
+
+      const matchCategory = (activeCategory === 'all' || cardCategory === activeCategory);
+      const matchSearch = (!searchQuery || cardName.includes(searchQuery));
+
+      if (matchCategory && matchSearch) {
+        card.classList.remove('hidden');
+        visibleCount++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    if (emptyState) {
+      if (visibleCount === 0) {
+        emptyState.classList.remove('hidden');
+      } else {
+        emptyState.classList.add('hidden');
+      }
+    }
+  };
+
+  // Tab click listeners
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => {
+        t.classList.remove('bg-bpr-blue', 'text-white', 'shadow-sm', 'font-bold');
+        t.classList.add('text-slate-600', 'hover:text-slate-900', 'hover:bg-white/60', 'font-semibold');
+        t.setAttribute('aria-selected', 'false');
+      });
+
+      tab.classList.remove('text-slate-600', 'hover:text-slate-900', 'hover:bg-white/60', 'font-semibold');
+      tab.classList.add('bg-bpr-blue', 'text-white', 'shadow-sm', 'font-bold');
+      tab.setAttribute('aria-selected', 'true');
+
+      activeCategory = tab.dataset.category || 'all';
+      filterCards();
+    });
+  });
+
+  // Search input listeners
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      searchQuery = e.target.value.trim().toLowerCase();
+      if (clearBtn) {
+        if (searchQuery.length > 0) {
+          clearBtn.classList.remove('hidden');
+        } else {
+          clearBtn.classList.add('hidden');
+        }
+      }
+      filterCards();
+    });
+  }
+
+  // Clear button listener
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      if (searchInput) searchInput.value = '';
+      searchQuery = '';
+      clearBtn.classList.add('hidden');
+      filterCards();
+      if (searchInput) searchInput.focus();
+    });
+  }
+
+  // Global reset helper
+  window.resetProductFilter = function() {
+    activeCategory = 'all';
+    searchQuery = '';
+    if (searchInput) searchInput.value = '';
+    if (clearBtn) clearBtn.classList.add('hidden');
+    tabs.forEach(t => {
+      if (t.dataset.category === 'all') {
+        t.classList.add('bg-bpr-blue', 'text-white', 'shadow-sm', 'font-bold');
+        t.classList.remove('text-slate-600', 'hover:text-slate-900', 'hover:bg-white/60', 'font-semibold');
+        t.setAttribute('aria-selected', 'true');
+      } else {
+        t.classList.remove('bg-bpr-blue', 'text-white', 'shadow-sm', 'font-bold');
+        t.classList.add('text-slate-600', 'hover:text-slate-900', 'hover:bg-white/60', 'font-semibold');
+        t.setAttribute('aria-selected', 'false');
+      }
+    });
+    filterCards();
+  };
 }
 
 /* ==========================================================================
