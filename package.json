@@ -1,0 +1,15 @@
+{
+  "name": "bank-majalengka-frontend",
+  "version": "1.0.0",
+  "description": "Frontend Resmi Perumda BPR Majalengka mengacu pada Figma UI dan Sketsa Mockup",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node test/verify.js"
+  },
+  "devDependencies": {
+    "vite": "^5.4.10"
+  }
+}

@@ -1,0 +1,1891 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ $settings['company_name'] ?? 'Perumda BPR Majalengka' }} - Langkah Kecil Hari Ini, Masa Depan Lebih Berarti</title>
+  <meta name="description" content="Website Resmi {{ $settings['company_name'] ?? 'Perumda BPR Majalengka' }} (Bank Majalengka) - BUMD Milik Pemerintah Kabupaten Majalengka. Solusi Tabungan, Deposito Berjangka LPS, dan Kredit Usaha Rakyat.">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <link rel="icon" type="image/png" href="assets/img/logo.png">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'bpr-navy': '#002D62',
+            'bpr-navy-dark': '#001A3A',
+            'bpr-navy-light': '#0B3C7B',
+            'bpr-blue': '#0066CC',
+            'bpr-blue-hover': '#0050A0',
+            'bpr-blue-light': '#EBF3FC',
+            'bpr-gold': '#F59E0B',
+            'bpr-gold-dark': '#D97706',
+            'bpr-red': '#DC2626',
+            'bpr-emerald': '#059669',
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-bpr-blue selection:text-white">
+
+  <!-- =====================================================================
+       TOP NOTIFICATION / COMPLIANCE STRIP
+       ===================================================================== -->
+  <div class="bg-bpr-navy-dark text-slate-300 text-xs py-2 hidden md:block border-b border-white/10">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 flex items-center justify-between">
+      <div class="flex items-center gap-2.5 text-xs whitespace-nowrap">
+        <span class="text-amber-400 font-bold tracking-wide whitespace-nowrap">BUMD Kab. Majalengka</span>
+        <span class="text-white/20">•</span>
+        <span class="flex items-center gap-1.5 text-slate-300 whitespace-nowrap"><span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span> Berizin & Diawasi OJK & BI</span>
+        <span class="text-white/20">•</span>
+        <span class="flex items-center gap-1.5 text-slate-300 whitespace-nowrap"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Penjaminan LPS s/d Rp 2 Miliar</span>
+      </div>
+      <div class="flex items-center gap-3.5 text-xs whitespace-nowrap">
+        <a href="tel:{{ preg_replace('/[^0-9]/', '', $settings['phone_central'] ?? '0233281144') }}" class="text-slate-300 hover:text-white flex items-center gap-1.5 transition-colors whitespace-nowrap">
+          <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          <span>{{ $settings['phone_central'] ?? '(0233) 281144' }}</span>
+        </a>
+        <span class="text-white/20">•</span>
+        <a href="{{ $settings['whatsapp_url'] ?? 'https://wa.me/6281111116526' }}" target="_blank" class="text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 transition-colors font-semibold whitespace-nowrap">
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+          <span>WA CS: {{ $settings['whatsapp_official'] ?? '0811-1111-6526' }}</span>
+        </a>
+        <span class="text-white/20">•</span>
+        <a href="{{ route('admin.login') }}" class="text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1.5 transition-colors whitespace-nowrap">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          <span>Portal Admin</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       MAIN HEADER (ORIGINAL CORPORATE NAVY NAVBAR - BCA STYLE)
+       ===================================================================== -->
+  <header id="main-header" class="sticky top-0 z-40 transition-all duration-300 glass-header">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-2 lg:gap-4">
+      
+      <!-- Bank Brand Logo: Clean framed badge on Navy -->
+      <a href="#" class="flex items-center gap-2 group flex-shrink-0">
+        <div class="bg-white px-2.5 py-1 rounded-xl shadow-sm flex items-center justify-center">
+          <img src="assets/img/logo.png" alt="Logo Perumda BPR Majalengka" class="h-8 sm:h-9 w-auto object-contain">
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Menu (Single Line - whitespace-nowrap) -->
+      <nav class="hidden lg:flex items-center gap-0.5 xl:gap-1.5">
+        <a href="#beranda" class="text-white hover:text-amber-400 font-semibold text-xs xl:text-[13px] px-2 xl:px-2.5 py-1.5 rounded-lg transition-colors whitespace-nowrap">Beranda</a>
+        
+        <!-- Dropdown Produk -->
+        <div class="relative group">
+          <button class="text-white/90 group-hover:text-amber-400 font-semibold text-xs xl:text-[13px] px-2 xl:px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition-colors whitespace-nowrap">
+            <span>Produk & Layanan</span>
+            <svg class="w-3.5 h-3.5 text-white/70 group-hover:text-amber-400 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="absolute left-0 mt-1 w-64 bg-white rounded-2xl shadow-xl py-3 hidden group-hover:block transition-all duration-200 border border-slate-100 z-50">
+            <div class="px-4 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider">Kategori Pilihan</div>
+            <a href="javascript:void(0)" onclick="openProductCatalog('tabungan')" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 transition-colors">
+              <span class="w-8 h-8 rounded-lg bg-blue-50 text-bpr-blue flex items-center justify-center text-xs font-bold">TAB</span>
+              <div>
+                <p class="text-xs font-bold text-slate-800">Tabungan Masyarakat</p>
+                <p class="text-[11px] text-slate-500">10 Produk Simpanan Terencana</p>
+              </div>
+            </a>
+            <a href="javascript:void(0)" onclick="openProductCatalog('deposito')" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 transition-colors">
+              <span class="w-8 h-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center text-xs font-bold">DEP</span>
+              <div>
+                <p class="text-xs font-bold text-slate-800">Deposito Berjangka LPS</p>
+                <p class="text-[11px] text-slate-500">Bunga Kompetitif & Hadiah Langsung</p>
+              </div>
+            </a>
+            <a href="javascript:void(0)" onclick="openProductCatalog('kredit')" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 transition-colors">
+              <span class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs font-bold">KRD</span>
+              <div>
+                <p class="text-xs font-bold text-slate-800">Kredit & Modal Usaha</p>
+                <p class="text-[11px] text-slate-500">12 Fasilitas Pembiayaan Cepat</p>
+              </div>
+            </a>
+            <div class="my-1.5 border-t border-slate-100"></div>
+            <a href="#ppob-section" class="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 transition-colors">
+              <span class="w-8 h-8 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center text-xs font-bold">POB</span>
+              <div>
+                <p class="text-xs font-bold text-slate-800">Loket PPOB & Multipayment</p>
+                <p class="text-[11px] text-slate-500">Bayar Listrik, PDAM, Pulsa</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <a href="#simulasi-kredit" class="text-white/90 hover:text-amber-400 font-semibold text-xs xl:text-[13px] px-2 xl:px-2.5 py-1.5 rounded-lg transition-colors whitespace-nowrap">Simulasi Kredit</a>
+        <a href="#tentang-kami" class="text-white/90 hover:text-amber-400 font-semibold text-xs xl:text-[13px] px-2 xl:px-2.5 py-1.5 rounded-lg transition-colors whitespace-nowrap">Tentang Kami</a>
+        <a href="#informasi-berita" class="text-white/90 hover:text-amber-400 font-semibold text-xs xl:text-[13px] px-2 xl:px-2.5 py-1.5 rounded-lg transition-colors whitespace-nowrap">Informasi & Berita</a>
+        <a href="#laporan-publikasi" class="text-white/90 hover:text-amber-400 font-semibold text-xs xl:text-[13px] px-2 xl:px-2.5 py-1.5 rounded-lg transition-colors whitespace-nowrap">Laporan Publikasi</a>
+        <a href="#kantor-kas" class="text-white/90 hover:text-amber-400 font-semibold text-xs xl:text-[13px] px-2 xl:px-2.5 py-1.5 rounded-lg transition-colors whitespace-nowrap">Kantor Kas</a>
+      </nav>
+
+      <!-- Action Button / Header CTA (Single Line - whitespace-nowrap) -->
+      <div class="hidden sm:flex items-center flex-shrink-0">
+        <button onclick="openFormPengajuan()" class="whitespace-nowrap px-4 py-2 bg-amber-400 hover:bg-amber-300 text-bpr-navy-dark font-bold text-xs uppercase rounded-xl shadow-md transition-all transform active:scale-95 flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-bpr-navy-dark flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <span>Ajukan Pinjaman</span>
+        </button>
+      </div>
+
+      <!-- Mobile Hamburger Button -->
+      <div class="flex lg:hidden items-center gap-2">
+        <button id="mobile-menu-toggle" class="p-2 text-slate-700 hover:bg-slate-100 rounded-xl transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div id="mobile-drawer-backdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden transition-opacity"></div>
+  <div id="mobile-drawer" class="fixed top-0 right-0 bottom-0 w-80 max-w-full bg-white z-50 transform translate-x-full transition-transform duration-300 ease-out flex flex-col justify-between p-6 shadow-2xl">
+    <div>
+      <div class="flex items-center justify-between pb-4">
+        <img src="assets/img/logo.png" alt="Logo" class="h-8 w-auto">
+        <button id="mobile-drawer-close" class="p-2 text-slate-400 hover:text-slate-700">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <nav class="mt-6 flex flex-col gap-2">
+        <a href="#beranda" class="mobile-nav-link py-2.5 px-3 rounded-lg text-slate-800 font-semibold hover:bg-slate-100">Beranda</a>
+        <a href="javascript:void(0)" onclick="openProductCatalog('all')" class="mobile-nav-link py-2.5 px-3 rounded-lg text-slate-800 font-semibold hover:bg-slate-100 flex items-center justify-between">
+          <span>Katalog Produk</span>
+          <span class="text-xs bg-bpr-blue text-white px-2 py-0.5 rounded-md font-bold">24 Produk</span>
+        </a>
+        <a href="#simulasi-kredit" class="mobile-nav-link py-2.5 px-3 rounded-lg text-slate-800 font-semibold hover:bg-slate-100">Simulasi Kredit</a>
+        <a href="#tentang-kami" class="mobile-nav-link py-2.5 px-3 rounded-lg text-slate-800 font-semibold hover:bg-slate-100">Tentang Kami & Makna Logo</a>
+        <a href="#informasi-berita" class="mobile-nav-link py-2.5 px-3 rounded-lg text-slate-800 font-semibold hover:bg-slate-100">Berita & Literasi</a>
+        <a href="#laporan-publikasi" class="mobile-nav-link py-2.5 px-3 rounded-lg text-slate-800 font-semibold hover:bg-slate-100">Laporan Publikasi</a>
+        <a href="#kantor-kas" class="mobile-nav-link py-2.5 px-3 rounded-lg text-slate-800 font-semibold hover:bg-slate-100">Jaringan 12 Kantor Kas</a>
+        <a href="#faq-section" class="mobile-nav-link py-2.5 px-3 rounded-lg text-slate-800 font-semibold hover:bg-slate-100">Pusat Bantuan & FAQ</a>
+      </nav>
+    </div>
+    <div class="pt-6 space-y-3">
+      <button onclick="openFormPengajuan()" class="w-full py-3 bg-amber-400 hover:bg-amber-300 text-bpr-navy-dark font-bold text-sm rounded-xl text-center shadow-md">
+        Ajukan Pinjaman Online
+      </button>
+      <a href="https://wa.me/6281111116526" target="_blank" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl text-center flex items-center justify-center gap-2">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+        Chat WhatsApp CS
+      </a>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       SECTION 1: HERO SECTION WITH INTEGRATED PHOTO & TICKER STRIP
+       (Sesuai Sketsa Halaman 1 & Figma Section 1)
+       ===================================================================== -->
+  <section id="beranda" class="relative bg-gradient-to-b from-bpr-navy via-bpr-navy-light to-bpr-navy pt-8 sm:pt-14 pb-16 lg:pb-24 overflow-hidden text-white">
+    <!-- Subtle background pattern & glow -->
+    <div class="absolute inset-0 hero-glow pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+        
+        <!-- Left Hero Content -->
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+          
+          <!-- Badge Tagline -->
+          <p class="text-xs font-bold text-amber-400 uppercase tracking-widest">Amanah, Kokoh & Terpercaya</p>
+
+          <!-- Main Hero Headline -->
+          <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-extrabold tracking-tight leading-[1.15]">
+            @if(isset($settings['hero_headline']) && str_contains($settings['hero_headline'], '.'))
+              @php $parts = explode('.', $settings['hero_headline'], 2); @endphp
+              {{ trim($parts[0]) }}.<br>
+              <span class="text-amber-400">{{ trim($parts[1]) }}</span>
+            @else
+              {{ $settings['hero_headline'] ?? 'Langkah kecil hari ini. Masa depan lebih berarti.' }}
+            @endif
+          </h1>
+
+          <!-- Hero Subtitle -->
+          <p class="text-slate-200 text-sm sm:text-base md:text-lg font-normal max-w-2xl leading-relaxed mx-auto lg:mx-0">
+            <strong>Mitra Kerja Membangun Ekonomi Rakyat.</strong> {{ $settings['hero_subheadline'] ?? 'Hadir mendampingi pertumbuhan keluarga, kemandirian pelaku usaha mikro, dan ketahanan finansial masyarakat Kabupaten Majalengka.' }}
+          </p>
+
+          <!-- Dual Call to Action Buttons -->
+          <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+            <button onclick="openProductCatalog('all')" class="w-full sm:w-auto px-8 py-4 bg-bpr-blue hover:bg-bpr-blue-hover text-white font-bold text-sm rounded-xl shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center">
+              Temukan Produk
+            </button>
+            <a href="#simulasi-kredit" class="w-full sm:w-auto px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold text-sm rounded-xl transition-all text-center">
+              Simulasi Kredit
+            </a>
+          </div>
+
+        </div>
+
+        <!-- Right Hero Visual Card (High Impact UMKM Photography) -->
+        <div class="lg:col-span-5 relative">
+          <div class="relative mx-auto max-w-md lg:max-w-none">
+            <div class="relative rounded-2xl overflow-hidden shadow-2xl bg-slate-900 group">
+              <img src="assets/img/hero-batik.jpg" alt="Nasabah & Pengrajin Batik Binaan BPR Majalengka" class="w-full h-80 sm:h-96 object-cover object-center group-hover:scale-105 transition-transform duration-500">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+              
+              <!-- Floating Card Overlay on Photo -->
+              <div class="absolute bottom-0 inset-x-0 p-5 text-left">
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-400 text-bpr-navy-dark text-[11px] font-bold uppercase mb-2">
+                  Cerita Sukses Majalengka
+                </div>
+                <h4 class="text-white font-bold text-base leading-snug">Pemberdayaan Pelaku Usaha Mikro & Pengrajin Batik</h4>
+                <p class="text-slate-300 text-xs mt-1">Modal usaha tepat guna, menggerakkan roda ekonomi kerakyatan dari desa ke kota.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Live Corporate Regulatory Ticker Strip -->
+    <div class="mt-12 sm:mt-16 bg-black/20 py-3 overflow-hidden">
+      <div class="ticker-track flex items-center gap-8 text-xs font-semibold text-slate-200">
+        <span>BUMD Resmi Milik Pemerintah Kabupaten Majalengka</span>
+        <span class="text-white/20">•</span>
+        <span>Berizin & Diawasi Otoritas Jasa Keuangan (OJK) & BI</span>
+        <span class="text-white/20">•</span>
+        <span>Peserta Penjaminan LPS s/d Rp 2.000.000.000,-</span>
+        <span class="text-white/20">•</span>
+        <span>12 Jaringan Kantor Kas Tersebar di Seluruh Majalengka</span>
+        <span class="text-white/20">•</span>
+        <span>Hasil Penyatuan (Merger) 8 BPR Berintegritas</span>
+        <span class="text-white/20">•</span>
+        <!-- Repeated items for smooth seamless infinite scroll -->
+        <span>BUMD Resmi Milik Pemerintah Kabupaten Majalengka</span>
+        <span class="text-white/20">•</span>
+        <span>Berizin & Diawasi Otoritas Jasa Keuangan (OJK) & BI</span>
+        <span class="text-white/20">•</span>
+        <span>Peserta Penjaminan LPS s/d Rp 2.000.000.000,-</span>
+        <span class="text-white/20">•</span>
+        <span>12 Jaringan Kantor Kas Tersebar di Seluruh Majalengka</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SECTION 2: QUICK INQUIRY / SHORTCUT BAR
+       (Sesuai Sketsa Halaman 1 & Figma Section 4)
+       ===================================================================== -->
+  <section class="relative -mt-6 z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-white rounded-2xl shadow-lg shadow-slate-200/40 p-4 sm:p-6">
+      
+      <!-- Kolom Tanya (Sesuai Sketsa Halaman 1 & app.js initKolomTanya) -->
+      <div class="relative mb-6 pb-2">
+        <label for="hero-search-input" class="block text-xs font-bold text-bpr-blue uppercase tracking-wider mb-2 flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-bpr-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <span>Kolom Tanya: Cari Produk Simpanan, Pinjaman, atau Kantor Kas</span>
+        </label>
+        <div class="relative flex items-center">
+          <input type="text" id="hero-search-input" placeholder="Ketik apa yang ingin Anda cari: TAHARA, Kredit Modal Kerja, Kas Kadipaten, Deposito..." class="w-full py-3.5 pl-11 pr-24 rounded-xl bg-slate-50/90 text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-bpr-blue/20 transition-all">
+          <div class="absolute left-3.5 text-slate-400 pointer-events-none">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </div>
+          <button id="hero-search-btn" type="button" class="absolute right-2 px-4 py-2 bg-bpr-blue hover:bg-bpr-blue-hover text-white text-xs font-bold rounded-lg shadow transition-colors">
+            Cari
+          </button>
+        </div>
+        <!-- Live Search Dropdown -->
+        <div id="hero-search-results" class="hidden absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl ring-1 ring-slate-100 p-3 max-h-96 overflow-y-auto z-50"></div>
+      </div>
+
+      <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
+        
+        <div class="text-left w-full lg:w-auto">
+          <span class="text-xs font-bold text-bpr-blue uppercase tracking-wider">Layanan Mandiri</span>
+          <h3 class="text-slate-900 font-extrabold text-base sm:text-lg">Apa yang ingin Anda rencanakan?</h3>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full lg:w-auto">
+          
+          <button onclick="openProductCatalog('tabungan')" class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-blue-50/70 hover:shadow-sm transition-all text-left group">
+            <div class="w-10 h-10 rounded-lg bg-blue-100 text-bpr-blue flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+              <svg class="w-5 h-5 text-bpr-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-slate-800">Mulai Menabung</p>
+              <p class="text-[11px] text-slate-500">TAHARA & TIARA</p>
+            </div>
+          </button>
+
+          <button onclick="openProductCatalog('deposito')" class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-amber-50/70 hover:shadow-sm transition-all text-left group">
+            <div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+              <svg class="w-5 h-5 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-slate-800">Simpanan Deposito</p>
+              <p class="text-[11px] text-slate-500">Bunga LPS Maksimal</p>
+            </div>
+          </button>
+
+          <button onclick="openProductCatalog('kredit')" class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-emerald-50/70 hover:shadow-sm transition-all text-left group">
+            <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+              <svg class="w-5 h-5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-slate-800">Kembangkan Usaha</p>
+              <p class="text-[11px] text-slate-500">Kredit Modal Cepat</p>
+            </div>
+          </button>
+
+          <a href="#ppob-section" class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-purple-50/70 hover:shadow-sm transition-all text-left group">
+            <div class="w-10 h-10 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+              <svg class="w-5 h-5 text-purple-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-slate-800">Bayar Tagihan</p>
+              <p class="text-[11px] text-slate-500">PPOB & Pickup</p>
+            </div>
+          </a>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SECTION 3: 3 CORE PRODUCTS OVERVIEW
+       (Sesuai Sketsa Halaman 2 & Figma Section 5)
+       ===================================================================== -->
+  <section class="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-3xl mx-auto mb-14">
+      <span class="text-xs font-bold text-bpr-blue uppercase tracking-wider">Solusi Perbankan Terpadu</span>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-2 tracking-tight">Pilihan Produk Sesuai Rencana Anda</h2>
+      <p class="text-slate-600 text-sm sm:text-base mt-2 leading-relaxed">
+        Ketahui pilihan produk simpanan dan pinjaman resmi secara transparan. Didampingi petugas profesional di 12 kantor kas se-Kabupaten Majalengka.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      
+      <!-- Card 1: Tabungan Rakyat -->
+      <div class="bg-white rounded-2xl p-7 card-shadow card-shadow-hover flex flex-col justify-between">
+        <div>
+          <div class="w-14 h-14 rounded-2xl bg-blue-50 text-bpr-blue flex items-center justify-center mb-6 shadow-sm">
+            <svg class="w-7 h-7 text-bpr-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+          </div>
+          <span class="text-xs font-bold text-bpr-blue uppercase tracking-wider">Simpanan Harian</span>
+          <h3 class="text-2xl font-extrabold text-slate-900 mt-1 mb-3">Tabungan Rakyat</h3>
+          <p class="text-slate-600 text-sm leading-relaxed mb-6">
+            Solusi simpanan terpercaya untuk segala kebutuhan keluarga: tabungan harian, persiapan hari raya, qurban, pendidikan anak, hingga pensiun dengan setoran terjangkau dan bebas biaya administrasi memberatkan.
+          </p>
+          <div class="space-y-2.5 pt-2 text-xs font-semibold text-slate-700">
+            <p class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> Rencana dana keluarga & masa depan</p>
+            <p class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> Setoran ringan & aman terjamin LPS</p>
+            <p class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> TAHARA, TIARA, KOTAK MAS, SIDASI, SIMPEL</p>
+          </div>
+        </div>
+        <div class="pt-8">
+          <button onclick="openProductCatalog('tabungan')" class="w-full py-3.5 px-4 bg-bpr-blue hover:bg-bpr-blue-hover text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center">
+            Kenali Tabungan ({{ count($productsByCat['tabungan'] ?? []) }} Produk)
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 2: Deposito Berjangka -->
+      <div class="bg-white rounded-2xl p-7 card-shadow card-shadow-hover flex flex-col justify-between">
+        <div>
+          <div class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mb-6 shadow-sm">
+            <svg class="w-7 h-7 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          </div>
+          <span class="text-xs font-bold text-amber-600 uppercase tracking-wider">Bunga Menarik LPS</span>
+          <h3 class="text-2xl font-extrabold text-slate-900 mt-1 mb-3">Deposito Berjangka</h3>
+          <p class="text-slate-600 text-sm leading-relaxed mb-6">
+            Maksimalkan imbal hasil simpanan secara aman dan terencana dengan suku bunga kompetitif dijamin LPS hingga 2 Miliar rupiah. Tersedia opsi Automatic Roll Over (ARO) dan program hadiah langsung tanpa diundi.
+          </p>
+          <div class="space-y-2.5 pt-2 text-xs font-semibold text-slate-700">
+            <p class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> Pilihan tenor fleksibel 1, 3, 6, 12 Bulan</p>
+            <p class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> Deposito Suka-Suka (Hadiah langsung tanpa diundi)</p>
+            <p class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> Dapat dijadikan jaminan agunan kredit</p>
+          </div>
+        </div>
+        <div class="pt-8">
+          <button onclick="openProductCatalog('deposito')" class="w-full py-3.5 px-4 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center">
+            Kenali Deposito ({{ count($productsByCat['deposito'] ?? []) }} Pilihan)
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 3: Kredit & Pembiayaan Usaha -->
+      <div class="bg-white rounded-2xl p-7 card-shadow card-shadow-hover flex flex-col justify-between">
+        <div>
+          <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-6 shadow-sm">
+            <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Solusi Pembiayaan</span>
+          <h3 class="text-2xl font-extrabold text-slate-900 mt-1 mb-3">Kredit & Usaha</h3>
+          <p class="text-slate-600 text-sm leading-relaxed mb-6">
+            Dukungan permodalan UMKM, ASN, pensiunan, pertanian, pedagang pasar, hingga proyek konstruksi daerah dengan proses kilat, suku bunga ringan bersaing, dan agunan yang fleksibel.
+          </p>
+          <div class="space-y-2.5 pt-2 text-xs font-semibold text-slate-700">
+            <p class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> Plafon s/d ratusan juta rupiah</p>
+            <p class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> Proses persetujuan cepat (1-3 hari kerja)</p>
+            <p class="flex items-center gap-2"><svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> {{ count($productsByCat['kredit'] ?? []) }} Kategori Kredit Resmi BPR Majalengka</p>
+          </div>
+        </div>
+        <div class="pt-8">
+          <button onclick="openProductCatalog('kredit')" class="w-full py-3.5 px-4 bg-bpr-navy hover:bg-bpr-navy-light text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center">
+            Kenali Kredit ({{ count($productsByCat['kredit'] ?? []) }} Kategori)
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Catatan Penjelasan Produk (Sesuai Sketsa Halaman 2) -->
+    <div class="mt-8 text-center">
+      <div class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100/80 text-xs text-slate-600 max-w-2xl text-left sm:text-center">
+        <svg class="w-4 h-4 text-bpr-blue flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span><strong class="text-slate-700">Catatan:</strong> Informasi di atas merupakan pengantar produk. Syarat, biaya, dan ketentuan berlaku pada masing-masing produk perbankan.</span>
+      </div>
+    </div>
+
+    <!-- 3 Benefit Pillars (Keuangan Lebih Bermakna - Sesuai Sketsa Halaman 2) -->
+    <div class="mt-16 pt-6">
+      <div class="text-left mb-8">
+        <span class="text-xs font-extrabold text-bpr-blue uppercase tracking-wider">NILAI KEMITRAAN KAMI</span>
+        <h3 class="text-2xl font-bold text-slate-900 mt-1">Keuangan yang Lebih Bermakna</h3>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-6 rounded-2xl bg-white card-shadow">
+          <div class="flex items-center gap-2.5 text-bpr-blue text-base sm:text-lg font-bold mb-3">
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            <span>Ruang untuk Bertanya</span>
+          </div>
+          <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">
+            Petugas kami siap mendengarkan kebutuhan nyata Anda secara langsung di loket kantor kas maupun melalui WhatsApp tanpa jargon perbankan yang rumit.
+          </p>
+        </div>
+        <div class="p-6 rounded-2xl bg-white card-shadow">
+          <div class="flex items-center gap-2.5 text-bpr-blue text-base sm:text-lg font-bold mb-3">
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            <span>Rencana yang Lebih Terarah</span>
+          </div>
+          <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">
+            Skema simpanan dan pinjaman diukur sesuai kemampuan arus kas riil Anda, tanpa memaksakan pinjaman yang berisiko memberatkan masa depan keluarga.
+          </p>
+        </div>
+        <div class="p-6 rounded-2xl bg-white card-shadow">
+          <div class="flex items-center gap-2.5 text-bpr-blue text-base sm:text-lg font-bold mb-3">
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <span>Perjalanan Panjang Bersama</span>
+          </div>
+          <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">
+            Sebagai BUMD milik Pemerintah Kabupaten Majalengka, kami berakar kuat dan berkomitmen penuh mendampingi kemajuan ekonomi masyarakat daerah.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SECTION 4: PPOB & MULTIPAYMENT TRANSACTION SHOWCASE
+       (Sesuai Figma Section 7)
+       ===================================================================== -->
+  <section id="ppob-section" class="py-14 bg-gradient-to-r from-slate-900 to-bpr-navy text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <div class="lg:col-span-5 space-y-4">
+          <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">LAYANAN TRANSAKSI & MULTIPAYMENT</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight leading-snug">
+            Bayar Segala Tagihan & Kebutuhan di BPR Majalengka
+          </h2>
+          <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+            Melayani loket pembayaran PPOB terpadu di seluruh kantor kas dan layanan <strong>Pickup Service</strong> jemput setoran langsung ke warung atau rumah Anda.
+          </p>
+          <div class="pt-2">
+            <div class="p-4 rounded-xl bg-white/[0.08] flex items-start gap-3">
+              <div class="w-10 h-10 rounded-xl bg-amber-400/20 text-amber-300 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-amber-300">Layanan Jemput Setoran (Pickup Service)</p>
+                <p class="text-[11px] text-slate-300 mt-0.5">Petugas resmi BPR siap menjemput tabungan langsung ke pasar, toko, dan instansi Anda.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7">
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            
+            <div class="bg-white/[0.08] hover:bg-white/[0.14] rounded-2xl p-4 text-center transition-all">
+              <svg class="w-6 h-6 mx-auto mb-2 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              <p class="text-xs font-bold text-white">Token & Listrik PLN</p>
+              <p class="text-[10px] text-slate-300 mt-0.5">Pra/Pasca Bayar</p>
+            </div>
+
+            <div class="bg-white/[0.08] hover:bg-white/[0.14] rounded-2xl p-4 text-center transition-all">
+              <svg class="w-6 h-6 mx-auto mb-2 text-cyan-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+              <p class="text-xs font-bold text-white">Tagihan Air PDAM</p>
+              <p class="text-[10px] text-slate-300 mt-0.5">Seluruh Majalengka</p>
+            </div>
+
+            <div class="bg-white/[0.08] hover:bg-white/[0.14] rounded-2xl p-4 text-center transition-all">
+              <svg class="w-6 h-6 mx-auto mb-2 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+              <p class="text-xs font-bold text-white">Pulsa & Paket Data</p>
+              <p class="text-[10px] text-slate-300 mt-0.5">Semua Operator</p>
+            </div>
+
+            <div class="bg-white/[0.08] hover:bg-white/[0.14] rounded-2xl p-4 text-center transition-all">
+              <svg class="w-6 h-6 mx-auto mb-2 text-rose-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              <p class="text-xs font-bold text-white">Iuran BPJS</p>
+              <p class="text-[10px] text-slate-300 mt-0.5">Kesehatan & Naker</p>
+            </div>
+
+            <div class="bg-white/[0.08] hover:bg-white/[0.14] rounded-2xl p-4 text-center transition-all">
+              <svg class="w-6 h-6 mx-auto mb-2 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/></svg>
+              <p class="text-xs font-bold text-white">Tiket Kereta Api</p>
+              <p class="text-[10px] text-slate-300 mt-0.5">Jadwal KAI Lengkap</p>
+            </div>
+
+            <div class="bg-white/[0.08] hover:bg-white/[0.14] rounded-2xl p-4 text-center transition-all">
+              <svg class="w-6 h-6 mx-auto mb-2 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+              <p class="text-xs font-bold text-white">Internet & Telepon</p>
+              <p class="text-[10px] text-slate-300 mt-0.5">IndiHome & Telkom</p>
+            </div>
+
+            <div class="bg-white/[0.08] hover:bg-white/[0.14] rounded-2xl p-4 text-center transition-all">
+              <svg class="w-6 h-6 mx-auto mb-2 text-amber-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+              <p class="text-xs font-bold text-white">Voucher Hotel</p>
+              <p class="text-[10px] text-slate-300 mt-0.5">Booking Domestik</p>
+            </div>
+
+            <div class="bg-white/[0.08] hover:bg-white/[0.14] rounded-2xl p-4 text-center transition-all">
+              <svg class="w-6 h-6 mx-auto mb-2 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z"/></svg>
+              <p class="text-xs font-bold text-white">Angsuran Finance</p>
+              <p class="text-[10px] text-slate-300 mt-0.5">Cicilan Kendaraan</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SECTION 5: INTERACTIVE CREDIT SIMULATOR WIDGET (FINANCIAL ENGINE)
+       (Sesuai Sketsa Halaman 10 & Figma Section 6)
+       ===================================================================== -->
+  <section id="simulasi-kredit" class="py-16 sm:py-20 bg-slate-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <span class="text-xs font-bold text-bpr-blue uppercase tracking-wider">Hitung Sebelum Melangkah</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-2 tracking-tight">Kalkulator Simulasi Angsuran Kredit</h2>
+        <p class="text-slate-600 text-sm sm:text-base mt-2">
+          Rencanakan pinjaman modal kerja UMKM atau pembiayaan multiguna Anda secara mandiri dengan estimasi cicilan yang transparan.
+        </p>
+      </div>
+
+      <!-- Main Calculator Card Container -->
+      <div class="bg-white rounded-3xl shadow-xl shadow-slate-200/50 overflow-hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-12">
+          
+          <!-- Left Column: Inputs & Sliders -->
+          <div class="lg:col-span-7 p-6 sm:p-10 space-y-8">
+            <div>
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Parameter Perhitungan Pinjaman</span>
+              <h3 class="text-xl font-bold text-slate-800 mt-1">Simulasi Ilustratif</h3>
+            </div>
+
+            <!-- Plafond Input & Slider -->
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <label for="sim-plafond-input" class="text-xs font-bold text-slate-700 uppercase">Jumlah Pinjaman (Plafond)</label>
+                <span class="text-xs text-slate-500 font-medium">Maks. Rp 100.000.000</span>
+              </div>
+              <div class="relative">
+                <input type="text" id="sim-plafond-input" value="Rp 25.000.000" class="w-full text-2xl font-extrabold text-bpr-navy py-3 px-4 rounded-xl bg-slate-50/90 focus:bg-white focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all">
+              </div>
+              <input type="range" id="sim-plafond-range" min="1000000" max="100000000" step="500000" value="25000000" class="cursor-pointer">
+              
+              <!-- Quick Preset Buttons -->
+              <div class="flex flex-wrap items-center gap-2 pt-1">
+                <button type="button" data-amount="5000000" class="sim-preset-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">Rp 5 Juta</button>
+                <button type="button" data-amount="10000000" class="sim-preset-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">Rp 10 Juta</button>
+                <button type="button" data-amount="25000000" class="sim-preset-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-bpr-blue text-white shadow-sm transition-colors">Rp 25 Juta</button>
+                <button type="button" data-amount="50000000" class="sim-preset-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">Rp 50 Juta</button>
+                <button type="button" data-amount="100000000" class="sim-preset-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">Rp 100 Juta</button>
+              </div>
+            </div>
+
+            <!-- Tenor Selector Buttons -->
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-bold text-slate-700 uppercase">Jangka Waktu Pinjaman (Tenor)</label>
+                <span class="text-xs text-slate-500 font-medium">Bulan</span>
+              </div>
+              <div class="grid grid-cols-3 sm:grid-cols-5 gap-2.5">
+                <button type="button" data-tenor="12" class="sim-tenor-btn py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-colors">12 Bulan</button>
+                <button type="button" data-tenor="24" class="sim-tenor-btn py-3 rounded-xl bg-bpr-navy text-white font-bold text-xs shadow-sm transition-colors">24 Bulan</button>
+                <button type="button" data-tenor="36" class="sim-tenor-btn py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-colors">36 Bulan</button>
+                <button type="button" data-tenor="48" class="sim-tenor-btn py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-colors">48 Bulan</button>
+                <button type="button" data-tenor="60" class="sim-tenor-btn py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-colors">60 Bulan</button>
+              </div>
+            </div>
+
+            <!-- Skema Suku Bunga Selector -->
+            <div class="space-y-2">
+              <label for="sim-rate-scheme" class="text-xs font-bold text-slate-700 uppercase">Skema Suku Bunga</label>
+              <select id="sim-rate-scheme" class="w-full py-3 px-4 rounded-xl bg-slate-50/90 text-sm font-semibold text-slate-800 focus:outline-none focus:bg-white focus:ring-2 focus:ring-bpr-blue/20 transition-all">
+                <option value="flat">Bunga Flat (Angsuran Tetap Sepanjang Tenor ~6% flat p.a.)</option>
+                <option value="effective">Bunga Menurun / Efektif (~12% per tahun)</option>
+              </select>
+              <p class="text-[11px] text-slate-500 italic">
+                * Asumsi suku bunga indikatif. Suku bunga final akan ditentukan berdasarkan hasil analisa kredit.
+              </p>
+            </div>
+
+          </div>
+
+          <!-- Right Column: Results & CTA (Dark Corporate Blue) -->
+          <div class="lg:col-span-5 bg-gradient-to-b from-bpr-navy to-bpr-navy-dark text-white p-6 sm:p-10 flex flex-col justify-between">
+            <div>
+              <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">ESTIMASI ANGSURAN</span>
+              <p class="text-slate-300 text-xs mt-1">Estimasi cicilan tetap per bulan</p>
+              
+              <!-- Big Number -->
+              <div class="my-6 py-4 px-5 rounded-2xl bg-white/[0.08]">
+                <div id="sim-result-monthly" class="text-3xl sm:text-4xl font-extrabold text-amber-400 tracking-tight">
+                  Rp 1.166.667
+                </div>
+                <p class="text-xs text-slate-300 mt-1 font-medium">per bulan (Estimasi Ilustratif)</p>
+              </div>
+
+              <!-- Breakdown -->
+              <div class="space-y-2.5 text-xs sm:text-sm text-slate-200">
+                <div class="flex justify-between py-1">
+                  <span class="text-slate-400">Pokok Pinjaman:</span>
+                  <span id="sim-result-plafond" class="font-bold">Rp 25.000.000</span>
+                </div>
+                <div class="flex justify-between py-1">
+                  <span class="text-slate-400">Jangka Waktu:</span>
+                  <span id="sim-result-tenor" class="font-bold">24 Bulan</span>
+                </div>
+                <div class="flex justify-between py-1">
+                  <span class="text-slate-400">Pokok per Bulan:</span>
+                  <span id="sim-result-principal" class="font-bold">Rp 1.041.667</span>
+                </div>
+                <div class="flex justify-between py-1">
+                  <span class="text-slate-400">Bunga per Bulan:</span>
+                  <span id="sim-result-interest" class="font-bold">Rp 125.000</span>
+                </div>
+                <div class="flex justify-between py-1">
+                  <span class="text-slate-400">Total Bunga (24 Bulan):</span>
+                  <span id="sim-result-total-interest" class="font-bold text-amber-200">Rp 3.000.000</span>
+                </div>
+                <div class="flex justify-between p-3 rounded-xl bg-white/[0.08] font-bold text-amber-300 mt-2">
+                  <span>Total Pengembalian:</span>
+                  <span id="sim-result-total">Rp 28.000.000</span>
+                </div>
+              </div>
+
+              <p class="text-[10px] text-slate-400 mt-4 leading-relaxed">
+                * Simulasi ini bersifat indikatif dan tidak mengikat. Ketentuan suku bunga, provisi, biaya administrasi, asuransi, serta persetujuan akhir pinjaman mengacu pada keputusan analisis kredit bank.
+              </p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="pt-6 space-y-3">
+              <button id="sim-btn-ajukan" class="w-full py-3.5 px-4 bg-amber-400 hover:bg-amber-300 text-bpr-navy-dark font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg transition-all transform active:scale-95 flex items-center justify-center gap-2">
+                <span>Ajukan Pinjaman Sekarang</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              </button>
+              
+              <a id="sim-btn-wa" href="https://wa.me/6281111116526" target="_blank" class="w-full py-3 px-4 bg-white/10 hover:bg-white/20 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2">
+                <svg class="w-4 h-4 fill-current text-emerald-400" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+                <span>Diskusikan via WhatsApp</span>
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 4 Langkah Pengajuan (Sesuai Sketsa Halaman 10 "Mulai Dengan Mudah") -->
+      <div class="mt-16">
+        <div class="text-center max-w-xl mx-auto mb-10">
+          <span class="text-xs font-bold text-bpr-blue uppercase tracking-wider">ALUR LAYANAN</span>
+          <h3 class="text-2xl font-bold text-slate-900 mt-1">Mulai Dengan Mudah</h3>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">Empat tahapan sederhana dalam mengajukan permohonan kredit di Bank Majalengka</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="p-6 rounded-2xl bg-white card-shadow text-center">
+            <span class="inline-block w-12 h-12 rounded-xl bg-blue-50 text-bpr-blue font-extrabold text-lg leading-12 mb-4 flex items-center justify-center mx-auto">01</span>
+            <h4 class="font-bold text-slate-900 text-base mb-1">Pilih Kebutuhan Anda</h4>
+            <p class="text-slate-500 text-xs leading-relaxed">Tentukan produk kredit sesuai tujuan usaha atau keperluan keluarga Anda.</p>
+          </div>
+          <div class="p-6 rounded-2xl bg-white card-shadow text-center">
+            <span class="inline-block w-12 h-12 rounded-xl bg-blue-50 text-bpr-blue font-extrabold text-lg leading-12 mb-4 flex items-center justify-center mx-auto">02</span>
+            <h4 class="font-bold text-slate-900 text-base mb-1">Bicarakan dgn Petugas</h4>
+            <p class="text-slate-500 text-xs leading-relaxed">Konsultasikan kemampuan angsuran bersama staf analis profesional kami.</p>
+          </div>
+          <div class="p-6 rounded-2xl bg-white card-shadow text-center">
+            <span class="inline-block w-12 h-12 rounded-xl bg-blue-50 text-bpr-blue font-extrabold text-lg leading-12 mb-4 flex items-center justify-center mx-auto">03</span>
+            <h4 class="font-bold text-slate-900 text-base mb-1">Siapkan Dokumen</h4>
+            <p class="text-slate-500 text-xs leading-relaxed">Lengkapi KTP, KK, bukti penghasilan, dan dokumen agunan yang diperlukan.</p>
+          </div>
+          <div class="p-6 rounded-2xl bg-white card-shadow text-center">
+            <span class="inline-block w-12 h-12 rounded-xl bg-blue-50 text-bpr-blue font-extrabold text-lg leading-12 mb-4 flex items-center justify-center mx-auto">04</span>
+            <h4 class="font-bold text-slate-900 text-base mb-1">Ikuti Proses Layanan</h4>
+            <p class="text-slate-500 text-xs leading-relaxed">Verifikasi cepat 1-3 hari kerja dan pencairan dana langsung ke rekening Anda.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SECTION 6: TENTANG KAMI & FILOSOFI IDENTITAS (MERGER 8 BPR)
+       (Sesuai Sketsa Halaman 11 & Figma Section 7 & 9)
+       ===================================================================== -->
+  <section id="tentang-kami" class="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
+      
+      <!-- Left Photo Visual -->
+      <div class="lg:col-span-5 relative">
+        <div class="rounded-2xl overflow-hidden shadow-xl">
+          <img src="assets/img/umkm-anyaman.jpg" alt="Pengrajin Anyaman Bambu Binaan BPR Majalengka" class="w-full h-80 sm:h-96 object-cover object-center">
+        </div>
+        <div class="absolute -bottom-6 -right-6 bg-bpr-navy text-white p-5 rounded-2xl shadow-xl max-w-xs hidden sm:block">
+          <p class="text-xs font-bold text-amber-400 uppercase">Tumbuh Bersama</p>
+          <p class="text-xs text-slate-200 mt-1">Menyalurkan dana masyarakat untuk menggerakkan perekonomian riil pedesaan & perkotaan.</p>
+        </div>
+      </div>
+
+      <!-- Right Corporate Content -->
+      <div class="lg:col-span-7 space-y-6">
+        <span class="text-xs font-bold text-bpr-blue uppercase tracking-wider">BUMD Kabupaten Majalengka</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-snug">
+          Di balik setiap usaha, ada harapan keluarga yang bertumbuh.
+        </h2>
+        <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+          Majalengka hidup dari keuletan warganya. Kami hadir memastikan perputaran modal tetap tinggal dan menghidupi daerah kita sendiri. Dari tangan para perajin bambu, warung kelontong di pelosok kecamatan, hingga aparatur dan keluarga yang merajut masa depan.
+        </p>
+        <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+          Mari bicarakan langkah keuangan yang menopang ketahanan keluarga Anda, tanpa memaksakan hal-hal yang belum tepat.
+        </p>
+        <div class="pt-2 flex flex-wrap gap-4">
+          <button onclick="openProfilBpr()" class="px-6 py-3.5 bg-bpr-blue hover:bg-bpr-blue-hover text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition-colors flex items-center">
+            Kenali BPR
+          </button>
+          <a href="#kantor-kas" class="px-6 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs uppercase tracking-wider rounded-xl transition-colors">
+            Lokasi 12 Kantor Kas
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Filosofi Identitas & Makna Logo (Sesuai Figma Section 9) -->
+    <div class="bg-gradient-to-r from-bpr-navy to-bpr-navy-dark text-white rounded-3xl p-8 sm:p-12 shadow-xl">
+      <div class="max-w-3xl mb-8">
+        <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">FILOSOFI IDENTITAS KORPORAT</span>
+        <h3 class="text-2xl sm:text-3xl font-extrabold mt-1">Makna Logo & Lambang Perumda BPR Majalengka</h3>
+        <p class="text-slate-300 text-xs sm:text-sm mt-2">
+          Representasi penyatuan (merger) 8 BPR Kabupaten Majalengka menjadi satu BUMD yang kokoh, tangkas, dan mengabdi seutuhnya untuk rakyat.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <div class="p-5 rounded-2xl bg-white/[0.08] hover:bg-white/[0.12] transition-colors">
+          <div class="w-10 h-10 rounded-xl bg-amber-400 text-bpr-navy font-black flex items-center justify-center text-lg mb-3">
+            <svg class="w-5 h-5 text-bpr-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
+          </div>
+          <h4 class="font-bold text-base text-amber-300 mb-1">Kota Angin Majalengka</h4>
+          <p class="text-slate-300 text-xs leading-relaxed">
+            Siluet hembusan angin dinamis dari lereng Gunung Ciremai, melambangkan BPR yang tangkas beradaptasi dan terus bergerak memutar roda perekonomian.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-white/[0.08] hover:bg-white/[0.12] transition-colors">
+          <div class="w-10 h-10 rounded-xl bg-blue-400 text-bpr-navy font-black flex items-center justify-center text-lg mb-3">M</div>
+          <h4 class="font-bold text-base text-blue-300 mb-1">Inisial Huruf "M"</h4>
+          <p class="text-slate-300 text-xs leading-relaxed">
+            Bentuk dinamis huruf M yang merepresentasikan Majalengka sekaligus penyatuan (merger) 8 BPR berintegritas menjadi satu kekuatan BUMD yang kokoh.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-white/[0.08] hover:bg-white/[0.12] transition-colors">
+          <div class="w-10 h-10 rounded-xl bg-red-500 text-white font-black flex items-center justify-center text-lg mb-3">
+            <div class="w-4 h-4 rounded-full bg-amber-300"></div>
+          </div>
+          <h4 class="font-bold text-base text-red-300 mb-1">Merah & Kuning</h4>
+          <p class="text-slate-300 text-xs leading-relaxed">
+            Merah: Keberanian dan kepemimpinan dalam pembiayaan mikro. Kuning: Kehangatan, energi positif, dan harapan kesejahteraan bagi para nasabah.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-white/[0.08] hover:bg-white/[0.12] transition-colors">
+          <div class="w-10 h-10 rounded-xl bg-blue-600 text-white font-black flex items-center justify-center text-lg mb-3">
+            <div class="w-4 h-4 rotate-45 bg-white/90 rounded-sm"></div>
+          </div>
+          <h4 class="font-bold text-base text-blue-200 mb-1">Biru Cobalt Korporat</h4>
+          <p class="text-slate-300 text-xs leading-relaxed">
+            Melambangkan stabilitas perbankan, profesionalisme tata kelola (GCG), kedewasaan, serta jaminan rasa aman bagi simpanan masyarakat.
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+  <!-- =====================================================================
+       SECTION 7: BERITA & LITERASI KEUANGAN
+       (Sesuai Sketsa Halaman 12 & Figma Section 8)
+       ===================================================================== -->
+  <section id="informasi-berita" class="py-16 sm:py-20 bg-slate-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
+        <div>
+          <span class="text-xs font-bold text-bpr-blue uppercase tracking-wider">Literasi & Edukasi</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-2 tracking-tight">Informasi Sederhana, Manfaat Nyata</h2>
+          <p class="text-slate-500 text-sm mt-1">Panduan praktis mengelola keuangan keluarga dan strategi mengembangkan usaha lokal.</p>
+        </div>
+        <button onclick="showAllArticles()" class="text-bpr-blue hover:text-bpr-blue-hover font-bold text-sm flex items-center">
+          Lihat Semua Artikel & Berita
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        @forelse($articles as $art)
+          @php
+            $colorClass = $art->tag_color === 'amber' ? 'bg-amber-500' : ($art->tag_color === 'red' ? 'bg-red-600' : ($art->tag_color === 'emerald' ? 'bg-emerald-600' : ($art->tag_color === 'purple' ? 'bg-purple-600' : 'bg-bpr-blue')));
+          @endphp
+          <div class="bg-white rounded-2xl overflow-hidden card-shadow card-shadow-hover flex flex-col justify-between">
+            <div>
+              <div class="h-48 overflow-hidden relative">
+                <img src="{{ asset($art->image ?: 'assets/img/perencanaan-keluarga.jpg') }}" alt="{{ $art->title }}" class="w-full h-full object-cover">
+                <span class="absolute top-3 left-3 px-3 py-1 {{ $colorClass }} text-white font-bold text-[11px] rounded-lg uppercase tracking-wider">{{ $art->tag }}</span>
+              </div>
+              <div class="p-6">
+                <p class="text-slate-400 text-xs mb-2">{{ $art->published_at ? $art->published_at->format('d F Y') : '' }} • {{ $art->read_time }}</p>
+                <h3 class="font-bold text-slate-900 text-lg leading-snug mb-2 hover:text-bpr-blue transition-colors cursor-pointer" onclick="readArticle({{ $art->id }})">
+                  {{ $art->title }}
+                </h3>
+                <p class="text-slate-500 text-xs sm:text-sm line-clamp-3 leading-relaxed">
+                  {{ $art->excerpt }}
+                </p>
+              </div>
+            </div>
+            <div class="px-6 pb-6 pt-2">
+              <button onclick="readArticle({{ $art->id }})" class="text-xs font-bold text-bpr-blue hover:underline">
+                Baca Selengkapnya
+              </button>
+            </div>
+          </div>
+        @empty
+          <div class="col-span-3 text-center py-8 text-slate-400 text-sm">Belum ada artikel publikasi.</div>
+        @endforelse
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SECTION 8: LAPORAN PUBLIKASI & TRANSPARANSI KEUANGAN
+       (Sesuai Figma Section 9)
+       ===================================================================== -->
+  <section id="laporan-publikasi" class="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-3xl mx-auto mb-12">
+      <span class="text-xs font-bold text-bpr-blue uppercase tracking-wider">Keterbukaan Informasi & Akuntabilitas</span>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-2 tracking-tight">Laporan Publikasi & Tata Kelola</h2>
+      <p class="text-slate-600 text-sm mt-2">
+        Neraca berkala triwulanan dan laporan tahunan yang dipublikasikan secara transparan untuk menunjukkan tingkat kesehatan bank sesuai regulasi Otoritas Jasa Keuangan (OJK).
+      </p>
+
+      <!-- Live Search Filter for Reports (initLaporanPublikasi) -->
+      <div class="mt-6 max-w-md mx-auto relative">
+        <input type="text" id="laporan-search" placeholder="Cari laporan publikasi, triwulan, GCG, audit..." class="w-full py-2.5 pl-10 pr-4 rounded-xl bg-white text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 card-shadow transition-shadow">
+        <div class="absolute left-3.5 top-2.5 text-slate-400 pointer-events-none">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @forelse($reports as $rep)
+        @php
+          $bgBadge = $rep->category_color === 'emerald' ? 'bg-emerald-50 text-emerald-700' : ($rep->category_color === 'amber' ? 'bg-amber-50 text-amber-800' : ($rep->category_color === 'purple' ? 'bg-purple-50 text-purple-700' : ($rep->category_color === 'slate' ? 'bg-slate-100 text-slate-700' : 'bg-blue-50 text-bpr-blue')));
+          $btnClass = $rep->category_color === 'emerald' ? 'bg-emerald-50/70 hover:bg-emerald-100/80 text-emerald-800' : ($rep->category_color === 'amber' ? 'bg-amber-50/70 hover:bg-amber-100/80 text-amber-900' : ($rep->category_color === 'purple' ? 'bg-purple-50/70 hover:bg-purple-100/80 text-purple-800' : ($rep->category_color === 'slate' ? 'bg-slate-100 hover:bg-slate-200 text-slate-800' : 'bg-blue-50/70 hover:bg-blue-100/80 text-bpr-blue')));
+        @endphp
+        <div class="laporan-card p-6 rounded-2xl bg-white card-shadow hover:shadow-lg transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg {{ $bgBadge }}">{{ $rep->category }}</span>
+              <span class="text-xs text-slate-400 font-mono">{{ $rep->file_size }}</span>
+            </div>
+            <h4 class="font-bold text-slate-900 text-base mb-1">{{ $rep->title }}</h4>
+            <p class="text-slate-500 text-xs leading-relaxed mb-4">{{ $rep->description }}</p>
+          </div>
+          @if($rep->file_path)
+          <a href="{{ asset($rep->file_path) }}" target="_blank" download class="w-full py-2.5 px-3 {{ $btnClass }} font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Unduh PDF Resmi
+          </a>
+          @else
+          <button onclick="alert('Dokumen {{ addslashes($rep->title) }} sedang disiapkan.')" class="w-full py-2.5 px-3 {{ $btnClass }} font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Unduh PDF Resmi
+          </button>
+          @endif
+        </div>
+      @empty
+        <div class="col-span-3 text-center py-8 text-slate-400 text-xs">Belum ada laporan publikasi aktif.</div>
+      @endforelse
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SECTION 9: 12 JARINGAN KANTOR KAS DI KABUPATEN MAJALENGKA
+       (Sesuai Sketsa Halaman 13 & Database Kantor Kas)
+       ===================================================================== -->
+  <section id="kantor-kas" class="py-16 sm:py-20 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+        <div>
+          <span class="text-xs font-bold text-bpr-blue uppercase tracking-wider">Dekat & Terjangkau</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-2 tracking-tight">12 Jaringan Kantor Kas Tersebar</h2>
+          <p class="text-slate-600 text-sm mt-1">Kami hadir melayani transaksi simpanan, pengajuan kredit, dan loket pembayaran di setiap wilayah kecamatan.</p>
+        </div>
+        <div class="w-full md:w-72">
+          <div class="relative">
+            <input type="text" id="kantor-kas-search" placeholder="Cari nama kecamatan..." class="w-full py-2.5 pl-9 pr-4 rounded-xl bg-white text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 card-shadow transition-shadow">
+            <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kantor Kas Cards Grid -->
+      <div id="kantor-kas-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        @forelse($branches as $branch)
+          @php
+            $isMain = $branch->is_main;
+            $branchType = $branch->type ?? ($isMain ? 'Pusat' : 'Kas');
+            $branchHours = $branch->hours ?? 'Senin - Jumat: 08:00 - 15:30 WIB';
+            $branchPhone = $branch->phone ?? '(0233) 281144';
+          @endphp
+          <div class="kantor-kas-card bg-white rounded-2xl p-6 {{ $isMain ? 'ring-2 ring-bpr-blue/20 bg-blue-50/20' : '' }} card-shadow hover:shadow-lg transition-all flex flex-col justify-between" data-name="{{ strtolower($branch->name) }}" data-address="{{ strtolower($branch->address) }}">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold px-2.5 py-1 rounded-lg {{ $isMain ? 'bg-bpr-blue text-white' : 'bg-slate-100 text-slate-700' }}">{{ $branchType }}</span>
+                <span class="text-xs text-emerald-700 font-semibold">Buka Layanan</span>
+              </div>
+              <h4 class="font-bold text-slate-900 text-base mb-1">{{ $branch->name }}</h4>
+              <p class="text-slate-600 text-xs mb-3 leading-relaxed flex items-start gap-1.5">
+                <svg class="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <span>{{ $branch->address }}</span>
+              </p>
+              <div class="text-xs text-slate-500 space-y-1 mb-4 pt-2">
+                <p><strong>Telepon:</strong> {{ $branchPhone }}</p>
+                <p><strong>Jam Buka:</strong> {{ $branchHours }}</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 pt-2">
+              <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $branch->whatsapp ?? '081111116526') }}?text={{ urlencode('Halo ' . $branch->name . ', saya butuh informasi layanan BPR.') }}" target="_blank" class="flex-1 text-center py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs rounded-xl flex items-center justify-center gap-1.5 transition-colors">
+                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+                Hubungi Kas
+              </a>
+              <a href="https://maps.google.com/?q={{ urlencode($branch->address) }}" target="_blank" class="py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs rounded-xl flex items-center justify-center transition-colors" title="Buka di Google Maps">
+                <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+              </a>
+            </div>
+          </div>
+        @empty
+          <div class="col-span-3 text-center py-8 text-slate-400 text-xs">Belum ada kantor kas aktif.</div>
+        @endforelse
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SECTION 10: ACCORDION FAQ (PERTANYAAN UMUM)
+       (Sesuai Sketsa Halaman 12 & Figma Section 9)
+       ===================================================================== -->
+  <section id="faq-section" class="py-16 sm:py-20 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center mb-12">
+        <span class="text-xs font-bold text-bpr-blue uppercase tracking-wider">Pusat Bantuan & Tanya Jawab</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-2 tracking-tight">Ada yang Ingin Anda Tanyakan?</h2>
+        <p class="text-slate-600 text-sm mt-2">Temukan jawaban cepat seputar pembukaan tabungan, syarat deposito, serta tata kelola pembiayaan kredit di BPR Majalengka.</p>
+      </div>
+
+      <div class="space-y-4">
+        
+        <!-- FAQ 1 -->
+        <div class="faq-item rounded-2xl bg-white overflow-hidden card-shadow">
+          <button class="faq-trigger w-full py-5 px-6 text-left font-bold text-slate-900 text-base sm:text-lg flex items-center justify-between gap-4 bg-slate-50/50 hover:bg-slate-50 transition-colors">
+            <span>Bagaimana cara mulai membuka rekening tabungan di BPR Majalengka?</span>
+            <span class="faq-icon text-bpr-blue text-xl font-bold transition-transform">+</span>
+          </button>
+          <div class="faq-answer px-6 pb-5 pt-3 text-sm text-slate-600 leading-relaxed">
+            Mulai dengan mengunjungi kantor kas terdekat atau menghubungi petugas resmi kami via WhatsApp. Siapkan KTP asli dan setoran awal sesuai jenis tabungan yang Anda pilih (seperti TAHARA, TIARA, atau KOTAK MAS). Anda juga dapat memanfaatkan fasilitas <em>Pickup Service</em> di mana petugas resmi kami akan datang langsung menjemput setoran ke tempat usaha Anda dengan bukti tanda terima sah tervalidasi sistem.
+          </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="faq-item rounded-2xl bg-white overflow-hidden card-shadow">
+          <button class="faq-trigger w-full py-5 px-6 text-left font-bold text-slate-900 text-base sm:text-lg flex items-center justify-between gap-4 bg-slate-50/50 hover:bg-slate-50 transition-colors">
+            <span>Apa keuntungan penempatan Deposito Berjangka di BPR Majalengka?</span>
+            <span class="faq-icon text-bpr-blue text-xl font-bold transition-transform">+</span>
+          </button>
+          <div class="faq-answer hidden px-6 pb-5 pt-3 text-sm text-slate-600 leading-relaxed">
+            Deposito di Perumda BPR Majalengka menawarkan tingkat suku bunga penjaminan LPS yang sangat menarik (di atas suku bunga rata-rata bank umum), pilihan jangka waktu fleksibel (1, 3, 6, 12 bulan), perpanjangan otomatis ARO, serta dijamin penuh 100% oleh Lembaga Penjamin Simpanan (LPS) hingga Rp 2.000.000.000,- per nasabah. Tersedia pula opsi Deposito Hadiah Langsung tanpa diundi.
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="faq-item rounded-2xl bg-white overflow-hidden card-shadow">
+          <button class="faq-trigger w-full py-5 px-6 text-left font-bold text-slate-900 text-base sm:text-lg flex items-center justify-between gap-4 bg-slate-50/50 hover:bg-slate-50 transition-colors">
+            <span>Dokumen apa saja yang diperlukan untuk pengajuan pinjaman kredit?</span>
+            <span class="faq-icon text-bpr-blue text-xl font-bold transition-transform">+</span>
+          </button>
+          <div class="faq-answer hidden px-6 pb-5 pt-3 text-sm text-slate-600 leading-relaxed">
+            Secara umum dokumen yang disiapkan meliputi: Fotokopi KTP Pemohon & Pasangan, Fotokopi Kartu Keluarga, Surat Nikah, Bukti Penghasilan (Slip Gaji bagi pegawai / Catatan Usaha & SKU bagi pedagang/UMKM), serta dokumen agunan (SHM/AJB atau BPKB Kendaraan). Untuk ASN/PPPK menyertakan SK Pengangkatan asli.
+          </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="faq-item rounded-2xl bg-white overflow-hidden card-shadow">
+          <button class="faq-trigger w-full py-5 px-6 text-left font-bold text-slate-900 text-base sm:text-lg flex items-center justify-between gap-4 bg-slate-50/50 hover:bg-slate-50 transition-colors">
+            <span>Apakah hasil kalkulator simulasi kredit bersifat mengikat?</span>
+            <span class="faq-icon text-bpr-blue text-xl font-bold transition-transform">+</span>
+          </button>
+          <div class="faq-answer hidden px-6 pb-5 pt-3 text-sm text-slate-600 leading-relaxed">
+            Hasil perhitungan kalkulator simulasi bersifat ilustratif indikatif untuk memberikan gambaran estimasi angsuran bulanan. Keputusan final mengenai suku bunga, nilai taksasi agunan, dan plafon kredit yang disetujui mengacu pada hasil analisis verifikasi berkas oleh komite kredit perbankan.
+          </div>
+        </div>
+
+        <!-- FAQ 5 -->
+        <div class="faq-item rounded-2xl bg-white overflow-hidden card-shadow">
+          <button class="faq-trigger w-full py-5 px-6 text-left font-bold text-slate-900 text-base sm:text-lg flex items-center justify-between gap-4 bg-slate-50/50 hover:bg-slate-50 transition-colors">
+            <span>Bagaimana jika nasabah memiliki kendala atau ingin menyampaikan keluhan?</span>
+            <span class="faq-icon text-bpr-blue text-xl font-bold transition-transform">+</span>
+          </button>
+          <div class="faq-answer hidden px-6 pb-5 pt-3 text-sm text-slate-600 leading-relaxed">
+            Kami menyediakan loket pengaduan nasabah di seluruh kantor kas, Call Center telepon (0233) 281144, WhatsApp resmi 0811-1111-6526, serta kanal Whistleblowing System (WBS) via email <code>wbs@bprmajalengka.com</code> yang ditangani secara profesional dan terjamin kerahasiaannya.
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SECTION 11: INFORMASI & LAYANAN TERPADU (2 KOLOM & 3 KARTU LAYANAN)
+       (Sesuai Sketsa Halaman 13 & Figma Section 10 & 14)
+       ===================================================================== -->
+  <section class="py-16 sm:py-20 bg-slate-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- 2-Column Layout matching Sketch Page 13 -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center mb-12">
+        
+        <!-- Left Column: Headline, subtext, Kontak Button -->
+        <div class="lg:col-span-5 space-y-6">
+          <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">
+            Pusat Layanan Terpadu
+          </span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-snug">
+            Informasi & Layanan Seputar Bank Majalengka
+          </h2>
+          <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+            Ingin berkonsultasi mengenai produk simpanan, pengajuan kredit usaha, atau memerlukan bantuan transaksi perbankan? Petugas kami siap melayani Anda dengan sepenuh hati.
+          </p>
+          <div class="pt-2">
+            <button onclick="openContactOptions()" class="px-8 py-4 bg-amber-400 hover:bg-amber-300 text-bpr-navy-dark font-extrabold text-sm rounded-xl shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center">
+              Hubungi Kami
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Column: 3 Cards (Informasi Layanan, Lokasi Kantor Kas, Pengaduan Nasabah) -->
+        <div class="lg:col-span-7 space-y-4">
+          
+          <!-- Card 1: Informasi Layanan -->
+          <div class="p-6 rounded-2xl bg-white/[0.06] hover:bg-white/[0.1] transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <div>
+                <h4 class="font-bold text-white text-base">Informasi Layanan & Konsultasi</h4>
+                <p class="text-xs text-slate-300 mt-0.5">Panduan persyaratan tabungan, deposito, dan kredit mikro daerah.</p>
+              </div>
+            </div>
+            <button onclick="openProductCatalog('all')" class="px-4 py-2 bg-bpr-blue hover:bg-bpr-blue-hover text-white text-xs font-bold rounded-xl flex-shrink-0 transition-colors">
+              Lihat Produk
+            </button>
+          </div>
+
+          <!-- Card 2: Lokasi Kantor Kas -->
+          <div class="p-6 rounded-2xl bg-white/[0.06] hover:bg-white/[0.1] transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              </div>
+              <div>
+                <h4 class="font-bold text-white text-base">Lokasi Jaringan Kantor Kas</h4>
+                <p class="text-xs text-slate-300 mt-0.5">12 Kantor Kas resmi melayani seluruh wilayah kecamatan di Majalengka.</p>
+              </div>
+            </div>
+            <a href="#kantor-kas" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl flex-shrink-0 transition-colors">
+              12 Kantor Kas
+            </a>
+          </div>
+
+          <!-- Card 3: Pengaduan Nasabah & WBS -->
+          <div class="p-6 rounded-2xl bg-white/[0.06] hover:bg-white/[0.1] transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              </div>
+              <div>
+                <h4 class="font-bold text-white text-base">Pengaduan Nasabah & WBS</h4>
+                <p class="text-xs text-slate-300 mt-0.5">Kanal pelaporan independen dan saluran keluhan transaksi perbankan.</p>
+              </div>
+            </div>
+            <a href="tel:0233281144" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-bpr-navy-dark text-xs font-bold rounded-xl flex-shrink-0 transition-colors">
+              (0233) 281144
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Full-Width Warning Ribbon (!) Sesuai Sketsa Halaman 13 -->
+      <div class="p-4 rounded-2xl bg-red-950/50 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center font-bold text-xl flex-shrink-0">
+            !
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-red-200 uppercase tracking-wide">AWAS PENIPUAN MENGATASNAMAKAN PERUMDA BPR MAJALENGKA:</h4>
+            <p class="text-xs text-red-300">
+              Petugas bank tidak pernah meminta kode OTP, PIN rekening, password, ataupun transfer biaya administrasi pinjaman ke nomor rekening pribadi.
+            </p>
+          </div>
+        </div>
+        <button onclick="readArticle(3)" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl flex-shrink-0 transition-colors">
+          Pelajari Modus
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SECTION 12: COMPREHENSIVE CORPORATE FOOTER
+       (Sesuai Sketsa Halaman 13 & Figma Section 11)
+       ===================================================================== -->
+  <footer class="bg-bpr-navy-dark text-slate-400 text-xs pt-16 pb-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12">
+        
+        <!-- Col 1 & 2: Brand Profile & Address -->
+        <div class="lg:col-span-2 space-y-4">
+          <div class="bg-white px-3 py-1.5 rounded-xl inline-block">
+            <img src="{{ asset('assets/img/logo.png') }}" alt="Logo {{ $settings['company_name'] ?? 'Perumda BPR Majalengka' }}" class="h-9 w-auto">
+          </div>
+          <p class="text-slate-300 font-semibold italic text-sm">
+            "{{ $settings['company_tagline'] ?? 'Mitra Kerja Membangun Ekonomi Rakyat' }}"
+          </p>
+          <p class="text-slate-400 leading-relaxed text-xs">
+            Kantor Pusat Operasional:<br>
+            {{ $settings['address_central'] ?? 'Jl. Raya K.H. Abdul Halim No. 338, Majalengka Wetan, Kec. Majalengka, Kabupaten Majalengka, Jawa Barat 45411.' }}
+          </p>
+          <div class="space-y-1.5 text-slate-300">
+            <p><strong>Telepon:</strong> {{ $settings['phone_central'] ?? '(0233) 281144' }}</p>
+            <p><strong>WhatsApp Layanan:</strong> {{ $settings['whatsapp_official'] ?? '0811-1111-6526' }}</p>
+            <p><strong>Email:</strong> {{ $settings['email_official'] ?? 'manajemenpusat@bprmajalengka.com' }}</p>
+            <p><strong>Jam Operasional:</strong> {{ $settings['operational_hours'] ?? 'Senin - Jumat: 08:00 - 15:30 WIB' }}</p>
+          </div>
+        </div>
+
+        <!-- Col 3: Produk & Layanan -->
+        <div class="space-y-3">
+          <h4 class="text-white font-bold text-sm uppercase tracking-wider">Produk Simpanan</h4>
+          <ul class="space-y-2">
+            <li><a href="javascript:void(0)" onclick="openProductCatalog('tabungan')" class="hover:text-white transition-colors">Tabungan TAHARA</a></li>
+            <li><a href="javascript:void(0)" onclick="openProductCatalog('tabungan')" class="hover:text-white transition-colors">Tabungan TIARA</a></li>
+            <li><a href="javascript:void(0)" onclick="openProductCatalog('tabungan')" class="hover:text-white transition-colors">Tabungan KOTAK MAS</a></li>
+            <li><a href="javascript:void(0)" onclick="openProductCatalog('tabungan')" class="hover:text-white transition-colors">Tabungan SIDASI</a></li>
+            <li><a href="javascript:void(0)" onclick="openProductCatalog('tabungan')" class="hover:text-white transition-colors">Tabungan SimPel OJK</a></li>
+            <li><a href="javascript:void(0)" onclick="openProductCatalog('deposito')" class="hover:text-white transition-colors">Deposito Berjangka LPS</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Pinjaman & Kredit -->
+        <div class="space-y-3">
+          <h4 class="text-white font-bold text-sm uppercase tracking-wider">Pembiayaan Kredit</h4>
+          <ul class="space-y-2">
+            <li><a href="javascript:void(0)" onclick="openProductCatalog('kredit')" class="hover:text-white transition-colors">Kredit KAPESTA</a></li>
+            <li><a href="javascript:void(0)" onclick="openProductCatalog('kredit')" class="hover:text-white transition-colors">Kredit KAN (ASN/PPPK)</a></li>
+            <li><a href="javascript:void(0)" onclick="openProductCatalog('kredit')" class="hover:text-white transition-colors">Kredit Modal Kerja</a></li>
+            <li><a href="javascript:void(0)" onclick="openProductCatalog('kredit')" class="hover:text-white transition-colors">Kredit PERAK Peduli UMKM</a></li>
+            <li><a href="javascript:void(0)" onclick="openProductCatalog('kredit')" class="hover:text-white transition-colors">Kredit Pensiunan</a></li>
+            <li><a href="#simulasi-kredit" class="hover:text-white transition-colors">Kalkulator Simulasi Kredit</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 5: Tata Kelola & Informasi -->
+        <div class="space-y-3">
+          <h4 class="text-white font-bold text-sm uppercase tracking-wider">Tata Kelola & Lembaga</h4>
+          <ul class="space-y-2">
+            <li><a href="#tentang-kami" class="hover:text-white transition-colors">Profil & Makna Logo</a></li>
+            <li><a href="#tentang-kami" class="hover:text-white transition-colors">Sejarah Merger 8 BPR</a></li>
+            <li><a href="#laporan-publikasi" class="hover:text-white transition-colors">Laporan Publikasi Keuangan</a></li>
+            <li><a href="#laporan-publikasi" class="hover:text-white transition-colors">Laporan Tata Kelola (GCG)</a></li>
+            <li><a href="#kantor-kas" class="hover:text-white transition-colors">Jaringan 12 Kantor Kas</a></li>
+            <li><a href="#faq-section" class="hover:text-white transition-colors">Pertanyaan Umum (FAQ)</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Regulatory & Legal Disclaimer (OJK & LPS) -->
+      <div class="pt-8 space-y-4">
+        <p class="text-slate-400 text-xs leading-relaxed">
+          {{ $settings['ojk_supervision_text'] ?? 'Perumda BPR Majalengka (Perseroda) berizin dan diawasi oleh Otoritas Jasa Keuangan (OJK) & Bank Indonesia serta merupakan peserta penjaminan Lembaga Penjamin Simpanan (LPS).' }} {{ $settings['lps_guarantee_text'] ?? 'Maksimum nilai simpanan yang dijamin oleh LPS sebesar Rp 2.000.000.000,- (Dua Miliar Rupiah) per nasabah per bank dengan suku bunga yang berlaku sesuai ketentuan penjaminan LPS.' }}
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-between text-slate-500 text-xs pt-4 gap-4">
+          <p>© {{ date('Y') }} {{ $settings['company_name'] ?? 'Perumda BPR Majalengka' }}. Seluruh Hak Cipta Dilindungi Undang-Undang.</p>
+          <div class="flex items-center gap-6">
+            <a href="javascript:void(0)" onclick="alert('Kebijakan Privasi: Perumda BPR Majalengka menjaga kerahasiaan dan keamanan data nasabah sesuai ketentuan perbankan yang berlaku.')" class="hover:text-slate-300">Kebijakan Privasi</a>
+            <a href="javascript:void(0)" onclick="alert('Syarat & Ketentuan Penggunaan Layanan Bank Majalengka.')" class="hover:text-slate-300">Syarat Penggunaan</a>
+            <a href="{{ route('admin.login') }}" class="hover:text-amber-400 font-semibold text-amber-300 flex items-center gap-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+              <span>Portal Admin</span>
+            </a>
+            <a href="#main-header" class="hover:text-white flex items-center gap-1">
+              <span>Ke Atas</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- =====================================================================
+       MODAL 1: FORM PENGAJUAN KREDIT INTERAKTIF
+       (Sesuai Sketsa Halaman 9: NIK, Nama, Alamat, Kontak, Kode Afiliasi,
+        Besar Pengajuan, Jangka Waktu, Tujuan, Sumber Pendapatan,
+        Pendapatan Tetap, Pendapatan Lain, Deskripsi, Agunan, CAPTCHA)
+       ===================================================================== -->
+  <div id="modal-pengajuan-kredit" class="modal-backdrop fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="modal-card bg-white rounded-3xl shadow-2xl max-w-2xl w-full my-8 overflow-hidden max-h-[90vh] flex flex-col">
+      
+      <!-- Modal Header -->
+      <div class="bg-bpr-navy text-white p-6 flex items-center justify-between flex-shrink-0">
+        <div>
+          <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">FORMULIR PERMOHONAN</span>
+          <h3 class="text-xl font-extrabold text-white">Form Pengajuan Kredit Online</h3>
+        </div>
+        <button id="modal-pengajuan-close" class="text-white/70 hover:text-white p-1 rounded-lg">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable Form) -->
+      <form id="form-pengajuan-kredit" class="p-6 sm:p-8 space-y-5 overflow-y-auto">
+        <p class="text-xs text-slate-500 mb-2">
+          Silakan lengkapi formulir permohonan pinjaman di bawah ini sesuai dokumen KTP yang sah. Tanda bintang (<span class="text-red-500 font-bold">*</span>) wajib diisi.
+        </p>
+
+        <!-- 1. NIK -->
+        <div>
+          <label for="form-nik" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+            NIK (Nomor Induk Kependudukan) <span class="text-red-500">*</span>
+          </label>
+          <input type="text" id="form-nik" required maxlength="16" placeholder="Contoh: 3210123456780001 (16 Digit)" class="w-full py-2.5 px-3.5 rounded-xl bg-slate-100/75 focus:bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all font-mono font-medium">
+        </div>
+
+        <!-- 2. Nama Debitur -->
+        <div>
+          <label for="form-nama" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+            Nama Lengkap Debitur <span class="text-red-500">*</span>
+          </label>
+          <input type="text" id="form-nama" required placeholder="Sesuai nama pada KTP asli" class="w-full py-2.5 px-3.5 rounded-xl bg-slate-100/75 focus:bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all font-medium">
+        </div>
+
+        <!-- 3. Alamat KTP -->
+        <div>
+          <label for="form-alamat" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+            Alamat KTP Lengkap <span class="text-red-500">*</span>
+          </label>
+          <textarea id="form-alamat" required rows="2" placeholder="Nama Jalan, No. Rumah, RT/RW, Dusun, Desa/Kelurahan, Kecamatan, Kabupaten" class="w-full py-2.5 px-3.5 rounded-xl bg-slate-100/75 focus:bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all font-medium"></textarea>
+        </div>
+
+        <!-- 4. Kontak & Kode Afiliasi -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="form-hp" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+              Kontak / Nomor HP (WhatsApp) <span class="text-red-500">*</span>
+            </label>
+            <input type="tel" id="form-hp" required placeholder="08xxxxxxxxxx" class="w-full py-2.5 px-3.5 rounded-xl bg-slate-100/75 focus:bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all font-medium">
+          </div>
+          <div>
+            <label for="form-afiliasi" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+              Kode Afiliasi / Rekomendasi
+            </label>
+            <input type="text" id="form-afiliasi" placeholder="Silahkan isi jika ada" class="w-full py-2.5 px-3.5 rounded-xl bg-slate-100/75 focus:bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all font-medium">
+          </div>
+        </div>
+
+        <!-- 5. Besar Pengajuan & Jangka Waktu -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="form-nominal" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+              Besar Pengajuan Pinjaman (Rp) <span class="text-red-500">*</span>
+            </label>
+            <input type="number" id="form-nominal" required min="1000000" step="500000" value="25000000" class="w-full py-2.5 px-3.5 rounded-xl bg-slate-100/75 focus:bg-white text-sm font-bold text-bpr-navy focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all">
+          </div>
+          <div>
+            <label for="form-tenor" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+              Jangka Waktu Pinjaman (Bulan) <span class="text-red-500">*</span>
+            </label>
+            <select id="form-tenor" required class="w-full py-2.5 px-3.5 rounded-xl bg-slate-100/75 focus:bg-white text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all font-medium">
+              <option value="6">6 Bulan</option>
+              <option value="12">12 Bulan (1 Tahun)</option>
+              <option value="24" selected>24 Bulan (2 Tahun)</option>
+              <option value="36">36 Bulan (3 Tahun)</option>
+              <option value="48">48 Bulan (4 Tahun)</option>
+              <option value="60">60 Bulan (5 Tahun)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 6. Tujuan Kredit -->
+        <div>
+          <label for="form-tujuan" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+            Tujuan Kredit <span class="text-red-500">*</span>
+          </label>
+          <input type="text" id="form-tujuan" required placeholder="Contoh: Tambahan Modal Warung Sembako / Renovasi Rumah" class="w-full py-2.5 px-3.5 rounded-xl bg-slate-100/75 focus:bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all font-medium">
+        </div>
+
+        <!-- 7. Sumber Pendapatan & Pendapatan Tetap -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="form-sumber" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+              Sumber Pendapatan Utama <span class="text-red-500">*</span>
+            </label>
+            <select id="form-sumber" required class="w-full py-2.5 px-3.5 rounded-xl bg-slate-100/75 focus:bg-white text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all font-medium">
+              <option value="Usaha Perdagangan/UMKM">Usaha Perdagangan / UMKM</option>
+              <option value="Gaji Pegawai Swasta/Pabrik">Gaji Pegawai Swasta / Pabrik</option>
+              <option value="Gaji ASN/PPPK/Honorer">Gaji ASN / PPPK / Honorer</option>
+              <option value="Hasil Pertanian/Perkebunan">Hasil Pertanian / Perkebunan</option>
+              <option value="Uang Pensiun">Uang Pensiun</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
+          <div>
+            <label for="form-pendapatan-tetap" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+              Pendapatan Tetap / Bulan (Rp) <span class="text-red-500">*</span>
+            </label>
+            <input type="number" id="form-pendapatan-tetap" required placeholder="Contoh: 5000000" class="w-full py-2.5 px-3.5 rounded-xl bg-slate-100/75 focus:bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all font-medium">
+          </div>
+        </div>
+
+        <!-- 8. Pendapatan Lainnya & Deskripsi -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="form-pendapatan-lain" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+              Pendapatan Lainnya (Rp)
+            </label>
+            <input type="number" id="form-pendapatan-lain" placeholder="Opsional (jika ada)" class="w-full py-2.5 px-3.5 rounded-xl bg-slate-100/75 focus:bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all font-medium">
+          </div>
+          <div>
+            <label for="form-deskripsi-lain" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+              Deskripsi Pendapatan Lainnya
+            </label>
+            <input type="text" id="form-deskripsi-lain" placeholder="Contoh: Hasil sewa kios / tani sampingan" class="w-full py-2.5 px-3.5 rounded-xl bg-slate-100/75 focus:bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all font-medium">
+          </div>
+        </div>
+
+        <!-- 9. Keterangan Agunan Berupa -->
+        <div>
+          <label for="form-agunan" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+            Keterangan Agunan Berupa <span class="text-red-500">*</span>
+          </label>
+          <select id="form-agunan" required class="w-full py-2.5 px-3.5 rounded-xl bg-slate-100/75 focus:bg-white text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all font-medium">
+            <option value="BPKB Sepeda Motor">BPKB Sepeda Motor</option>
+            <option value="BPKB Mobil / Armada Niaga">BPKB Mobil / Armada Niaga</option>
+            <option value="Sertifikat Hak Milik (SHM) / SHGB">Sertifikat Hak Milik (SHM) / SHGB Tanah-Bangunan</option>
+            <option value="Akta Jual Beli (AJB)">Akta Jual Beli (AJB) Terverifikasi</option>
+            <option value="SK Pengangkatan Asli (ASN/PPPK)">SK Pengangkatan Asli (Khusus ASN/PPPK)</option>
+            <option value="Bilyet Deposito BPR Majalengka">Bilyet Deposito BPR Majalengka</option>
+            <option value="Hak Pemakaian Tempat Dasaran (Kios/Los)">Hak Pemakaian Tempat Dasaran (Kios/Los Pasar)</option>
+          </select>
+        </div>
+
+        <!-- 10. CAPTCHA Challenge -->
+        <div class="p-4 rounded-xl bg-slate-100/70 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span class="text-xs font-bold text-slate-700">Verifikasi Keamanan:</span>
+            <span id="captcha-question" class="px-3 py-1.5 bg-bpr-navy text-amber-300 font-extrabold text-sm rounded-lg tracking-wider">7 + 5 = ?</span>
+            <button type="button" id="captcha-refresh" class="inline-flex items-center gap-1 text-xs text-bpr-blue font-semibold hover:underline" title="Acak Soal Baru">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              Ganti
+            </button>
+          </div>
+          <div class="w-full sm:w-36">
+            <input type="number" id="form-captcha-answer" required placeholder="Jawaban..." class="w-full py-2 px-3 rounded-lg bg-white text-sm text-center font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20">
+          </div>
+        </div>
+
+        <!-- Form Footer Actions -->
+        <div class="pt-4 flex items-center justify-end gap-3 flex-shrink-0">
+          <button type="button" id="modal-pengajuan-cancel" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-colors">
+            Batal
+          </button>
+          <button type="submit" class="px-6 py-2.5 bg-bpr-blue hover:bg-bpr-blue-hover text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg transition-all">
+            Ajukan Pinjaman
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       MODAL 2: KONFIRMASI SUKSES PENGAJUAN PINJAMAN
+       ===================================================================== -->
+  <div id="modal-pengajuan-success" class="modal-backdrop fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="modal-card bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-8 text-center space-y-5">
+      <div class="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <div>
+        <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest">PENGAJUAN BERHASIL DITERIMA</span>
+        <h3 class="text-2xl font-extrabold text-slate-900 mt-1">Terima Kasih atas Kepercayaan Anda</h3>
+        <p class="text-slate-500 text-xs sm:text-sm mt-1">Data permohonan kredit Anda telah tersimpan aman pada sistem pelayanan Perumda BPR Majalengka.</p>
+      </div>
+
+      <div class="bg-slate-50 p-4 rounded-2xl text-center">
+        <p class="text-xs text-slate-500 font-medium">Nomor Registrasi Permohonan:</p>
+        <p id="success-ref-code" class="text-lg font-mono font-extrabold text-bpr-navy mt-0.5">BPR-MJL-20261028-8921</p>
+      </div>
+
+      <div id="success-details-summary"></div>
+
+      <p class="text-[11px] text-slate-400">
+        Petugas analis kredit resmi kami akan menghubungi nomor WhatsApp Anda dalam 1x24 jam kerja untuk penjadwalan verifikasi berkas dan survei lapangan.
+      </p>
+
+      <div class="flex flex-col gap-2 pt-2">
+        <a id="success-btn-wa-confirm" href="#" target="_blank" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase rounded-xl flex items-center justify-center gap-2 shadow-md transition-colors">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+          Konfirmasi WhatsApp Petugas
+        </a>
+        <button id="modal-success-close" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-colors">
+          Tutup
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       MODAL 3: PRODUCT CATALOG (TABUNGAN, DEPOSITO, KREDIT)
+       (Sesuai Sketsa Halaman 3, 5, 7)
+       ===================================================================== -->
+  <div id="modal-product-catalog" class="modal-backdrop fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="modal-card bg-slate-50 rounded-3xl shadow-2xl max-w-5xl w-full my-8 overflow-hidden max-h-[92vh] flex flex-col">
+      
+      <!-- Catalog Header -->
+      <div class="bg-bpr-navy text-white p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 flex-shrink-0">
+        <div>
+          <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">KATALOG LENGKAP BPR MAJALENGKA</span>
+          <h3 class="text-xl sm:text-2xl font-extrabold text-white">Daftar Produk Simpanan & Pinjaman</h3>
+        </div>
+        <button id="modal-catalog-close" class="self-end sm:self-center text-white/70 hover:text-white p-1 rounded-lg">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Filter Controls & Search -->
+      <div class="bg-white px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 flex-shrink-0">
+        <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+          <button data-category="all" class="catalog-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-bpr-navy text-white transition-colors">Semua Produk</button>
+          <button data-category="tabungan" class="catalog-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors">Tabungan (10)</button>
+          <button data-category="deposito" class="catalog-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors">Deposito (2)</button>
+          <button data-category="kredit" class="catalog-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors">Kredit (12)</button>
+        </div>
+        <div class="w-full sm:w-64">
+          <input type="text" id="catalog-search-input" placeholder="Cari nama produk..." class="w-full py-2 px-3.5 rounded-xl bg-slate-100/80 text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all">
+        </div>
+      </div>
+
+      <!-- Catalog Cards Container (Scrollable) -->
+      <div class="p-6 overflow-y-auto">
+        <div id="catalog-cards-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Rendered by JavaScript -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       MODAL 4: DETAIL PRODUK (KETENTUAN & SYARAT VIEW)
+       (Sesuai Sketsa Halaman 4, 6, 8: Foto Header, Info Singkat,
+        Box Ketentuan, Box Syarat, Tombol Aksi)
+       ===================================================================== -->
+  <div id="modal-product-detail" class="modal-backdrop fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="modal-card bg-white rounded-3xl shadow-2xl max-w-3xl w-full my-8 overflow-hidden max-h-[92vh] flex flex-col">
+      
+      <!-- Modal Top Bar -->
+      <div class="px-6 py-4 flex items-center justify-between flex-shrink-0 bg-white">
+        <div class="flex items-center gap-2">
+          <button id="modal-detail-back" class="text-slate-500 hover:text-slate-800 p-1.5 rounded-lg mr-1 hover:bg-slate-100 transition-colors" title="Kembali ke Katalog">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <span id="detail-product-badge" class="px-2.5 py-0.5 rounded-lg text-xs font-bold bg-blue-50 text-bpr-blue">TABUNGAN</span>
+          <span id="detail-product-title" class="text-sm font-bold text-slate-800">Nama Produk</span>
+        </div>
+        <button id="modal-detail-close" class="text-slate-400 hover:text-slate-700 p-1 rounded-lg">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Scrollable Detail Body -->
+      <div class="p-6 sm:p-8 space-y-6 overflow-y-auto">
+        
+        <!-- Header Hero Photo with overlay text (Sketch: "Tulisannya berada di atas foto") -->
+        <div class="relative rounded-2xl overflow-hidden h-52 sm:h-64 shadow-md bg-slate-900">
+          <img id="detail-product-hero-img" src="assets/img/hero-batik.jpg" alt="Foto Header Produk" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+          
+          <div class="absolute bottom-0 inset-x-0 p-6 text-white text-left">
+            <h3 id="detail-product-hero-title" class="text-xl sm:text-2xl font-extrabold tracking-tight">Tabungan Hari Raya</h3>
+            <p id="detail-product-slogan" class="text-amber-300 text-xs sm:text-sm font-medium mt-1">Persiapan menyambut hari raya Idul Fitri...</p>
+          </div>
+        </div>
+
+        <!-- Direct Hero Action Button (Sesuai Sketsa Halaman 8 "Form pengajuan kredit langsung di bawah foto") -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 bg-slate-50 rounded-2xl">
+          <div class="text-left w-full sm:w-auto">
+            <p class="text-xs font-bold text-slate-800">Tertarik dengan produk perbankan ini?</p>
+            <p class="text-[11px] text-slate-500">Ajukan secara instan online atau konsultasikan dengan petugas kami</p>
+          </div>
+          <button id="detail-product-hero-cta" class="w-full sm:w-auto px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-bpr-navy-dark font-extrabold text-xs uppercase tracking-wider rounded-xl shadow transition-all flex items-center justify-center gap-1 flex-shrink-0">
+            Form Pengajuan Kredit
+          </button>
+        </div>
+
+        <!-- Box: Informasi Singkat (Sketch Page 4, 6, 8) -->
+        <div class="p-5 rounded-2xl bg-blue-50/70">
+          <h4 class="text-xs font-extrabold text-bpr-blue uppercase tracking-wider mb-1.5">Informasi Singkat Produk</h4>
+          <p id="detail-product-short-desc" class="text-slate-700 text-xs sm:text-sm leading-relaxed">
+            Deskripsi lengkap produk...
+          </p>
+        </div>
+
+        <!-- 2 Side-by-Side Boxes: Ketentuan & Syarat (Sketch Page 4, 6, 8) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Box Ketentuan -->
+          <div class="p-5 rounded-2xl bg-slate-50/70">
+            <h4 class="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
+              <svg class="w-4 h-4 text-bpr-blue flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+              <span>Ketentuan Produk:</span>
+            </h4>
+            <ul id="detail-product-ketentuan" class="space-y-2">
+              <!-- Rendered by JS -->
+            </ul>
+          </div>
+
+          <!-- Box Syarat -->
+          <div class="p-5 rounded-2xl bg-slate-50/70">
+            <h4 class="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
+              <svg class="w-4 h-4 text-amber-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              <span>Persyaratan Berkas:</span>
+            </h4>
+            <ul id="detail-product-syarat" class="space-y-2">
+              <!-- Rendered by JS -->
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Action Button Footer -->
+      <div class="p-6 bg-slate-50 flex items-center justify-between gap-4 flex-shrink-0">
+        <span class="text-xs text-slate-500">Berizin & Diawasi OJK • Dijamin LPS</span>
+        <button id="detail-product-cta-btn" class="px-6 py-3 bg-bpr-blue hover:bg-bpr-blue-hover text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg transition-all">
+          Ajukan Sekarang
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       MODAL 5: NEWS & LITERASI READER MODAL
+       ===================================================================== -->
+  <div id="modal-news-reader" class="modal-backdrop fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="modal-card bg-white rounded-3xl shadow-2xl max-w-2xl w-full my-8 overflow-hidden max-h-[92vh] flex flex-col">
+      
+      <div class="p-6 flex items-center justify-between flex-shrink-0">
+        <span id="news-modal-tag" class="text-xs font-bold px-2.5 py-1 rounded-lg bg-blue-50 text-bpr-blue">Perencanaan Finansial</span>
+        <button id="modal-news-close" class="text-slate-400 hover:text-slate-700 p-1 rounded-lg">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="p-6 sm:p-8 space-y-4 overflow-y-auto">
+        <h3 id="news-modal-title" class="text-2xl font-extrabold text-slate-900 leading-snug">Judul Artikel</h3>
+        <p id="news-modal-date" class="text-xs text-slate-400">Tanggal</p>
+        
+        <div class="rounded-2xl overflow-hidden h-60 my-4">
+          <img id="news-modal-img" src="" alt="Ilustrasi Berita" class="w-full h-full object-cover">
+        </div>
+
+        <div id="news-modal-body" class="text-sm text-slate-700 leading-relaxed space-y-4"></div>
+      </div>
+
+      <div class="p-4 bg-slate-50 text-right flex-shrink-0">
+        <button onclick="document.getElementById('modal-news-reader').classList.remove('active'); document.body.classList.remove('overflow-hidden');" class="px-5 py-2 bg-bpr-navy text-white text-xs font-bold rounded-xl">
+          Tutup Artikel
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       MODAL 6: PROFIL PERUMDA BPR MAJALENGKA (MERGER 8 BPR & SEJARAH)
+       (Sesuai Sketsa Halaman 11 "Kenali BPR ↗" & Figma Section 7 & 9)
+       ===================================================================== -->
+  <div id="modal-profil-bpr" class="modal-backdrop fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="modal-card bg-white rounded-3xl shadow-2xl max-w-3xl w-full my-8 overflow-hidden max-h-[92vh] flex flex-col">
+      
+      <!-- Modal Top Bar -->
+      <div class="bg-bpr-navy text-white px-6 py-5 flex items-center justify-between flex-shrink-0">
+        <div>
+          <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">TENTANG KAMI</span>
+          <h3 class="text-xl font-extrabold text-white">Profil Perumda BPR Majalengka</h3>
+        </div>
+        <button id="modal-profil-close" class="text-white/70 hover:text-white p-1 rounded-lg">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 sm:p-8 space-y-6 overflow-y-auto text-slate-700 text-sm leading-relaxed">
+        
+        <div class="rounded-2xl overflow-hidden h-52 relative">
+          <img src="assets/img/umkm-anyaman.jpg" alt="BPR Majalengka" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-5">
+            <span class="text-white font-bold text-lg">"{{ $settings['company_tagline'] ?? 'Mitra Kerja Membangun Ekonomi Rakyat' }}"</span>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-base font-extrabold text-slate-900 mb-2">{{ $settings['about_title'] ?? 'BUMD Kebanggaan Masyarakat Majalengka' }}</h4>
+          <p>
+            {{ $settings['about_description'] ?? 'Perusahaan Umum Daerah (Perumda) Bank Perekonomian Rakyat Majalengka merupakan Badan Usaha Milik Daerah yang 100% kepemilikannya dimiliki oleh Pemerintah Kabupaten Majalengka. Berdiri sebagai pilar penggerak ekonomi kerakyatan dengan menghimpun simpanan masyarakat dan menyalurkannya kembali dalam bentuk permodalan usaha bagi pelaku UMKM lokal.' }}
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-blue-50/80 space-y-2">
+          <h5 class="font-bold text-bpr-blue text-xs uppercase tracking-wider">Tonggak Sejarah Merger 8 BPR</h5>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            {{ $settings['sejarah_singkat'] ?? 'Sesuai regulasi Otoritas Jasa Keuangan (OJK) dan komitmen Pemkab Majalengka untuk memperkuat permodalan serta tata kelola, Bank Majalengka merupakan hasil penggabungan (merger) 8 BPR berintegritas di Kabupaten Majalengka. Penyatuan ini melahirkan institusi keuangan yang jauh lebih kokoh, profesional, efisien, dan memiliki daya jangkau yang luas melalui 12 kantor kas aktif.' }}
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-4 rounded-xl bg-slate-50">
+            <h5 class="font-bold text-slate-900 text-xs uppercase tracking-wider mb-1">Visi Perusahaan</h5>
+            <p class="text-xs text-slate-600">{{ $settings['vision'] ?? 'Menjadi Bank Perekonomian Rakyat yang terpercaya, sehat, mandiri, dan berdaya saing tinggi dalam mendorong pertumbuhan ekonomi daerah Majalengka.' }}</p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-50">
+            <h5 class="font-bold text-slate-900 text-xs uppercase tracking-wider mb-1">Misi Perusahaan</h5>
+            <p class="text-xs text-slate-600">{{ $settings['mission'] ?? 'Menyelenggarakan pelayanan perbankan yang prima, memberdayakan UMKM pedesaan, serta memberikan kontribusi nyata bagi Pendapatan Asli Daerah (PAD).' }}</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 bg-slate-50 flex items-center justify-between flex-shrink-0">
+        <button onclick="document.getElementById('modal-profil-bpr').classList.remove('active'); openProductCatalog('all');" class="text-xs font-bold text-bpr-blue hover:underline">
+          Lihat Katalog Produk
+        </button>
+        <button onclick="document.getElementById('modal-profil-bpr').classList.remove('active'); document.body.classList.remove('overflow-hidden');" class="px-5 py-2.5 bg-bpr-navy hover:bg-bpr-navy-light text-white text-xs font-bold rounded-xl transition-colors">
+          Tutup
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       MODAL 7: SEMUA ARTIKEL & BERITA (LITERASI KEUANGAN LENGKAP)
+       (Sesuai Sketsa Halaman 12 "Lihat Semua Artikel & Berita")
+       ===================================================================== -->
+  <div id="modal-all-news" class="modal-backdrop fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="modal-card bg-slate-50 rounded-3xl shadow-2xl max-w-4xl w-full my-8 overflow-hidden max-h-[92vh] flex flex-col">
+      
+      <!-- Top Bar -->
+      <div class="bg-bpr-navy text-white px-6 py-5 flex items-center justify-between flex-shrink-0">
+        <div>
+          <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">PUSAT EDUKASI & INFORMASI</span>
+          <h3 class="text-xl font-extrabold text-white">Semua Artikel & Berita Literasi Keuangan</h3>
+        </div>
+        <button id="modal-all-news-close" class="text-white/70 hover:text-white p-1 rounded-lg">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Articles Grid Container -->
+      <div class="p-6 overflow-y-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          @forelse($articles as $art)
+          <div class="bg-white rounded-2xl overflow-hidden card-shadow flex flex-col justify-between">
+            <div>
+              <img src="{{ $art->thumbnail ? asset($art->thumbnail) : asset('assets/img/perencanaan-keluarga.jpg') }}" alt="{{ $art->title }}" class="w-full h-40 object-cover">
+              <div class="p-5">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-blue-50 text-bpr-blue uppercase">{{ $art->category }}</span>
+                <p class="text-[11px] text-slate-400 mt-2">{{ $art->published_at ? $art->published_at->translatedFormat('d F Y') : $art->created_at->format('d M Y') }}</p>
+                <h4 class="font-bold text-slate-900 text-base mt-1">{{ $art->title }}</h4>
+                <p class="text-xs text-slate-600 mt-1.5 line-clamp-2">{{ $art->excerpt }}</p>
+              </div>
+            </div>
+            <div class="p-5 pt-0">
+              <button onclick="document.getElementById('modal-all-news').classList.remove('active'); readArticle({{ $art->id }});" class="w-full py-2 bg-blue-50/60 hover:bg-blue-100/70 text-bpr-blue text-xs font-bold rounded-xl transition-colors">
+                Baca Artikel Lengkap
+              </button>
+            </div>
+          </div>
+          @empty
+          <div class="col-span-2 text-center py-8 text-slate-400 text-xs">Belum ada artikel publikasi.</div>
+          @endforelse
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       MODAL 8: PUSAT KONTAK RESMI & JALUR INFORMASI
+       (Sesuai Sketsa Halaman 13 "Kontak ↗")
+       ===================================================================== -->
+  <div id="modal-kontak" class="modal-backdrop fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="modal-card bg-white rounded-3xl shadow-2xl max-w-lg w-full my-8 overflow-hidden max-h-[92vh] flex flex-col">
+      
+      <div class="bg-bpr-navy text-white px-6 py-5 flex items-center justify-between flex-shrink-0">
+        <div>
+          <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">HUBUNGI KAMI</span>
+          <h3 class="text-xl font-extrabold text-white">Saluran Kontak Resmi</h3>
+        </div>
+        <button id="modal-kontak-close" class="text-white/70 hover:text-white p-1 rounded-lg">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4 overflow-y-auto text-slate-700">
+        
+        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['whatsapp_official'] ?? '6281111116526') }}" target="_blank" class="flex items-center gap-4 p-4 rounded-2xl bg-emerald-50 hover:bg-emerald-100/80 transition-colors">
+          <div class="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-sm">WhatsApp Customer Service</h4>
+            <p class="text-xs text-slate-500">{{ $settings['whatsapp_official'] ?? '0811-1111-6526' }} (Chat Interaktif)</p>
+          </div>
+        </a>
+
+        <a href="tel:{{ preg_replace('/[^0-9]/', '', $settings['phone_central'] ?? '0233281144') }}" class="flex items-center gap-4 p-4 rounded-2xl bg-blue-50 hover:bg-blue-100/80 transition-colors">
+          <div class="w-12 h-12 rounded-xl bg-bpr-blue text-white flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-sm">Call Center Kantor Pusat</h4>
+            <p class="text-xs text-slate-500">{{ $settings['phone_central'] ?? '(0233) 281144' }} ({{ $settings['operational_hours'] ?? 'Senin - Jumat: 08:00 - 15:30 WIB' }})</p>
+          </div>
+        </a>
+
+        <a href="mailto:{{ $settings['email_official'] ?? 'manajemenpusat@bprmajalengka.com' }}" class="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 hover:bg-slate-100 transition-colors">
+          <div class="w-12 h-12 rounded-xl bg-slate-700 text-white flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-sm">Email Resmi Manajemen</h4>
+            <p class="text-xs text-slate-500">{{ $settings['email_official'] ?? 'manajemenpusat@bprmajalengka.com' }}</p>
+          </div>
+        </a>
+
+        <div class="p-4 rounded-2xl bg-slate-50">
+          <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider mb-1">Kantor Pusat Operasional</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            {{ $settings['address_central'] ?? 'Jl. Raya K.H. Abdul Halim No. 338, Majalengka Wetan, Kec. Majalengka, Kabupaten Majalengka, Jawa Barat 45411.' }}
+          </p>
+        </div>
+
+      </div>
+
+      <div class="p-4 bg-slate-50 text-right flex-shrink-0">
+        <button onclick="document.getElementById('modal-kontak').classList.remove('active'); document.body.classList.remove('overflow-hidden');" class="px-5 py-2.5 bg-bpr-navy hover:bg-bpr-navy-light text-white text-xs font-bold rounded-xl transition-colors">
+          Tutup
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Dynamic Data Injection for app.js Client-Side Rendering -->
+  <script>
+    window.DYNAMIC_PRODUCTS = {
+      tabungan: {!! json_encode($productsByCat['tabungan'] ?? []) !!},
+      deposito: {!! json_encode($productsByCat['deposito'] ?? []) !!},
+      kredit: {!! json_encode($productsByCat['kredit'] ?? []) !!}
+    };
+    window.DYNAMIC_BRANCHES = {!! json_encode($branches ?? []) !!};
+    window.DYNAMIC_ARTICLES = {!! json_encode($articles ?? []) !!};
+    window.DYNAMIC_SETTINGS = {!! json_encode($settings ?? []) !!};
+  </script>
+
+  <!-- Application Logic -->
+  <script type="module" src="{{ asset('assets/js/app.js') }}"></script>
+</body>
+</html>
