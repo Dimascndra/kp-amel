@@ -31,92 +31,52 @@ document.addEventListener('DOMContentLoaded', () => {
   initGlobalModals();
 });
 
-// Explicit top-level global exposures to guarantee availability across ES module scopes
-window.openFormPengajuan = function(p, t, pr) { if (typeof openFormPengajuan === 'function') return openFormPengajuan(p, t, pr); };
-window.showPengajuanSuccessModal = function(d, r) { if (typeof showPengajuanSuccessModal === 'function') return showPengajuanSuccessModal(d, r); };
-window.openProfilBpr = function() { if (typeof openProfilBpr === 'function') return openProfilBpr(); };
-window.openContactOptions = function() { if (typeof openContactOptions === 'function') return openContactOptions(); };
-window.resetProductFilter = function() { if (typeof resetProductFilter === 'function') return resetProductFilter(); };
-
-window.openProductCatalog = function(category = 'all') {
-  const modal = document.getElementById('modal-product-catalog');
-  if (!modal) return;
-
-  const tabButtons = document.querySelectorAll('.catalog-tab-btn');
-  tabButtons.forEach(btn => {
-    if (btn.dataset.category === category) {
-      btn.classList.add('bg-bpr-navy', 'text-white');
-      btn.classList.remove('bg-slate-100', 'text-slate-600');
-    } else {
-      btn.classList.remove('bg-bpr-navy', 'text-white');
-      btn.classList.add('bg-slate-100', 'text-slate-600');
-    }
-  });
-
-  const searchInput = document.getElementById('catalog-search-input');
-  if (searchInput) searchInput.value = '';
-
-  const container = document.getElementById('catalog-cards-container');
-  if (container) {
-    let allItems = [];
-    if (category === 'all' || category === 'tabungan') allItems.push(...PRODUCTS_DATA.tabungan);
-    if (category === 'all' || category === 'deposito') allItems.push(...PRODUCTS_DATA.deposito);
-    if (category === 'all' || category === 'kredit') allItems.push(...PRODUCTS_DATA.kredit);
-
-    container.innerHTML = allItems.map(prod => `
-      <div onclick="window.showProductDetail && window.showProductDetail(PRODUCTS_DATA['${prod.category}'].find(p => p.id === '${prod.id}'))" class="bg-white rounded-2xl p-6 card-shadow card-shadow-hover flex flex-col justify-between cursor-pointer group">
-        <div>
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-bold px-2.5 py-1 rounded-lg ${prod.category === 'tabungan' ? 'bg-blue-50 text-bpr-blue font-semibold' : prod.category === 'deposito' ? 'bg-amber-50 text-amber-700 font-semibold' : 'bg-emerald-50 text-emerald-700 font-semibold'}">${prod.badge || (prod.category === 'tabungan' ? 'Tabungan' : prod.category === 'deposito' ? 'Deposito' : 'Kredit')}</span>
-            <span class="text-xs text-slate-400 font-mono">${prod.code}</span>
-          </div>
-          <div class="h-32 rounded-xl bg-slate-50 flex items-center justify-center p-3 mb-4 overflow-hidden group-hover:scale-[1.02] transition-transform">
-            <img src="${prod.image}" alt="${prod.name}" class="max-h-full max-w-full object-contain" onerror="this.src='assets/img/logo.png'">
-          </div>
-          <h4 class="font-bold text-slate-900 group-hover:text-bpr-blue transition-colors text-base mb-1.5 leading-snug">${prod.name}</h4>
-          <p class="text-slate-500 text-xs line-clamp-3 mb-4 leading-relaxed">${prod.shortDesc || prod.short_desc || ''}</p>
-        </div>
-        <div class="pt-3 mt-auto flex items-center justify-between">
-          <span class="text-xs font-semibold text-bpr-blue group-hover:underline">
-            Selengkapnya
-          </span>
-          <span class="text-xs text-slate-400 font-medium">BPR Majalengka</span>
-        </div>
-      </div>
-    `).join('');
+// Global Function Declarations & Exposures (Strictly matching Mockup Sketches and BCA Product Showcase)
+function resolveProduct(product) {
+  if (!product) return null;
+  if (typeof product === 'object') return product;
+  const searchKey = String(product).toLowerCase().trim();
+  for (const cat of ['tabungan', 'deposito', 'kredit']) {
+    const list = PRODUCTS_DATA[cat] || [];
+    const found = list.find(p => {
+      const codeMatch = p.code && p.code.toLowerCase() === searchKey;
+      const idMatch = p.id && String(p.id).toLowerCase() === searchKey;
+      const slugMatch = p.slug && p.slug.toLowerCase() === searchKey;
+      const nameMatch = p.name && p.name.toLowerCase() === searchKey;
+      return codeMatch || idMatch || slugMatch || nameMatch;
+    });
+    if (found) return found;
   }
+  return null;
+}
 
-  modal.classList.add('active');
-  document.body.classList.add('overflow-hidden');
-};
+let currentCatalogCategory = 'all';
 
-window.showProductDetail = function(product) {
-  if (typeof product === 'string') {
-    for (const cat of ['tabungan', 'deposito', 'kredit']) {
-      const found = PRODUCTS_DATA[cat]?.find(p => p.id === product || p.code === product || p.slug === product);
-      if (found) { product = found; break; }
-    }
-  }
+function showProductDetail(product) {
+  const prod = resolveProduct(product);
   const detailModal = document.getElementById('modal-product-detail');
-  if (!detailModal || !product || typeof product !== 'object') return;
+  if (!detailModal || !prod) return;
 
-  const shortDesc = product.shortDesc || product.short_desc || '';
-  const heroImage = product.heroImage || product.hero_image || 'assets/img/hero-batik.jpg';
-  const ctaText = product.ctaText || product.cta_text || (product.category === 'kredit' ? 'Form Pengajuan Kredit' : 'Buka Rekening via WhatsApp');
-  const ctaType = product.ctaType || product.cta_type || (product.category === 'kredit' ? 'form' : 'whatsapp');
-  const ketentuanList = Array.isArray(product.ketentuan) ? product.ketentuan : [];
-  const syaratList = Array.isArray(product.syarat) ? product.syarat : [];
+  const shortDesc = prod.shortDesc || prod.short_desc || '';
+  const heroImage = prod.heroImage || prod.hero_image || 'assets/img/hero-batik.jpg';
+  const ctaText = prod.ctaText || prod.cta_text || (prod.category === 'kredit' ? 'Form Pengajuan Kredit' : 'Buka Rekening via WhatsApp');
+  const ctaType = prod.ctaType || prod.cta_type || (prod.category === 'kredit' ? 'form' : 'whatsapp');
+  const ketentuanList = Array.isArray(prod.ketentuan) ? prod.ketentuan : [];
+  const syaratList = Array.isArray(prod.syarat) ? prod.syarat : [];
 
-  const tEl = document.getElementById('detail-product-title'); if (tEl) tEl.textContent = product.name || '';
-  const bEl = document.getElementById('detail-product-badge'); if (bEl) bEl.textContent = product.badge || product.code || '';
-  const htEl = document.getElementById('detail-product-hero-title'); if (htEl) htEl.textContent = product.name || '';
-  const sEl = document.getElementById('detail-product-slogan'); if (sEl) sEl.textContent = product.slogan || '';
+  const tEl = document.getElementById('detail-product-title'); if (tEl) tEl.textContent = prod.name || '';
+  const bEl = document.getElementById('detail-product-badge'); if (bEl) bEl.textContent = prod.badge || prod.code || '';
+  const htEl = document.getElementById('detail-product-hero-title'); if (htEl) htEl.textContent = prod.name || '';
+  const sEl = document.getElementById('detail-product-slogan'); if (sEl) sEl.textContent = prod.slogan || '';
   const dEl = document.getElementById('detail-product-short-desc'); if (dEl) dEl.textContent = shortDesc;
   const hiEl = document.getElementById('detail-product-hero-img'); if (hiEl) hiEl.src = heroImage;
 
+  const defaultWa = '6281111116526';
+  const waOfficial = (window.DYNAMIC_SETTINGS && window.DYNAMIC_SETTINGS.whatsapp_official ? window.DYNAMIC_SETTINGS.whatsapp_official : defaultWa).replace(/[^0-9]/g, '');
+
   const heroCta = document.getElementById('detail-product-hero-cta');
   if (heroCta) {
-    if (product.category === 'kredit' || ctaType === 'form' || ctaType === 'form_pengajuan') {
+    if (prod.category === 'kredit' || ctaType === 'form' || ctaType === 'form_pengajuan') {
       heroCta.classList.remove('hidden');
       heroCta.innerHTML = `
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
@@ -126,7 +86,7 @@ window.showProductDetail = function(product) {
         detailModal.classList.remove('active');
         const catModal = document.getElementById('modal-product-catalog');
         if (catModal) catModal.classList.remove('active');
-        window.openFormPengajuan(null, null, product.name);
+        openFormPengajuan(null, null, prod.name);
       };
     } else {
       heroCta.classList.remove('hidden');
@@ -134,9 +94,9 @@ window.showProductDetail = function(product) {
         <svg class="w-4 h-4 fill-current text-emerald-400" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
         <span>Buka Rekening via WhatsApp</span>
       `;
-      const waMsg = encodeURIComponent(`Halo Perumda BPR Majalengka, saya tertarik untuk membuka rekening / informasi produk ${product.name} (${product.code}). Mohon bantuannya.`);
+      const waMsg = encodeURIComponent(`Halo Perumda BPR Majalengka, saya tertarik untuk membuka rekening / informasi produk ${prod.name} (${prod.code}). Mohon bantuannya.`);
       heroCta.onclick = () => {
-        window.open(`https://wa.me/6281111116526?text=${waMsg}`, '_blank');
+        window.open(`https://wa.me/${waOfficial}?text=${waMsg}`, '_blank');
       };
     }
   }
@@ -164,46 +124,158 @@ window.showProductDetail = function(product) {
   const ctaBtn = document.getElementById('detail-product-cta-btn');
   if (ctaBtn) {
     ctaBtn.textContent = ctaText;
-    if (product.category === 'kredit' || ctaType === 'form' || ctaType === 'form_pengajuan') {
+    if (prod.category === 'kredit' || ctaType === 'form' || ctaType === 'form_pengajuan') {
       ctaBtn.onclick = () => {
         detailModal.classList.remove('active');
         const catModal = document.getElementById('modal-product-catalog');
         if (catModal) catModal.classList.remove('active');
-        window.openFormPengajuan(null, null, product.name);
+        openFormPengajuan(null, null, prod.name);
       };
     } else {
-      const waMsg = encodeURIComponent(`Halo Perumda BPR Majalengka, saya tertarik untuk membuka / konsultasi produk ${product.name} (${product.code}). Mohon info jadwal dan syarat pendaftarannya.`);
+      const waMsg = encodeURIComponent(`Halo Perumda BPR Majalengka, saya tertarik untuk membuka / konsultasi produk ${prod.name} (${prod.code}). Mohon info jadwal dan syarat pendaftarannya.`);
       ctaBtn.onclick = () => {
-        window.open(`https://wa.me/6281111116526?text=${waMsg}`, '_blank');
+        window.open(`https://wa.me/${waOfficial}?text=${waMsg}`, '_blank');
       };
     }
   }
 
   detailModal.classList.add('active');
   document.body.classList.add('overflow-hidden');
+}
+
+function renderCatalogCards(category = 'all', filterText = '') {
+  const container = document.getElementById('catalog-cards-container');
+  if (!container) return;
+
+  let allItems = [];
+  if (category === 'all' || category === 'tabungan') allItems.push(...PRODUCTS_DATA.tabungan);
+  if (category === 'all' || category === 'deposito') allItems.push(...PRODUCTS_DATA.deposito);
+  if (category === 'all' || category === 'kredit') allItems.push(...PRODUCTS_DATA.kredit);
+
+  if (filterText) {
+    const q = filterText.toLowerCase();
+    allItems = allItems.filter(item => 
+      (item.name || '').toLowerCase().includes(q) || 
+      ((item.shortDesc || item.short_desc) || '').toLowerCase().includes(q) ||
+      (item.code || '').toLowerCase().includes(q)
+    );
+  }
+
+  if (allItems.length === 0) {
+    container.innerHTML = `
+      <div class="col-span-full py-12 text-center text-slate-500">
+        <svg class="w-12 h-12 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <p class="font-semibold">Produk tidak ditemukan</p>
+        <p class="text-sm">Silakan ubah kata kunci pencarian atau ganti kategori produk.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = allItems.map(prod => `
+    <div onclick="window.catalogModalCardClick && window.catalogModalCardClick('${prod.code}')" class="bg-white rounded-2xl p-6 card-shadow card-shadow-hover flex flex-col justify-between cursor-pointer group">
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold px-2.5 py-1 rounded-lg ${prod.category === 'tabungan' ? 'bg-blue-50 text-bpr-blue font-semibold' : prod.category === 'deposito' ? 'bg-amber-50 text-amber-700 font-semibold' : 'bg-emerald-50 text-emerald-700 font-semibold'}">${prod.badge || (prod.category === 'tabungan' ? 'Tabungan' : prod.category === 'deposito' ? 'Deposito' : 'Kredit')}</span>
+          <span class="text-xs text-slate-400 font-mono">${prod.code}</span>
+        </div>
+        <div class="h-32 rounded-xl bg-slate-50 flex items-center justify-center p-3 mb-4 overflow-hidden group-hover:scale-[1.02] transition-transform">
+          <img src="${prod.image}" alt="${prod.name}" class="max-h-full max-w-full object-contain" onerror="this.src='assets/img/logo.png'">
+        </div>
+        <h4 class="font-bold text-slate-900 group-hover:text-bpr-blue transition-colors text-base mb-1.5 leading-snug">${prod.name}</h4>
+        <p class="text-slate-500 text-xs line-clamp-3 mb-4 leading-relaxed">${prod.shortDesc || prod.short_desc || ''}</p>
+      </div>
+      <div class="pt-3 mt-auto flex items-center justify-between">
+        <span class="text-xs font-semibold text-bpr-blue group-hover:underline">
+          Selengkapnya
+        </span>
+        <span class="text-xs text-slate-400 font-medium">BPR Majalengka</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+window.catalogModalCardClick = function(code) {
+  const modal = document.getElementById('modal-product-catalog');
+  if (modal) modal.classList.add('was-open');
+  showProductDetail(code);
 };
 
-window.readArticle = function(id) {
-  const modal = document.getElementById('modal-news-reader');
+function openProductCatalog(category = 'all') {
+  currentCatalogCategory = category;
+  const modal = document.getElementById('modal-product-catalog');
   if (!modal) return;
-  const article = ARTICLES_DATA.find(a => a.id === id);
-  if (!article) return;
-  const tagEl = document.getElementById('news-modal-tag'); if (tagEl) tagEl.textContent = article.category;
-  const titleEl = document.getElementById('news-modal-title'); if (titleEl) titleEl.textContent = article.title;
-  const dateEl = document.getElementById('news-modal-date'); if (dateEl) dateEl.textContent = article.date;
-  const imgEl = document.getElementById('news-modal-img'); if (imgEl) imgEl.src = article.image;
-  const bodyEl = document.getElementById('news-modal-body'); if (bodyEl) bodyEl.innerHTML = article.content;
+
+  const tabButtons = document.querySelectorAll('.catalog-tab-btn');
+  tabButtons.forEach(btn => {
+    if (btn.dataset.category === category) {
+      btn.classList.add('bg-bpr-navy', 'text-white');
+      btn.classList.remove('bg-slate-100', 'text-slate-600');
+    } else {
+      btn.classList.remove('bg-bpr-navy', 'text-white');
+      btn.classList.add('bg-slate-100', 'text-slate-600');
+    }
+  });
+
+  const searchInput = document.getElementById('catalog-search-input');
+  if (searchInput) searchInput.value = '';
+
+  renderCatalogCards(category, '');
+
   modal.classList.add('active');
   document.body.classList.add('overflow-hidden');
-};
+}
 
-window.showAllArticles = function() {
+function readArticle(id) {
+  const modal = document.getElementById('modal-news-reader');
+  if (!modal) return;
+  const article = ARTICLES_DATA.find(a => a.id == id || a.slug === id);
+  if (!article) return;
+
+  const articleDate = article.date || (article.published_at ? new Date(article.published_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '');
+  const articleReadTime = article.readTime || article.read_time || '3 menit baca';
+
+  const tagEl = document.getElementById('news-modal-tag'); if (tagEl) tagEl.textContent = article.tag || article.category || 'Berita';
+  const titleEl = document.getElementById('news-modal-title'); if (titleEl) titleEl.textContent = article.title;
+  const dateEl = document.getElementById('news-modal-date'); if (dateEl) dateEl.textContent = `${articleDate} • ${articleReadTime}`;
+  const imgEl = document.getElementById('news-modal-img'); if (imgEl) imgEl.src = article.image || 'assets/img/perencanaan-keluarga.jpg';
+  const bodyEl = document.getElementById('news-modal-body'); if (bodyEl) bodyEl.innerHTML = article.content;
+
+  modal.classList.add('active');
+  document.body.classList.add('overflow-hidden');
+}
+
+function showAllArticles() {
   const modal = document.getElementById('modal-all-news');
   if (modal) {
     modal.classList.add('active');
     document.body.classList.add('overflow-hidden');
   }
-};
+}
+
+function resetProductFilter() {
+  if (typeof window.applyShowcaseCategoryTab === 'function') {
+    window.applyShowcaseCategoryTab('all', true);
+  }
+}
+
+function filterProductShowcase(category = 'all') {
+  if (typeof window.applyShowcaseCategoryTab === 'function') {
+    window.applyShowcaseCategoryTab(category);
+  }
+}
+
+// Explicit top-level global exposures to guarantee availability across ES module scopes
+window.openFormPengajuan = openFormPengajuan;
+window.showPengajuanSuccessModal = showPengajuanSuccessModal;
+window.openProfilBpr = openProfilBpr;
+window.openContactOptions = openContactOptions;
+window.openProductCatalog = openProductCatalog;
+window.showProductDetail = showProductDetail;
+window.readArticle = readArticle;
+window.showAllArticles = showAllArticles;
+window.resetProductFilter = resetProductFilter;
+window.filterProductShowcase = filterProductShowcase;
 
 /* ==========================================================================
    1. DATABASE PRODUK (TABUNGAN, DEPOSITO, KREDIT)
@@ -1475,13 +1547,14 @@ function initProductShowcase() {
   const filterCards = () => {
     const cards = grid.querySelectorAll('.product-showcase-card');
     let visibleCount = 0;
+    const searchTerms = searchQuery ? searchQuery.split(/\s+/).filter(Boolean) : [];
 
     cards.forEach(card => {
       const cardCategory = card.dataset.category;
       const cardName = card.dataset.name || '';
 
       const matchCategory = (activeCategory === 'all' || cardCategory === activeCategory);
-      const matchSearch = (!searchQuery || cardName.includes(searchQuery));
+      const matchSearch = searchTerms.length === 0 || searchTerms.every(term => cardName.includes(term));
 
       if (matchCategory && matchSearch) {
         card.classList.remove('hidden');
@@ -1500,21 +1573,27 @@ function initProductShowcase() {
     }
   };
 
-  // Tab click listeners
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => {
+  const applyCategoryTab = (category) => {
+    activeCategory = category || 'all';
+    tabs.forEach(t => {
+      const isSelected = (t.dataset.category || 'all') === activeCategory;
+      if (isSelected) {
+        t.classList.add('bg-bpr-blue', 'text-white', 'shadow-sm', 'font-bold');
+        t.classList.remove('text-slate-600', 'hover:text-slate-900', 'hover:bg-white/60', 'font-semibold');
+        t.setAttribute('aria-selected', 'true');
+      } else {
         t.classList.remove('bg-bpr-blue', 'text-white', 'shadow-sm', 'font-bold');
         t.classList.add('text-slate-600', 'hover:text-slate-900', 'hover:bg-white/60', 'font-semibold');
         t.setAttribute('aria-selected', 'false');
-      });
+      }
+    });
+    filterCards();
+  };
 
-      tab.classList.remove('text-slate-600', 'hover:text-slate-900', 'hover:bg-white/60', 'font-semibold');
-      tab.classList.add('bg-bpr-blue', 'text-white', 'shadow-sm', 'font-bold');
-      tab.setAttribute('aria-selected', 'true');
-
-      activeCategory = tab.dataset.category || 'all';
-      filterCards();
+  // Tab click listeners
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      applyCategoryTab(tab.dataset.category || 'all');
     });
   });
 
@@ -1531,6 +1610,15 @@ function initProductShowcase() {
       }
       filterCards();
     });
+
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        searchInput.value = '';
+        searchQuery = '';
+        if (clearBtn) clearBtn.classList.add('hidden');
+        filterCards();
+      }
+    });
   }
 
   // Clear button listener
@@ -1544,24 +1632,23 @@ function initProductShowcase() {
     });
   }
 
+  window.applyShowcaseCategoryTab = (category, clearSearch = false) => {
+    if (clearSearch) {
+      searchQuery = '';
+      if (searchInput) searchInput.value = '';
+      if (clearBtn) clearBtn.classList.add('hidden');
+    }
+    applyCategoryTab(category);
+  };
+
   // Global reset helper
   window.resetProductFilter = function() {
-    activeCategory = 'all';
-    searchQuery = '';
-    if (searchInput) searchInput.value = '';
-    if (clearBtn) clearBtn.classList.add('hidden');
-    tabs.forEach(t => {
-      if (t.dataset.category === 'all') {
-        t.classList.add('bg-bpr-blue', 'text-white', 'shadow-sm', 'font-bold');
-        t.classList.remove('text-slate-600', 'hover:text-slate-900', 'hover:bg-white/60', 'font-semibold');
-        t.setAttribute('aria-selected', 'true');
-      } else {
-        t.classList.remove('bg-bpr-blue', 'text-white', 'shadow-sm', 'font-bold');
-        t.classList.add('text-slate-600', 'hover:text-slate-900', 'hover:bg-white/60', 'font-semibold');
-        t.setAttribute('aria-selected', 'false');
-      }
-    });
-    filterCards();
+    window.applyShowcaseCategoryTab('all', true);
+  };
+
+  // Programmatic tab filter helper
+  window.filterProductShowcase = function(category = 'all') {
+    window.applyShowcaseCategoryTab(category, false);
   };
 }
 
@@ -1678,9 +1765,15 @@ function initProductModals() {
   if (detailBack) {
     detailBack.addEventListener('click', () => {
       detailModal.classList.remove('active');
-      if (catalogModal) {
+      if (catalogModal && catalogModal.classList.contains('was-open')) {
         catalogModal.classList.add('active');
+        catalogModal.classList.remove('was-open');
         document.body.classList.add('overflow-hidden');
+      } else {
+        const anyActive = document.querySelector('.modal-backdrop.active');
+        if (!anyActive) {
+          document.body.classList.remove('overflow-hidden');
+        }
       }
     });
   }
@@ -1689,121 +1782,13 @@ function initProductModals() {
   if (detailClose) {
     detailClose.addEventListener('click', () => {
       detailModal.classList.remove('active');
+      if (catalogModal) catalogModal.classList.remove('was-open');
       const anyActive = document.querySelector('.modal-backdrop.active');
       if (!anyActive) {
         document.body.classList.remove('overflow-hidden');
       }
     });
   }
-
-  // Show Product Detail Function (Strictly matching Mockup Sketches 4, 6, 8)
-  window.showProductDetail = (product) => {
-    if (!detailModal || !product) return;
-
-    const shortDesc = product.shortDesc || product.short_desc || '';
-    const heroImage = product.heroImage || product.hero_image || 'assets/img/hero-batik.jpg';
-    const ctaText = product.ctaText || product.cta_text || (product.category === 'kredit' ? 'Form Pengajuan Kredit' : 'Buka Rekening via WhatsApp');
-    const ctaType = product.ctaType || product.cta_type || (product.category === 'kredit' ? 'form' : 'whatsapp');
-    const ketentuanList = Array.isArray(product.ketentuan) ? product.ketentuan : [];
-    const syaratList = Array.isArray(product.syarat) ? product.syarat : [];
-
-    document.getElementById('detail-product-title').textContent = product.name || '';
-    document.getElementById('detail-product-badge').textContent = product.badge || product.code || '';
-    document.getElementById('detail-product-hero-title').textContent = product.name || '';
-    document.getElementById('detail-product-slogan').textContent = product.slogan || '';
-    document.getElementById('detail-product-short-desc').textContent = shortDesc;
-
-    // Foto Header
-    const heroImgEl = document.getElementById('detail-product-hero-img');
-    if (heroImgEl) heroImgEl.src = heroImage;
-
-    // Prominent CTA Button under photo (Matching Sketsa Halaman 8 for Kredit)
-    const heroCtaBtn = document.getElementById('detail-product-hero-cta');
-    if (heroCtaBtn) {
-      if (product.category === 'kredit' || ctaType === 'form' || ctaType === 'form_pengajuan') {
-        heroCtaBtn.classList.remove('hidden');
-        heroCtaBtn.innerHTML = `
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-          <span>Form Pengajuan Kredit</span>
-        `;
-        heroCtaBtn.onclick = () => {
-          detailModal.classList.remove('active');
-          if (catalogModal) catalogModal.classList.remove('active');
-          openFormPengajuan(null, null, product.name);
-        };
-      } else {
-        heroCtaBtn.classList.remove('hidden');
-        heroCtaBtn.innerHTML = `
-          <svg class="w-4 h-4 fill-current text-emerald-400" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
-          <span>Buka Rekening via WhatsApp</span>
-        `;
-        const waMsg = encodeURIComponent(`Halo Perumda BPR Majalengka, saya tertarik untuk membuka rekening / informasi produk ${product.name} (${product.code}). Mohon bantuannya.`);
-        heroCtaBtn.onclick = () => {
-          window.open(`https://wa.me/6281111116526?text=${waMsg}`, '_blank');
-        };
-      }
-    }
-
-    // Ketentuan List
-    const ketentuanContainer = document.getElementById('detail-product-ketentuan');
-    if (ketentuanContainer) {
-      ketentuanContainer.innerHTML = ketentuanList.map(item => `
-        <li class="flex items-start gap-2.5 text-sm text-slate-700 leading-relaxed">
-          <span class="w-1.5 h-1.5 rounded-full bg-bpr-blue mt-2 flex-shrink-0"></span>
-          <span>${item}</span>
-        </li>
-      `).join('');
-    }
-
-    // Syarat List
-    const syaratContainer = document.getElementById('detail-product-syarat');
-    if (syaratContainer) {
-      syaratContainer.innerHTML = syaratList.map(item => `
-        <li class="flex items-start gap-2.5 text-sm text-slate-700 leading-relaxed">
-          <span class="w-1.5 h-1.5 rounded-full bg-bpr-gold mt-2 flex-shrink-0"></span>
-          <span>${item}</span>
-        </li>
-      `).join('');
-    }
-
-    // Direct Action CTA Button (Footer)
-    const ctaBtn = document.getElementById('detail-product-cta-btn');
-    if (ctaBtn) {
-      ctaBtn.textContent = ctaText;
-      if (product.category === 'kredit' || ctaType === 'form' || ctaType === 'form_pengajuan') {
-        ctaBtn.onclick = () => {
-          detailModal.classList.remove('active');
-          if (catalogModal) catalogModal.classList.remove('active');
-          openFormPengajuan(null, null, product.name);
-        };
-      } else {
-        const waMsg = encodeURIComponent(`Halo Perumda BPR Majalengka, saya tertarik untuk membuka / konsultasi produk ${product.name} (${product.code}). Mohon info jadwal dan syarat pendaftarannya.`);
-        ctaBtn.onclick = () => {
-          window.open(`https://wa.me/6281111116526?text=${waMsg}`, '_blank');
-        };
-      }
-    }
-
-    detailModal.classList.add('active');
-    document.body.classList.add('overflow-hidden');
-  };
-
-  // Open Catalog Globally
-  window.openProductCatalog = (category = 'all') => {
-    activeCategory = category;
-    tabButtons.forEach(btn => {
-      if (btn.dataset.category === category) {
-        btn.classList.add('bg-bpr-navy', 'text-white');
-        btn.classList.remove('bg-slate-100', 'text-slate-600');
-      } else {
-        btn.classList.remove('bg-bpr-navy', 'text-white');
-        btn.classList.add('bg-slate-100', 'text-slate-600');
-      }
-    });
-    renderCatalog();
-    catalogModal.classList.add('active');
-    document.body.classList.add('overflow-hidden');
-  };
 }
 
 /* ==========================================================================
@@ -1813,24 +1798,7 @@ function initNewsModal() {
   const newsModal = document.getElementById('modal-news-reader');
   const newsClose = document.getElementById('modal-news-close');
 
-  window.readArticle = (id) => {
-    const article = ARTICLES_DATA.find(a => a.id == id || a.slug === id);
-    if (!article || !newsModal) return;
-
-    const articleDate = article.date || (article.published_at ? new Date(article.published_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '');
-    const articleReadTime = article.readTime || article.read_time || '3 menit baca';
-
-    document.getElementById('news-modal-tag').textContent = article.tag || article.category || 'Berita';
-    document.getElementById('news-modal-title').textContent = article.title;
-    document.getElementById('news-modal-date').textContent = `${articleDate} • ${articleReadTime}`;
-    document.getElementById('news-modal-img').src = article.image || 'assets/img/perencanaan-keluarga.jpg';
-    document.getElementById('news-modal-body').innerHTML = article.content;
-
-    newsModal.classList.add('active');
-    document.body.classList.add('overflow-hidden');
-  };
-
-  if (newsClose) {
+  if (newsClose && newsModal) {
     newsClose.addEventListener('click', () => {
       newsModal.classList.remove('active');
       const anyActive = document.querySelector('.modal-backdrop.active');
@@ -1839,18 +1807,6 @@ function initNewsModal() {
       }
     });
   }
-
-  // Open all articles modal
-  window.showAllArticles = () => {
-    const allNewsModal = document.getElementById('modal-all-news');
-    if (allNewsModal) {
-      allNewsModal.classList.add('active');
-      document.body.classList.add('overflow-hidden');
-    } else {
-      const newsSection = document.getElementById('informasi-berita');
-      if (newsSection) newsSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   const allNewsClose = document.getElementById('modal-all-news-close');
   if (allNewsClose) {

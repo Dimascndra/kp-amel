@@ -202,6 +202,56 @@ assert(cardCount === 24, `Showcase contains exactly 24 pre-rendered BCA product 
 assert(appJs.includes('initProductShowcase'), 'app.js includes initProductShowcase()');
 assert(appJs.includes('resetProductFilter'), 'app.js includes resetProductFilter()');
 
+console.log('\n--- 8. Testing JS Runtime Functionality (showProductDetail string lookup & filter) ---');
+try {
+  const captured = {};
+  const mockEl = (id = '') => ({
+    id,
+    classList: { add: ()=>{}, remove: ()=>{}, contains: ()=>false },
+    addEventListener: () => {},
+    setAttribute: () => {},
+    style: {},
+    set textContent(v) { captured[id] = v; },
+    set innerHTML(v) { captured[id] = v; },
+    set src(v) { captured[id] = v; },
+    value: ''
+  });
+
+  global.window = global;
+  global.document = {
+    addEventListener: () => {},
+    getElementById: (id) => mockEl(id),
+    querySelectorAll: () => [],
+    querySelector: () => null,
+    body: { classList: { add: ()=>{}, remove: ()=>{} } }
+  };
+
+  // Run appJs in global sandbox
+  (0, eval)(appJs.replace(/export\s+/g, ''));
+
+  // Test showProductDetail with string 'TAB-01'
+  window.showProductDetail('TAB-01');
+  assert(captured['detail-product-hero-title'] === 'Tabungan Hari Raya (TAHARA)', 'showProductDetail("TAB-01") populates hero title');
+  assert(captured['detail-product-short-desc'] && captured['detail-product-short-desc'].length > 10, 'showProductDetail("TAB-01") populates short description');
+  assert(captured['detail-product-ketentuan'] && captured['detail-product-ketentuan'].includes('Jangka waktu'), 'showProductDetail("TAB-01") populates ketentuan list');
+
+  // Test showProductDetail with string 'KRD-01' (kredit product)
+  window.showProductDetail('KRD-01');
+  assert(captured['detail-product-hero-title'] === 'KAPESTA (Kredit Pegawai Swasta)', 'showProductDetail("KRD-01") populates kredit hero title');
+  assert(captured['detail-product-cta-btn'] && (captured['detail-product-cta-btn'].includes('Ajukan') || captured['detail-product-cta-btn'].includes('KAPESTA')), 'showProductDetail("KRD-01") sets loan application CTA');
+
+  // Test showProductDetail with string 'DEP-01' (deposito product)
+  captured['detail-product-hero-title'] = '';
+  window.showProductDetail('DEP-01');
+  assert(captured['detail-product-hero-title'] === 'Deposito Berjangka Bank Majalengka', 'showProductDetail("DEP-01") populates deposito hero title');
+
+  // Test that window.filterProductShowcase is defined
+  assert(typeof window.filterProductShowcase === 'function', 'window.filterProductShowcase is a defined function');
+  assert(typeof window.resetProductFilter === 'function', 'window.resetProductFilter is a defined function');
+} catch (err) {
+  assert(false, `JS Runtime verification error: ${err.message}`);
+}
+
 console.log('\n======================================================');
 console.log(`Verification Summary: Passed: ${passedTests}, Failed: ${failedTests}`);
 if (failedTests > 0) {
