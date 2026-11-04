@@ -84,7 +84,25 @@ const requiredIds = [
   'modal-success-close',
   'success-ref-code',
   'success-details-summary',
-  'success-btn-wa-confirm'
+  'success-btn-wa-confirm',
+  'pengaduan-nasabah',
+  'form-pengaduan-nasabah',
+  'complaint-nama',
+  'complaint-email',
+  'complaint-telepon',
+  'complaint-kategori',
+  'complaint-judul',
+  'complaint-isi',
+  'complaint-captcha-question',
+  'complaint-captcha-refresh',
+  'complaint-captcha-answer',
+  'complaint-submit-btn',
+  'complaint-success-result',
+  'result-ticket-code',
+  'container-cek-pengaduan',
+  'track-ticket-code',
+  'track-submit-btn',
+  'track-result-card'
 ];
 
 requiredIds.forEach(id => {
@@ -100,7 +118,13 @@ const expectedWindowFunctions = [
   'readArticle',
   'showAllArticles',
   'openProfilBpr',
-  'openContactOptions'
+  'openContactOptions',
+  'switchComplaintTab',
+  'copyComplaintCode',
+  'resetComplaintForm',
+  'checkStatusFromCode',
+  'handleCekStatusSubmit',
+  'refreshComplaintCaptcha'
 ];
 
 expectedWindowFunctions.forEach(fn => {

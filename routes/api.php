@@ -13,6 +13,10 @@ Route::prefix('v1')->group(function () {
     Route::get('/settings', [PublicApiController::class, 'settings']);
     Route::get('/search', [PublicApiController::class, 'search']);
     Route::post('/pengajuan-kredit', [PublicApiController::class, 'submitLoan']);
+    Route::get('/captcha/generate', [PublicApiController::class, 'captcha']);
+    Route::post('/pengaduan', [PublicApiController::class, 'submitComplaint']);
+    Route::get('/pengaduan/status', [PublicApiController::class, 'checkComplaintStatus']);
+    Route::post('/pengaduan/status', [PublicApiController::class, 'checkComplaintStatus']);
 });
 
 // Non-versioned alias routes for direct frontend consumption
@@ -25,3 +29,7 @@ Route::get('/reports', [PublicApiController::class, 'reports']);
 Route::get('/settings', [PublicApiController::class, 'settings']);
 Route::get('/search', [PublicApiController::class, 'search']);
 Route::post('/pengajuan-kredit', [PublicApiController::class, 'submitLoan']);
+Route::get('/captcha/generate', [PublicApiController::class, 'captcha']);
+Route::post('/pengaduan', [PublicApiController::class, 'submitComplaint']);
+Route::get('/pengaduan/status', [PublicApiController::class, 'checkComplaintStatus']);
+Route::post('/pengaduan/status', [PublicApiController::class, 'checkComplaintStatus']);

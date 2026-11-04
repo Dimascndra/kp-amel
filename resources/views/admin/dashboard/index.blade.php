@@ -71,6 +71,10 @@
       <p class="text-xs text-blue-200 mt-0.5">Semua perubahan pada produk, kantor kas, berita, dan laporan akan langsung tersinkronisasi ke website utama.</p>
     </div>
     <div class="flex flex-wrap items-center gap-2">
+      <a href="{{ route('admin.complaints.index') }}" class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs flex items-center gap-1.5 transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        Kelola Pengaduan ({{ $metrics['complaints_diproses'] }})
+      </a>
       <a href="{{ route('admin.loans.index') }}" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-xs flex items-center gap-1.5 transition">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
         Tinjau Pinjaman ({{ $metrics['loans_pending'] }})
@@ -153,6 +157,69 @@
               <tr>
                 <td colspan="6" class="py-8 text-center text-slate-400 text-xs">
                   Belum ada pengajuan pinjaman baru.
+                </td>
+              </tr>
+            @endforelse
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Recent Complaints (2 Cols) -->
+    <div class="lg:col-span-2 bg-white rounded-2xl card-shadow overflow-hidden mt-6">
+      <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+        <div>
+          <h3 class="font-bold text-slate-800 text-sm">Pengaduan Nasabah Terbaru</h3>
+          <p class="text-xs text-slate-400">Pengaduan nasabah yang masuk via website dengan kode unik tiket.</p>
+        </div>
+        <a href="{{ route('admin.complaints.index') }}" class="text-xs text-bpr-blue font-bold hover:underline">Lihat Semua ({{ $metrics['total_complaints'] }}) &rarr;</a>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-50/80 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-100">
+              <th class="py-3 px-4">Kode Tiket</th>
+              <th class="py-3 px-4">Pelapor</th>
+              <th class="py-3 px-4">Perihal</th>
+              <th class="py-3 px-4">Status</th>
+              <th class="py-3 px-4 text-center">Aksi</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-xs">
+            @forelse($recentComplaints as $c)
+              <tr class="hover:bg-slate-50/60 transition-colors">
+                <td class="py-3.5 px-4 font-mono font-bold text-bpr-navy">
+                  {{ $c->ticket_code }}
+                  <span class="block text-[10px] text-slate-400 font-normal">{{ $c->created_at->format('d/m/Y H:i') }}</span>
+                </td>
+                <td class="py-3.5 px-4">
+                  <span class="font-bold text-slate-900 block">{{ $c->nama }}</span>
+                  <span class="text-[11px] text-slate-500">{{ $c->email }}</span>
+                </td>
+                <td class="py-3.5 px-4 max-w-xs">
+                  <span class="font-semibold text-slate-800 block truncate">{{ $c->judul }}</span>
+                  <span class="text-[10px] text-slate-400 uppercase font-medium">{{ $c->kategori }}</span>
+                </td>
+                <td class="py-3.5 px-4">
+                  @if($c->status === 'selesai')
+                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase">Selesai</span>
+                  @elseif($c->status === 'ditindaklanjuti')
+                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 uppercase">Ditindaklanjuti</span>
+                  @else
+                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200 uppercase">Diproses</span>
+                  @endif
+                </td>
+                <td class="py-3.5 px-4 text-center">
+                  <a href="{{ route('admin.complaints.show', $c) }}" class="inline-flex items-center px-2.5 py-1.5 rounded-lg bg-bpr-navy hover:bg-bpr-dark text-white font-bold text-[11px] transition">
+                    Kelola
+                  </a>
+                </td>
+              </tr>
+            @empty
+              <tr>
+                <td colspan="5" class="py-8 text-center text-slate-400 text-xs">
+                  Belum ada pengaduan nasabah masuk.
                 </td>
               </tr>
             @endforelse

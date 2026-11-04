@@ -76,6 +76,17 @@
           @endif
         </a>
 
+        <a href="{{ route('admin.complaints.index') }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold text-white/90 hover:bg-white/10 transition-colors {{ request()->routeIs('admin.complaints.*') ? 'sidebar-active text-white' : '' }}">
+          <div class="flex items-center gap-3">
+            <svg class="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            Pengaduan Nasabah
+          </div>
+          @php $complaintCount = \App\Models\Complaint::whereIn('status', ['diproses', 'ditindaklanjuti'])->count(); @endphp
+          @if($complaintCount > 0)
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500 text-white">{{ $complaintCount }}</span>
+          @endif
+        </a>
+
         <div class="pt-3 pb-1.5 px-3.5 text-[10px] font-bold text-blue-300/60 uppercase tracking-wider">Master Data</div>
 
         <a href="{{ route('admin.products.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-white/90 hover:bg-white/10 transition-colors {{ request()->routeIs('admin.products.*') ? 'sidebar-active text-white' : '' }}">
@@ -224,6 +235,7 @@
       <nav class="space-y-1 overflow-y-auto">
         <a href="{{ route('admin.dashboard') }}" class="block px-3.5 py-2.5 rounded-xl text-xs font-semibold text-white/90 hover:bg-white/10">Dashboard</a>
         <a href="{{ route('admin.loans.index') }}" class="block px-3.5 py-2.5 rounded-xl text-xs font-semibold text-white/90 hover:bg-white/10">Pengajuan Pinjaman</a>
+        <a href="{{ route('admin.complaints.index') }}" class="block px-3.5 py-2.5 rounded-xl text-xs font-semibold text-white/90 hover:bg-white/10">Pengaduan Nasabah</a>
         <a href="{{ route('admin.products.index') }}" class="block px-3.5 py-2.5 rounded-xl text-xs font-semibold text-white/90 hover:bg-white/10">Produk</a>
         <a href="{{ route('admin.branches.index') }}" class="block px-3.5 py-2.5 rounded-xl text-xs font-semibold text-white/90 hover:bg-white/10">12 Kantor Kas</a>
         <a href="{{ route('admin.articles.index') }}" class="block px-3.5 py-2.5 rounded-xl text-xs font-semibold text-white/90 hover:bg-white/10">Artikel & Edukasi</a>

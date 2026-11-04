@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\BranchController;
+use App\Http\Controllers\Admin\ComplaintController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LoanApplicationController;
 use App\Http\Controllers\Admin\ProductController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Admin\PublicationReportController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Api\PublicApiController;
 use App\Http\Controllers\HomeController;
+use App\Http\Middleware\EnsureSingleAdmin;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +21,10 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/pengajuan-kredit', [PublicApiController::class, 'submitLoan'])->name('pengajuan.submit');
+Route::get('/captcha/generate', [PublicApiController::class, 'captcha'])->name('captcha.generate');
+Route::post('/pengaduan', [PublicApiController::class, 'submitComplaint'])->name('pengaduan.submit');
+Route::get('/pengaduan/status', [PublicApiController::class, 'checkComplaintStatus'])->name('pengaduan.status');
+Route::post('/pengaduan/status', [PublicApiController::class, 'checkComplaintStatus'])->name('pengaduan.status.post');
 
 // Fallback alias for default auth redirect
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -34,11 +40,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
     });
 
-    Route::middleware('auth')->group(function () {
+    Route::middleware(['auth', EnsureSingleAdmin::class])->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
         // Dashboard
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+        // Customer Complaints Management (Pengaduan Nasabah & Anti-Fraud)
+        Route::get('/complaints', [ComplaintController::class, 'index'])->name('complaints.index');
+        Route::get('/complaints/{complaint}', [ComplaintController::class, 'show'])->name('complaints.show');
+        Route::put('/complaints/{complaint}/status', [ComplaintController::class, 'updateStatus'])->name('complaints.updateStatus');
+        Route::delete('/complaints/{complaint}', [ComplaintController::class, 'destroy'])->name('complaints.destroy');
 
         // Products CRUD
         Route::patch('/products/{product}/toggle', [ProductController::class, 'toggleStatus'])->name('products.toggle');

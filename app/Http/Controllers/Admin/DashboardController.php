@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\Branch;
+use App\Models\Complaint;
 use App\Models\LoanApplication;
 use App\Models\Product;
 use App\Models\PublicationReport;
@@ -28,11 +29,17 @@ class DashboardController extends Controller
             'loans_approved' => LoanApplication::where('status', 'approved')->count(),
             'loans_rejected' => LoanApplication::where('status', 'rejected')->count(),
             'total_nominal_loans' => LoanApplication::sum('nominal'),
+            'total_complaints' => Complaint::count(),
+            'complaints_diproses' => Complaint::where('status', 'diproses')->count(),
+            'complaints_ditindaklanjuti' => Complaint::where('status', 'ditindaklanjuti')->count(),
+            'complaints_selesai' => Complaint::where('status', 'selesai')->count(),
+            'complaints_high_risk' => Complaint::where('fraud_risk_level', 'high')->count(),
         ];
 
         $recentLoans = LoanApplication::latest()->take(6)->get();
+        $recentComplaints = Complaint::latest()->take(5)->get();
         $recentArticles = Article::latest()->take(3)->get();
 
-        return view('admin.dashboard.index', compact('metrics', 'recentLoans', 'recentArticles'));
+        return view('admin.dashboard.index', compact('metrics', 'recentLoans', 'recentComplaints', 'recentArticles'));
     }
 }

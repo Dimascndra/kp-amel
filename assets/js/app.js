@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initProductShowcase();
   initSimulator();
   initFormPengajuan();
+  initPengaduanNasabah();
   initProductModals();
   initNewsModal();
   initFAQ();
@@ -276,6 +277,12 @@ window.readArticle = readArticle;
 window.showAllArticles = showAllArticles;
 window.resetProductFilter = resetProductFilter;
 window.filterProductShowcase = filterProductShowcase;
+window.switchComplaintTab = switchComplaintTab;
+window.copyComplaintCode = copyComplaintCode;
+window.resetComplaintForm = resetComplaintForm;
+window.checkStatusFromCode = checkStatusFromCode;
+window.handleCekStatusSubmit = handleCekStatusSubmit;
+window.refreshComplaintCaptcha = refreshComplaintCaptcha;
 
 /* ==========================================================================
    1. DATABASE PRODUK (TABUNGAN, DEPOSITO, KREDIT)
@@ -2231,4 +2238,299 @@ function openContactOptions() {
   } else {
     window.open('https://wa.me/6281111116526', '_blank');
   }
+}
+
+/* ==========================================================================
+   11. PENGADUAN NASABAH, ANTI-FRAUD CAPTCHA & STATUS TRACKING
+   (Sesuai Kebutuhan Portal Pengaduan Resmi & Standar Perbankan)
+   ========================================================================== */
+function switchComplaintTab(tab) {
+  const formContainer = document.getElementById('container-form-pengaduan');
+  const trackContainer = document.getElementById('container-cek-pengaduan');
+  const formBtn = document.getElementById('tab-btn-form-pengaduan');
+  const trackBtn = document.getElementById('tab-btn-cek-pengaduan');
+
+  if (tab === 'form') {
+    if (formContainer) formContainer.classList.remove('hidden');
+    if (trackContainer) trackContainer.classList.add('hidden');
+    if (formBtn) {
+      formBtn.className = 'px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm bg-bpr-navy text-white';
+    }
+    if (trackBtn) {
+      trackBtn.className = 'px-5 py-2.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
+    }
+  } else {
+    if (formContainer) formContainer.classList.add('hidden');
+    if (trackContainer) trackContainer.classList.remove('hidden');
+    if (trackBtn) {
+      trackBtn.className = 'px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm bg-bpr-navy text-white';
+    }
+    if (formBtn) {
+      formBtn.className = 'px-5 py-2.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
+    }
+  }
+}
+
+function copyComplaintCode() {
+  const codeEl = document.getElementById('result-ticket-code');
+  if (!codeEl) return;
+  const code = codeEl.textContent.trim();
+
+  const showCopyFeedback = () => {
+    const copyText = document.getElementById('copy-text');
+    if (copyText) {
+      const orig = copyText.textContent;
+      copyText.textContent = 'Tersalin! ✓';
+      setTimeout(() => { copyText.textContent = orig; }, 2000);
+    }
+  };
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(code).then(() => {
+      showCopyFeedback();
+    }).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = code;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showCopyFeedback();
+    });
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = code;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showCopyFeedback();
+  }
+}
+
+function resetComplaintForm() {
+  const form = document.getElementById('form-pengaduan-nasabah');
+  if (form) form.reset();
+  const successBox = document.getElementById('complaint-success-result');
+  if (successBox) successBox.classList.add('hidden');
+  refreshComplaintCaptcha();
+  const formSection = document.getElementById('pengaduan-nasabah');
+  if (formSection) formSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+function refreshComplaintCaptcha() {
+  const questionEl = document.getElementById('complaint-captcha-question');
+  const tokenInput = document.getElementById('complaint-captcha-token');
+  const loadTokenInput = document.getElementById('complaint-form-load-token');
+  const answerInput = document.getElementById('complaint-captcha-answer');
+
+  if (answerInput) answerInput.value = '';
+
+  const fallbackLocalCaptcha = () => {
+    const n1 = Math.floor(Math.random() * 8) + 3;
+    const n2 = Math.floor(Math.random() * 6) + 2;
+    if (questionEl) questionEl.textContent = `${n1} + ${n2} = ?`;
+    if (tokenInput && !tokenInput.value) tokenInput.value = 'local_fallback';
+  };
+
+  fetch('/captcha/generate', { headers: { 'Accept': 'application/json' } })
+    .then(res => res.json())
+    .then(res => {
+      if (res && res.success && res.data) {
+        if (questionEl) questionEl.textContent = res.data.question;
+        if (tokenInput) tokenInput.value = res.data.captcha_token;
+        if (loadTokenInput) loadTokenInput.value = res.data.form_load_token;
+      } else {
+        fallbackLocalCaptcha();
+      }
+    })
+    .catch(() => {
+      fallbackLocalCaptcha();
+    });
+}
+
+function checkStatusFromCode(code) {
+  switchComplaintTab('track');
+  const input = document.getElementById('track-ticket-code');
+  if (input) {
+    input.value = code;
+    doFetchComplaintStatus(code);
+  }
+}
+
+function handleCekStatusSubmit(event) {
+  if (event) event.preventDefault();
+  const input = document.getElementById('track-ticket-code');
+  if (!input) return;
+  const code = input.value.trim();
+  if (!code) {
+    alert('Silakan masukkan nomor kode unik pengaduan Anda.');
+    input.focus();
+    return;
+  }
+  doFetchComplaintStatus(code);
+}
+
+function doFetchComplaintStatus(code) {
+  const btn = document.getElementById('track-submit-btn');
+  const card = document.getElementById('track-result-card');
+  const origBtnText = btn ? btn.textContent : '';
+
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Mencari...';
+  }
+
+  fetch(`/pengaduan/status?code=${encodeURIComponent(code)}`, {
+    headers: { 'Accept': 'application/json' }
+  })
+  .then(res => res.json().then(data => ({ ok: res.ok, data })))
+  .then(({ ok, data }) => {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = origBtnText;
+    }
+
+    if (!ok || !data.success) {
+      alert(data.message || 'Pengaduan dengan kode tiket tersebut tidak ditemukan. Mohon periksa kembali kode unik Anda.');
+      if (card) card.classList.add('hidden');
+      return;
+    }
+
+    const d = data.data;
+    if (card) {
+      card.classList.remove('hidden');
+      const codeEl = document.getElementById('track-result-code');
+      const badgeEl = document.getElementById('track-result-badge');
+      const namaEl = document.getElementById('track-result-nama');
+      const katEl = document.getElementById('track-result-kategori');
+      const tglEl = document.getElementById('track-result-tanggal');
+      const notesEl = document.getElementById('track-result-notes');
+
+      if (codeEl) codeEl.textContent = d.ticket_code;
+      if (namaEl) namaEl.textContent = d.nama;
+      if (katEl) katEl.textContent = d.kategori;
+      if (tglEl) tglEl.textContent = `${d.tanggal_lapor} WIB`;
+      if (notesEl) notesEl.textContent = d.catatan_petugas;
+
+      if (badgeEl) {
+        badgeEl.textContent = d.status_label;
+        if (d.status === 'selesai') {
+          badgeEl.className = 'px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-emerald-100 text-emerald-800 border border-emerald-300';
+        } else if (d.status === 'ditindaklanjuti') {
+          badgeEl.className = 'px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-blue-100 text-blue-800 border border-blue-300';
+        } else {
+          badgeEl.className = 'px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-amber-100 text-amber-800 border border-amber-300';
+        }
+      }
+
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  })
+  .catch(err => {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = origBtnText;
+    }
+    alert('Terjadi kesalahan saat memeriksa status pengaduan: ' + err.message);
+  });
+}
+
+function initPengaduanNasabah() {
+  const form = document.getElementById('form-pengaduan-nasabah');
+  if (!form) return;
+
+  const refreshBtn = document.getElementById('complaint-captcha-refresh');
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', refreshComplaintCaptcha);
+  }
+
+  // Load initial CAPTCHA
+  refreshComplaintCaptcha();
+
+  // Handle URL hash or param
+  if (window.location.hash === '#cek-pengaduan' || window.location.search.includes('code=')) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const codeParam = urlParams.get('code');
+    if (codeParam) {
+      setTimeout(() => {
+        checkStatusFromCode(codeParam);
+      }, 300);
+    } else {
+      switchComplaintTab('track');
+    }
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Check honeypot
+    const honeypot = document.getElementById('complaint-honeypot');
+    if (honeypot && honeypot.value.trim() !== '') {
+      console.warn('Bot trap triggered');
+      return;
+    }
+
+    const answerInput = document.getElementById('complaint-captcha-answer');
+    if (!answerInput || !answerInput.value.trim()) {
+      alert('Silakan isi jawaban verifikasi CAPTCHA keamanan.');
+      if (answerInput) answerInput.focus();
+      return;
+    }
+
+    const submitBtn = document.getElementById('complaint-submit-btn');
+    const spinner = document.getElementById('complaint-submit-spinner');
+    const submitText = document.getElementById('complaint-submit-text');
+
+    if (submitBtn) submitBtn.disabled = true;
+    if (spinner) spinner.classList.remove('hidden');
+    if (submitText) submitText.textContent = 'Memverifikasi & Mengirim...';
+
+    const formData = new FormData(form);
+
+    fetch('/pengaduan', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+      },
+      body: formData
+    })
+    .then(res => res.json().then(data => ({ ok: res.ok, status: res.status, data })))
+    .then(({ ok, data }) => {
+      if (submitBtn) submitBtn.disabled = false;
+      if (spinner) spinner.classList.add('hidden');
+      if (submitText) submitText.textContent = 'Kirim Pengaduan Nasabah';
+
+      if (!ok || !data.success) {
+        alert(data.message || 'Pengiriman pengaduan gagal. Silakan periksa kembali formulir Anda.');
+        refreshComplaintCaptcha();
+        return;
+      }
+
+      // Success: Reveal unique code card right below the form!
+      const resultBox = document.getElementById('complaint-success-result');
+      const ticketCodeEl = document.getElementById('result-ticket-code');
+      const emailEl = document.getElementById('result-email-text');
+
+      if (ticketCodeEl) ticketCodeEl.textContent = data.data.ticket_code;
+      if (emailEl) emailEl.textContent = data.data.email;
+
+      if (resultBox) {
+        resultBox.classList.remove('hidden');
+        resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      // Reset form fields but keep tokens fresh
+      form.reset();
+      refreshComplaintCaptcha();
+    })
+    .catch(err => {
+      if (submitBtn) submitBtn.disabled = false;
+      if (spinner) spinner.classList.add('hidden');
+      if (submitText) submitText.textContent = 'Kirim Pengaduan Nasabah';
+      alert('Terjadi kendala jaringan saat mengirimkan pengaduan: ' + err.message);
+      refreshComplaintCaptcha();
+    });
+  });
 }

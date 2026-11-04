@@ -123,6 +123,7 @@
         <a href="#simulasi-kredit" class="text-white/90 hover:text-amber-400 font-semibold text-xs xl:text-[13px] px-2.5 xl:px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap">Simulasi Kredit</a>
         <a href="#laporan-publikasi" class="text-white/90 hover:text-amber-400 font-semibold text-xs xl:text-[13px] px-2.5 xl:px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap">Laporan</a>
         <a href="#informasi-berita" class="text-white/90 hover:text-amber-400 font-semibold text-xs xl:text-[13px] px-2.5 xl:px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap">Informasi Berita</a>
+        <a href="#pengaduan-nasabah" class="text-amber-300 hover:text-amber-400 font-bold text-xs xl:text-[13px] px-2.5 xl:px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap flex items-center gap-1">Pengaduan</a>
       </nav>
 
       <!-- Action Button / Header CTA (Single Line - whitespace-nowrap) -->
@@ -164,6 +165,10 @@
         <a href="#laporan-publikasi" class="mobile-nav-link py-2.5 px-3 rounded-lg text-slate-800 font-semibold hover:bg-slate-100">Laporan</a>
         <a href="#informasi-berita" class="mobile-nav-link py-2.5 px-3 rounded-lg text-slate-800 font-semibold hover:bg-slate-100">Informasi Berita</a>
         <a href="#kantor-kas" class="mobile-nav-link py-2.5 px-3 rounded-lg text-slate-800 font-semibold hover:bg-slate-100">Jaringan 12 Kantor Kas</a>
+        <a href="#pengaduan-nasabah" class="mobile-nav-link py-2.5 px-3 rounded-lg text-amber-900 bg-amber-50 font-bold hover:bg-amber-100 flex items-center justify-between">
+          <span>Pengaduan Nasabah</span>
+          <span class="text-[10px] bg-amber-500 text-slate-900 px-2 py-0.5 rounded font-extrabold uppercase">Online</span>
+        </a>
       </nav>
     </div>
     <div class="pt-6 space-y-3">
@@ -1118,8 +1123,8 @@
                 <p class="text-xs text-slate-300 mt-0.5">Kanal pelaporan independen dan saluran keluhan transaksi perbankan.</p>
               </div>
             </div>
-            <a href="tel:0233281144" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-bpr-navy-dark text-xs font-bold rounded-xl flex-shrink-0 transition-colors">
-              (0233) 281144
+            <a href="#pengaduan-nasabah" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-bpr-navy-dark text-xs font-extrabold rounded-xl flex-shrink-0 transition-colors shadow">
+              Form Pengaduan &rarr;
             </a>
           </div>
 
@@ -1143,6 +1148,349 @@
         <button onclick="readArticle(3)" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl flex-shrink-0 transition-colors">
           Pelajari Modus
         </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SECTION: PENGADUAN NASABAH & ANTI-FRAUD PORTAL
+       (Form Pengaduan Online, Kode Unik Otomatis, & Lacak Status)
+       ===================================================================== -->
+  <section id="pengaduan-nasabah" class="py-16 sm:py-24 bg-slate-50 border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-widest bg-blue-100 text-bpr-navy">
+          <svg class="w-3.5 h-3.5 text-bpr-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          Saluran Pengaduan Nasabah & Whistleblowing System
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mt-3">
+          Layanan Pengaduan & Bantuan Transaksi
+        </h2>
+        <p class="text-slate-600 text-sm sm:text-base mt-2 leading-relaxed">
+          Kenyamanan dan keamanan perbankan Anda adalah prioritas kami. Sampaikan keluhan, pertanyaan transaksi, atau pelaporan indikasi kecurangan (fraud) melalui formulir terverifikasi di bawah ini.
+        </p>
+      </div>
+
+      <!-- Main Tabs: Isi Pengaduan Baru vs Cek Status Pengaduan -->
+      <div class="flex items-center justify-center gap-2 mb-8">
+        <button id="tab-btn-form-pengaduan" onclick="switchComplaintTab('form')" class="px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm bg-bpr-navy text-white">
+          Isi Formulir Pengaduan
+        </button>
+        <button id="tab-btn-cek-pengaduan" onclick="switchComplaintTab('track')" class="px-5 py-2.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">
+          Lacak / Cek Status Pengaduan
+        </button>
+      </div>
+
+      <!-- Container: Form Pengaduan Section -->
+      <div id="container-form-pengaduan" class="max-w-3xl mx-auto">
+        <div class="bg-white rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden">
+          
+          <!-- Top bar with Anti-Fraud Badge -->
+          <div class="bg-gradient-to-r from-bpr-navy to-bpr-dark p-6 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <span class="text-[10px] font-extrabold uppercase tracking-widest text-amber-400">FORMULIR ELEKTRONIK</span>
+              <h3 class="text-lg font-bold text-white mt-0.5">Formulir Pengaduan Nasabah Bank Majalengka</h3>
+              <p class="text-xs text-blue-200 mt-0.5">Kode unik pengaduan akan otomatis terbit dan dikirimkan ke email Anda.</p>
+            </div>
+            <div class="px-3 py-1.5 rounded-xl bg-white/10 text-emerald-300 text-[11px] font-bold flex items-center gap-1.5 flex-shrink-0">
+              <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              <span>Proteksi Anti-Fraud Aktif</span>
+            </div>
+          </div>
+
+          <!-- Anti-Fraud Security Notice Banner -->
+          <div class="p-4 bg-amber-50 border-b border-amber-200/80 flex items-start gap-3">
+            <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            <p class="text-xs text-amber-900 leading-relaxed">
+              <strong>Peringatan Keamanan:</strong> Perumda BPR Majalengka <strong>tidak pernah meminta biaya</strong> penanganan pengaduan, PIN rekening, password, ataupun kode OTP perbankan Anda.
+            </p>
+          </div>
+
+          <!-- Form Element -->
+          <form id="form-pengaduan-nasabah" class="p-6 sm:p-8 space-y-5" enctype="multipart/form-data">
+            
+            <!-- Anti-Fraud Honeypot Trap (Hidden from humans) -->
+            <div style="position: absolute; left: -9999px; opacity: 0; pointer-events: none;" aria-hidden="true">
+              <input type="text" name="website_hp" id="complaint-honeypot" tabindex="-1" autocomplete="off">
+              <input type="text" name="complaint_fax" id="complaint-fax-honeypot" tabindex="-1" autocomplete="off">
+            </div>
+
+            <!-- Anti-Fraud Hidden Tokens -->
+            <input type="hidden" id="complaint-captcha-token" name="captcha_token" value="">
+            <input type="hidden" id="complaint-form-load-token" name="form_load_token" value="">
+
+            <!-- Nama & Email Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="complaint-nama" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+                  Nama Lengkap Pelapor <span class="text-red-500">*</span>
+                </label>
+                <input type="text" id="complaint-nama" name="nama" required placeholder="Contoh: Budi Santoso" class="w-full py-2.5 px-3.5 rounded-xl bg-slate-100/75 focus:bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all font-medium border border-slate-200">
+              </div>
+
+              <div>
+                <label for="complaint-email" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+                  Alamat Email Aktif <span class="text-red-500">*</span>
+                </label>
+                <input type="email" id="complaint-email" name="email" required placeholder="alamat.email@anda.com" class="w-full py-2.5 px-3.5 rounded-xl bg-slate-100/75 focus:bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all font-medium border border-slate-200">
+                <span class="text-[10px] text-slate-400 mt-1 block">Kode unik & informasi status akan dikirimkan ke email ini.</span>
+              </div>
+            </div>
+
+            <!-- Telepon & Rekening Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="complaint-telepon" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+                  Nomor HP / WhatsApp <span class="text-red-500">*</span>
+                </label>
+                <input type="tel" id="complaint-telepon" name="telepon" required placeholder="08xxxxxxxxxx" class="w-full py-2.5 px-3.5 rounded-xl bg-slate-100/75 focus:bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all font-medium border border-slate-200">
+              </div>
+
+              <div>
+                <label for="complaint-rekening" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+                  Nomor Rekening Bank Majalengka
+                </label>
+                <input type="text" id="complaint-rekening" name="nomor_rekening" placeholder="Opsional (jika terkait transaksi rekening)" class="w-full py-2.5 px-3.5 rounded-xl bg-slate-100/75 focus:bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all font-medium border border-slate-200 font-mono">
+              </div>
+            </div>
+
+            <!-- Kategori Pengaduan -->
+            <div>
+              <label for="complaint-kategori" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+                Kategori Pengaduan <span class="text-red-500">*</span>
+              </label>
+              <select id="complaint-kategori" name="kategori" required class="w-full py-2.5 px-3.5 rounded-xl bg-slate-100/75 focus:bg-white text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all font-medium border border-slate-200">
+                <option value="pelayanan">Pelayanan Petugas / Kantor Kas</option>
+                <option value="transaksi">Transaksi Perbankan / Setoran / Tarikan</option>
+                <option value="kredit">Pengajuan Kredit / Pinjaman</option>
+                <option value="tabungan_deposito">Produk Tabungan & Deposito</option>
+                <option value="kartu_atm">Kartu ATM / Saluran Elektronik</option>
+                <option value="indikasi_fraud">Indikasi Penipuan / Fraud Mengatasnamakan Bank</option>
+                <option value="lainnya">Lainnya</option>
+              </select>
+            </div>
+
+            <!-- Judul Pengaduan -->
+            <div>
+              <label for="complaint-judul" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+                Judul / Pokok Masalah Pengaduan <span class="text-red-500">*</span>
+              </label>
+              <input type="text" id="complaint-judul" name="judul" required placeholder="Ringkasan singkat kendala yang dialami" class="w-full py-2.5 px-3.5 rounded-xl bg-slate-100/75 focus:bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all font-medium border border-slate-200">
+            </div>
+
+            <!-- Isi Pengaduan -->
+            <div>
+              <label for="complaint-isi" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+                Uraian Kronologi Pengaduan <span class="text-red-500">*</span>
+              </label>
+              <textarea id="complaint-isi" name="isi_pengaduan" required rows="4" placeholder="Jelaskan secara runtut tanggal, waktu, lokasi kantor kas (jika ada), serta detail kronologi pengaduan Anda..." class="w-full py-2.5 px-3.5 rounded-xl bg-slate-100/75 focus:bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-bpr-blue/20 transition-all font-medium border border-slate-200 leading-relaxed"></textarea>
+            </div>
+
+            <!-- Lampiran Bukti File (Opsional) -->
+            <div>
+              <label for="complaint-lampiran" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+                Bukti Pendukung / Foto / Dokumen
+              </label>
+              <input type="file" id="complaint-lampiran" name="lampiran" accept=".jpg,.jpeg,.png,.pdf" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-bpr-blue hover:file:bg-blue-100 cursor-pointer">
+              <span class="text-[10px] text-slate-400 mt-1 block">Format diperbolehkan: JPG, PNG, atau PDF (Maksimal 3 MB). Opsional.</span>
+            </div>
+
+            <!-- Anti-Fraud CAPTCHA Challenge -->
+            <div class="p-4 rounded-2xl bg-slate-100/80 border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <span class="text-xs font-bold text-slate-700">Verifikasi Anti-Fraud:</span>
+                <span id="complaint-captcha-question" class="px-3 py-1.5 bg-bpr-navy text-amber-300 font-extrabold text-sm rounded-xl tracking-wider font-mono">
+                  Memuat...
+                </span>
+                <button type="button" id="complaint-captcha-refresh" class="inline-flex items-center gap-1 text-xs text-bpr-blue font-semibold hover:underline" title="Acak Soal Baru">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                  Ganti
+                </button>
+              </div>
+              <div class="w-full sm:w-36">
+                <input type="number" id="complaint-captcha-answer" name="captcha_answer" required placeholder="Jawaban..." class="w-full py-2 px-3 rounded-xl bg-white text-sm text-center font-bold text-slate-800 border border-slate-300 focus:outline-none focus:ring-2 focus:ring-bpr-blue">
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="pt-2">
+              <button type="submit" id="complaint-submit-btn" class="w-full py-3.5 bg-bpr-blue hover:bg-bpr-blue-hover text-white font-extrabold text-sm uppercase tracking-wider rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                <svg id="complaint-submit-spinner" class="hidden w-4 h-4 text-white animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <span id="complaint-submit-text">Kirim Pengaduan Nasabah</span>
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+
+        <!-- ===============================================================
+             HASIL SETELAH PENGADUAN: KODE UNIK MUNCUL TEPAT DI BAWAH FORM
+             (Sesuai Instruksi User: "Setelah selesai mengisi formulir, kode unik
+              akan langsung muncul di bawah tampilan formulir pengaduan...")
+             =============================================================== -->
+        <div id="complaint-success-result" class="hidden mt-8 p-6 sm:p-8 bg-emerald-50/90 border-2 border-emerald-500 rounded-3xl shadow-2xl space-y-6 scroll-mt-24 transition-all">
+          
+          <div class="flex items-center gap-4 border-b border-emerald-200/80 pb-5">
+            <div class="w-14 h-14 rounded-2xl bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 shadow-md">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest block">PENGADUAN RESMI DITERIMA</span>
+              <h3 class="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">Pengaduan Anda Berhasil Didaftarkan!</h3>
+              <p class="text-xs text-slate-600 mt-0.5">Laporan pengaduan telah tersimpan aman pada sistem pengawasan Bank Majalengka.</p>
+            </div>
+          </div>
+
+          <!-- Highlight Kode Unik Box -->
+          <div class="p-6 bg-white rounded-2xl border-2 border-dashed border-emerald-400 text-center space-y-2 shadow-sm">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">KODE UNIK PENGADUAN (NOMOR TIKET):</span>
+            <div class="flex items-center justify-center gap-3 flex-wrap">
+              <span id="result-ticket-code" class="text-2xl sm:text-3xl font-black font-mono text-bpr-navy tracking-wider select-all">
+                BM-ADU-XXXXXXXX-XXXX
+              </span>
+              <button type="button" onclick="copyComplaintCode()" class="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1.5 border border-slate-200 shadow-sm" title="Salin Kode Tiket">
+                <svg id="copy-icon" class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                <span id="copy-text">Salin Kode</span>
+              </button>
+            </div>
+            <p class="text-xs text-slate-500 pt-1">
+              Simpan dan catat kode unik di atas untuk melacak perkembangan status tindak lanjut aduan Anda.
+            </p>
+          </div>
+
+          <!-- Status Indicator Pipeline -->
+          <div>
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">Status Penanganan Pengaduan:</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              
+              <!-- 1. Diproses -->
+              <div class="p-3.5 rounded-xl bg-amber-100/80 border border-amber-300 flex items-start gap-3">
+                <span class="w-6 h-6 rounded-full bg-amber-500 text-slate-900 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <strong class="text-xs text-amber-900 font-bold">Diproses</strong>
+                    <span class="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-amber-500 text-slate-900">Aktif</span>
+                  </div>
+                  <p class="text-[11px] text-amber-800/90 mt-0.5 leading-snug">Laporan diterima & sedang diteliti tim layanan nasabah.</p>
+                </div>
+              </div>
+
+              <!-- 2. Ditindaklanjuti -->
+              <div class="p-3.5 rounded-xl bg-white/70 border border-slate-200 flex items-start gap-3 opacity-70">
+                <span class="w-6 h-6 rounded-full bg-slate-300 text-slate-700 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
+                <div>
+                  <strong class="text-xs text-slate-800 font-bold">Ditindaklanjuti</strong>
+                  <p class="text-[11px] text-slate-500 mt-0.5 leading-snug">Investigasi & koordinasi kantor kas/unit terkait.</p>
+                </div>
+              </div>
+
+              <!-- 3. Selesai -->
+              <div class="p-3.5 rounded-xl bg-white/70 border border-slate-200 flex items-start gap-3 opacity-70">
+                <span class="w-6 h-6 rounded-full bg-slate-300 text-slate-700 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+                <div>
+                  <strong class="text-xs text-slate-800 font-bold">Selesai</strong>
+                  <p class="text-[11px] text-slate-500 mt-0.5 leading-snug">Solusi resmi & hasil tindak lanjut tuntas.</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Email Notification Notice -->
+          <div class="p-4 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-900 flex items-start gap-3">
+            <svg class="w-5 h-5 text-bpr-blue flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <div>
+              <p>
+                Tanda terima resmi dan informasi status telah dikirimkan ke email: <strong id="result-email-text" class="text-bpr-navy">...</strong>.
+              </p>
+              <p class="text-blue-700 mt-0.5">
+                Setiap perkembangan tindak lanjut dari petugas Bank Majalengka akan diberitahukan kembali melalui email tersebut.
+              </p>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-col sm:flex-row items-center gap-3 pt-2">
+            <button type="button" onclick="checkStatusFromCode(document.getElementById('result-ticket-code').textContent.trim())" class="w-full sm:w-auto flex-1 py-3 bg-bpr-navy hover:bg-bpr-navy-light text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-md text-center">
+              Lacak Pengaduan Ini Sekarang &rarr;
+            </button>
+            <button type="button" onclick="resetComplaintForm()" class="w-full sm:w-auto px-6 py-3 bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs rounded-xl transition border border-slate-200">
+              Isi Pengaduan Baru
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Container: Lacak / Cek Status Pengaduan Section -->
+      <div id="container-cek-pengaduan" class="max-w-2xl mx-auto hidden">
+        <div class="bg-white rounded-3xl shadow-xl border border-slate-200/80 p-6 sm:p-8 space-y-6">
+          
+          <div class="text-center space-y-1">
+            <div class="w-12 h-12 rounded-2xl bg-blue-50 text-bpr-blue flex items-center justify-center mx-auto mb-2">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            </div>
+            <h3 class="text-xl font-extrabold text-slate-900">Lacak Status Pengaduan Anda</h3>
+            <p class="text-xs text-slate-500">Masukkan kode unik pengaduan yang telah Anda terima setelah pengisian formulir atau di email.</p>
+          </div>
+
+          <form id="form-cek-status" onsubmit="handleCekStatusSubmit(event)" class="space-y-4">
+            <div>
+              <label for="track-ticket-code" class="block text-xs font-bold text-slate-700 uppercase mb-1">
+                Kode Unik Pengaduan (Nomor Tiket)
+              </label>
+              <div class="relative">
+                <input type="text" id="track-ticket-code" required placeholder="Contoh: BM-ADU-20261104-XXXX" class="w-full py-3 pl-10 pr-28 rounded-xl bg-slate-50 text-sm font-mono font-bold text-slate-800 placeholder-slate-400 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bpr-blue">
+                <svg class="w-5 h-5 text-slate-400 absolute left-3 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+                <button type="submit" id="track-submit-btn" class="absolute right-1.5 top-1.5 bottom-1.5 px-4 bg-bpr-blue hover:bg-bpr-blue-hover text-white text-xs font-bold rounded-lg transition">
+                  Cek Status
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <!-- Result Area -->
+          <div id="track-result-card" class="hidden p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+              <div>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">KODE TIKET</span>
+                <p id="track-result-code" class="text-base font-extrabold font-mono text-bpr-navy">...</p>
+              </div>
+              <div>
+                <span id="track-result-badge" class="px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-amber-100 text-amber-800 border border-amber-300">
+                  Diproses
+                </span>
+              </div>
+            </div>
+
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between">
+                <span class="text-slate-500">Nama Pelapor:</span>
+                <span id="track-result-nama" class="font-bold text-slate-800">...</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Kategori:</span>
+                <span id="track-result-kategori" class="font-semibold text-slate-800 uppercase">...</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Waktu Lapor:</span>
+                <span id="track-result-tanggal" class="font-medium text-slate-800">...</span>
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-slate-200">
+              <span class="text-[11px] font-bold text-slate-700 uppercase block mb-1">Tanggapan Resmi Bank Majalengka:</span>
+              <p id="track-result-notes" class="text-xs text-slate-700 bg-white p-3 rounded-xl border border-slate-200 leading-relaxed whitespace-pre-line">
+                ...
+              </p>
+            </div>
+          </div>
+
+        </div>
       </div>
 
     </div>
@@ -1195,7 +1543,7 @@
             <li><a href="#tentang-kami" onclick="openProfilBpr()" class="hover:text-white transition-colors">Tentang Kami / Profil Perusahaan</a></li>
             <li><a href="#tentang-kami" class="hover:text-white transition-colors">Visi & Misi</a></li>
             <li><a href="#informasi-berita" class="hover:text-white transition-colors">Berita & Edukasi</a></li>
-            <li><a href="javascript:void(0)" onclick="openContactOptions()" class="hover:text-white transition-colors">Pengaduan Nasabah</a></li>
+            <li><a href="#pengaduan-nasabah" class="hover:text-white transition-colors">Pengaduan Nasabah</a></li>
           </ul>
         </div>
 
