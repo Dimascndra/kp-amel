@@ -116,6 +116,11 @@
           Pengaturan BPR & Kontak
         </a>
 
+        <a href="{{ route('admin.profile.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-white/90 hover:bg-white/10 transition-colors {{ request()->routeIs('admin.profile.*') ? 'sidebar-active text-white' : '' }}">
+          <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          Keamanan & Kata Sandi
+        </a>
+
         <div class="pt-4 border-t border-white/10">
           <a href="{{ route('home') }}" target="_blank" class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-medium text-blue-200 hover:text-white hover:bg-white/10 transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
@@ -125,16 +130,16 @@
       </nav>
 
       <!-- User footer -->
-      <div class="p-4 border-t border-white/10 flex items-center justify-between">
-        <div class="flex items-center gap-2.5 overflow-hidden">
-          <div class="w-8 h-8 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0">
+      <div class="p-3.5 border-t border-white/10 flex items-center justify-between">
+        <a href="{{ route('admin.profile.index') }}" title="Kelola Profil & Ganti Kata Sandi" class="flex items-center gap-2.5 overflow-hidden group hover:opacity-90 transition">
+          <div class="w-8 h-8 rounded-full bg-blue-600 group-hover:bg-amber-400 group-hover:text-bpr-navy text-white font-bold text-xs flex items-center justify-center flex-shrink-0 transition-colors shadow-sm">
             {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}
           </div>
-          <div class="overflow-hidden">
-            <p class="text-xs font-bold truncate">{{ auth()->user()->name ?? 'Admin BPR' }}</p>
+          <div class="overflow-hidden text-left">
+            <p class="text-xs font-bold truncate group-hover:text-amber-300 transition-colors">{{ auth()->user()->name ?? 'Admin BPR' }}</p>
             <p class="text-[10px] text-blue-300 truncate">{{ auth()->user()->email ?? 'admin@bankmajalengka.co.id' }}</p>
           </div>
-        </div>
+        </a>
         <form method="POST" action="{{ route('admin.logout') }}">
           @csrf
           <button type="submit" title="Keluar" class="p-1.5 text-blue-300 hover:text-red-400 hover:bg-white/10 rounded-lg transition-colors">
@@ -160,6 +165,11 @@
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span>Server MySQL Native Aktif</span>
           </div>
+
+          <a href="{{ route('admin.profile.index') }}" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-700 hover:text-bpr-navy bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+            <span>Ubah Kata Sandi</span>
+          </a>
 
           <a href="{{ route('home') }}" target="_blank" class="px-3 py-1.5 text-xs font-bold text-white bg-bpr-navy hover:bg-bpr-blue rounded-xl flex items-center gap-1.5 transition-colors shadow-sm">
             <span>Lihat Website</span>

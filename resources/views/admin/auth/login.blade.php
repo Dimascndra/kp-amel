@@ -65,8 +65,9 @@
         <div>
           <label for="email" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Email Administrator</label>
           <div class="relative">
-            <input type="email" id="email" name="email" value="{{ old('email', 'admin@bankmajalengka.co.id') }}" required autofocus
-              placeholder="admin@bankmajalengka.co.id"
+            <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus
+              placeholder="Masukkan email administrator"
+              autocomplete="email"
               class="w-full px-4 py-3 rounded-xl border border-slate-300 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-bpr-blue focus:border-transparent transition">
           </div>
         </div>
@@ -74,11 +75,11 @@
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label for="password" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Kata Sandi</label>
-            <span class="text-[11px] text-slate-400">Default: password</span>
           </div>
           <div class="relative">
             <input type="password" id="password" name="password" required
-              placeholder="••••••••"
+              placeholder="Masukkan kata sandi"
+              autocomplete="current-password"
               class="w-full px-4 py-3 rounded-xl border border-slate-300 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-bpr-blue focus:border-transparent transition">
           </div>
         </div>
