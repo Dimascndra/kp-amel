@@ -7,11 +7,12 @@ use App\Models\Branch;
 use App\Models\Product;
 use App\Models\PublicationReport;
 use App\Models\Setting;
+use App\Services\AntiFraudService;
 use Illuminate\View\View;
 
 class HomeController extends Controller
 {
-    public function index(): View
+    public function index(AntiFraudService $antiFraud): View
     {
         $settings = Setting::getAllKeyValues();
 
@@ -26,6 +27,18 @@ class HomeController extends Controller
         $articles = Article::published()->take(6)->get();
         $reports = PublicationReport::active()->get();
 
-        return view('landing', compact('settings', 'allProducts', 'productsByCat', 'branches', 'articles', 'reports'));
+        $complaintCaptcha = $antiFraud->generateCaptcha();
+        $complaintFormLoadToken = $antiFraud->generateFormLoadToken();
+
+        return view('landing', compact(
+            'settings',
+            'allProducts',
+            'productsByCat',
+            'branches',
+            'articles',
+            'reports',
+            'complaintCaptcha',
+            'complaintFormLoadToken'
+        ));
     }
 }

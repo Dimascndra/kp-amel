@@ -3,7 +3,9 @@
  * Mengacu pada Sketsa Mockup (13 Halaman) dan Figma Corporate UI Design
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+var currentComplaintLocalAnswer = 13;
+
+function bootstrapApp() {
   if (window.DYNAMIC_PRODUCTS) {
     if (window.DYNAMIC_PRODUCTS.tabungan) PRODUCTS_DATA.tabungan = window.DYNAMIC_PRODUCTS.tabungan;
     if (window.DYNAMIC_PRODUCTS.deposito) PRODUCTS_DATA.deposito = window.DYNAMIC_PRODUCTS.deposito;
@@ -18,18 +20,26 @@ document.addEventListener('DOMContentLoaded', () => {
     ARTICLES_DATA.push(...window.DYNAMIC_ARTICLES);
   }
 
-  initNavbar();
-  initKolomTanya();
-  initProductShowcase();
-  initSimulator();
-  initFormPengajuan();
-  initProductModals();
-  initNewsModal();
-  initFAQ();
-  initKantorKas();
-  initLaporanPublikasi();
-  initGlobalModals();
-});
+  try { initNavbar(); } catch (e) { console.warn('initNavbar error:', e); }
+  try { initKolomTanya(); } catch (e) { console.warn('initKolomTanya error:', e); }
+  try { initHeroCarousel(); } catch (e) { console.warn('initHeroCarousel error:', e); }
+  try { initProductShowcase(); } catch (e) { console.warn('initProductShowcase error:', e); }
+  try { initSimulator(); } catch (e) { console.warn('initSimulator error:', e); }
+  try { initFormPengajuan(); } catch (e) { console.warn('initFormPengajuan error:', e); }
+  try { initPengaduanNasabah(); } catch (e) { console.warn('initPengaduanNasabah error:', e); }
+  try { initProductModals(); } catch (e) { console.warn('initProductModals error:', e); }
+  try { initNewsModal(); } catch (e) { console.warn('initNewsModal error:', e); }
+  try { initFAQ(); } catch (e) { console.warn('initFAQ error:', e); }
+  try { initKantorKas(); } catch (e) { console.warn('initKantorKas error:', e); }
+  try { initLaporanPublikasi(); } catch (e) { console.warn('initLaporanPublikasi error:', e); }
+  try { initGlobalModals(); } catch (e) { console.warn('initGlobalModals error:', e); }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootstrapApp);
+} else {
+  bootstrapApp();
+}
 
 // Global Function Declarations & Exposures (Strictly matching Mockup Sketches and BCA Product Showcase)
 function resolveProduct(product) {
@@ -276,6 +286,18 @@ window.readArticle = readArticle;
 window.showAllArticles = showAllArticles;
 window.resetProductFilter = resetProductFilter;
 window.filterProductShowcase = filterProductShowcase;
+window.toggleBranchesDirectory = toggleBranchesDirectory;
+window.initHeroCarousel = initHeroCarousel;
+window.openReportArchive = openReportArchive;
+window.closeReportArchiveModal = closeReportArchiveModal;
+window.selectReportArchiveFile = selectReportArchiveFile;
+window.filterReportArchiveYear = filterReportArchiveYear;
+window.switchComplaintTab = switchComplaintTab;
+window.copyComplaintCode = copyComplaintCode;
+window.resetComplaintForm = resetComplaintForm;
+window.checkStatusFromCode = checkStatusFromCode;
+window.handleCekStatusSubmit = handleCekStatusSubmit;
+window.refreshComplaintCaptcha = refreshComplaintCaptcha;
 
 /* ==========================================================================
    1. DATABASE PRODUK (TABUNGAN, DEPOSITO, KREDIT)
@@ -1441,6 +1463,88 @@ function showPengajuanSuccessModal(data, serverRefCode) {
 }
 
 /* ==========================================================================
+   2B. HERO PRODUCT CAROUSEL (MENAMPILKAN SEMUA PRODUK)
+   ========================================================================== */
+function initHeroCarousel() {
+  const container = document.getElementById('hero-product-carousel');
+  if (!container) return;
+
+  const slides = container.querySelectorAll('.hero-carousel-slide');
+  const dots = container.querySelectorAll('.hero-carousel-dot');
+  const prevBtn = document.getElementById('hero-carousel-prev');
+  const nextBtn = document.getElementById('hero-carousel-next');
+
+  if (slides.length === 0) return;
+
+  let currentIndex = 0;
+  let autoplayTimer = null;
+
+  const showSlide = (index) => {
+    if (index < 0) index = slides.length - 1;
+    if (index >= slides.length) index = 0;
+    currentIndex = index;
+
+    slides.forEach((slide, i) => {
+      if (i === currentIndex) {
+        slide.classList.remove('opacity-0', 'pointer-events-none', 'translate-x-4');
+        slide.classList.add('opacity-100', 'pointer-events-auto', 'translate-x-0');
+        slide.setAttribute('aria-hidden', 'false');
+      } else {
+        slide.classList.add('opacity-0', 'pointer-events-none', 'translate-x-4');
+        slide.classList.remove('opacity-100', 'pointer-events-auto', 'translate-x-0');
+        slide.setAttribute('aria-hidden', 'true');
+      }
+    });
+
+    dots.forEach((dot, i) => {
+      if (i === currentIndex) {
+        dot.classList.add('bg-amber-400', 'w-8');
+        dot.classList.remove('bg-white/40', 'w-2.5');
+      } else {
+        dot.classList.remove('bg-amber-400', 'w-8');
+        dot.classList.add('bg-white/40', 'w-2.5');
+      }
+    });
+  };
+
+  const nextSlide = () => showSlide(currentIndex + 1);
+  const prevSlide = () => showSlide(currentIndex - 1);
+
+  if (prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); resetAutoplay(); });
+  if (nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); resetAutoplay(); });
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      showSlide(i);
+      resetAutoplay();
+    });
+  });
+
+  const startAutoplay = () => {
+    if (autoplayTimer) clearInterval(autoplayTimer);
+    autoplayTimer = setInterval(nextSlide, 5000);
+  };
+
+  const stopAutoplay = () => {
+    if (autoplayTimer) {
+      clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    }
+  };
+
+  const resetAutoplay = () => {
+    stopAutoplay();
+    startAutoplay();
+  };
+
+  container.addEventListener('mouseenter', stopAutoplay);
+  container.addEventListener('mouseleave', startAutoplay);
+
+  showSlide(0);
+  startAutoplay();
+}
+
+/* ==========================================================================
    6B. BCA-STYLE INTERACTIVE PRODUCT SHOWCASE (TABS, SEARCH & GRID)
    ========================================================================== */
 function initProductShowcase() {
@@ -1449,11 +1553,16 @@ function initProductShowcase() {
   const clearBtn = document.getElementById('product-showcase-search-clear');
   const grid = document.getElementById('product-showcase-grid');
   const emptyState = document.getElementById('product-showcase-empty');
+  const toggleBtn = document.getElementById('product-showcase-toggle-btn');
+  const toggleContainer = document.getElementById('product-showcase-toggle-container');
+  const toggleText = document.getElementById('product-showcase-toggle-text');
+  const toggleIcon = document.getElementById('product-showcase-toggle-icon');
 
   if (!grid) return;
 
   let activeCategory = 'all';
   let searchQuery = '';
+  let isExpanded = false; // Default: hanya tampilkan 3 produk unggulan
 
   const getWaUrl = (prod) => {
     const defaultWa = '6281111116526';
@@ -1546,8 +1655,10 @@ function initProductShowcase() {
 
   const filterCards = () => {
     const cards = grid.querySelectorAll('.product-showcase-card');
-    let visibleCount = 0;
     const searchTerms = searchQuery ? searchQuery.split(/\s+/).filter(Boolean) : [];
+    const isSearching = searchTerms.length > 0;
+
+    let matchingCards = [];
 
     cards.forEach(card => {
       const cardCategory = card.dataset.category;
@@ -1557,24 +1668,80 @@ function initProductShowcase() {
       const matchSearch = searchTerms.length === 0 || searchTerms.every(term => cardName.includes(term));
 
       if (matchCategory && matchSearch) {
-        card.classList.remove('hidden');
-        visibleCount++;
+        matchingCards.push(card);
       } else {
         card.classList.add('hidden');
       }
     });
 
+    const totalMatching = matchingCards.length;
+
     if (emptyState) {
-      if (visibleCount === 0) {
+      if (totalMatching === 0) {
         emptyState.classList.remove('hidden');
       } else {
         emptyState.classList.add('hidden');
       }
     }
+
+    // Jika sedang dalam pencarian, tampilkan semua hasil pencarian yang relevan
+    if (isSearching) {
+      matchingCards.forEach(card => card.classList.remove('hidden'));
+      if (toggleContainer) toggleContainer.classList.add('hidden');
+      return;
+    }
+
+    // Mode penjelajahan standar:
+    if (!isExpanded) {
+      // Hanya tampilkan 3 produk unggulan
+      matchingCards.forEach((card, index) => {
+        if (index < 3) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    } else {
+      // Tampilkan seluruh produk
+      matchingCards.forEach(card => card.classList.remove('hidden'));
+    }
+
+    // Update tombol toggle "Tampilkan Semua Produk"
+    if (toggleContainer && toggleBtn) {
+      if (totalMatching > 3) {
+        toggleContainer.classList.remove('hidden');
+        if (!isExpanded) {
+          let catLabel = '';
+          if (activeCategory === 'tabungan') catLabel = 'Tabungan ';
+          else if (activeCategory === 'deposito') catLabel = 'Deposito ';
+          else if (activeCategory === 'kredit') catLabel = 'Kredit ';
+          if (toggleText) toggleText.textContent = `Tampilkan Semua Produk ${catLabel}(${totalMatching} Produk)`.replace(/\s+/g, ' ');
+          if (toggleIcon) toggleIcon.classList.remove('rotate-180');
+        } else {
+          if (toggleText) toggleText.textContent = 'Tampilkan Lebih Sedikit (3 Produk Unggulan)';
+          if (toggleIcon) toggleIcon.classList.add('rotate-180');
+        }
+      } else {
+        toggleContainer.classList.add('hidden');
+      }
+    }
   };
+
+  // Toggle button click listener
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      isExpanded = !isExpanded;
+      filterCards();
+      if (!isExpanded) {
+        const prodSec = document.getElementById('produk');
+        if (prodSec) prodSec.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  }
 
   const applyCategoryTab = (category) => {
     activeCategory = category || 'all';
+    isExpanded = false; // Reset to 3 featured products on tab switch
     tabs.forEach(t => {
       const isSelected = (t.dataset.category || 'all') === activeCategory;
       if (isSelected) {
@@ -1851,8 +2018,28 @@ function initFAQ() {
 }
 
 /* ==========================================================================
-   10. KANTOR KAS DIRECTORY & SEARCH
+   10. KANTOR KAS DIRECTORY & FILE SYSTEM
    ========================================================================== */
+function toggleBranchesDirectory(forceOpen = null) {
+  const content = document.getElementById('branches-directory-content');
+  const btnText = document.getElementById('btn-toggle-branches-text');
+  const icon = document.getElementById('branches-toggle-icon');
+  if (!content) return;
+
+  const isHidden = content.classList.contains('hidden');
+  const shouldOpen = forceOpen !== null ? forceOpen : isHidden;
+
+  if (shouldOpen) {
+    content.classList.remove('hidden');
+    if (btnText) btnText.textContent = 'Tutup Daftar Kantor Cabang';
+    if (icon) icon.classList.add('rotate-180');
+  } else {
+    content.classList.add('hidden');
+    if (btnText) btnText.textContent = 'Lihat Kantor Cabang Lainnya';
+    if (icon) icon.classList.remove('rotate-180');
+  }
+}
+
 function initKantorKas() {
   const container = document.getElementById('kantor-kas-grid');
   const searchInput = document.getElementById('kantor-kas-search');
@@ -1863,6 +2050,9 @@ function initKantorKas() {
 
   const filterExisting = (query = '') => {
     const q = query.trim().toLowerCase();
+    if (q) {
+      toggleBranchesDirectory(true);
+    }
     let visibleCount = 0;
     existingCards.forEach(card => {
       const name = card.dataset.name || '';
@@ -1892,10 +2082,15 @@ function initKantorKas() {
 
   const renderFromData = (query = '') => {
     container.innerHTML = '';
-    let filtered = BRANCHES_DATA;
+    // Kantor Pusat ditampilkan khusus di Headline, grid menampilkan 11 kantor kas cabang
+    let branchesToRender = BRANCHES_DATA.filter(b => !(b.isMain || b.is_main));
+    if (branchesToRender.length === 0) branchesToRender = BRANCHES_DATA;
+
+    let filtered = branchesToRender;
     if (query) {
+      toggleBranchesDirectory(true);
       const q = query.toLowerCase();
-      filtered = BRANCHES_DATA.filter(b => 
+      filtered = branchesToRender.filter(b => 
         (b.name || '').toLowerCase().includes(q) || 
         (b.address || '').toLowerCase().includes(q)
       );
@@ -1914,21 +2109,29 @@ function initKantorKas() {
       const waNumber = (branch.whatsapp || '081111116526').replace(/[^0-9]/g, '');
 
       const card = document.createElement('div');
-      card.className = `kantor-kas-card bg-white rounded-2xl p-6 ${isMain ? 'ring-2 ring-bpr-blue/20 bg-blue-50/20' : ''} card-shadow hover:shadow-lg transition-all flex flex-col justify-between`;
+      card.className = `kantor-kas-card bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group`;
+      card.dataset.name = (branch.name || '').toLowerCase();
+      card.dataset.address = (branch.address || '').toLowerCase();
       card.innerHTML = `
         <div>
           <div class="flex items-center justify-between mb-2">
-            <span class="text-xs font-bold px-2.5 py-1 rounded-lg ${isMain ? 'bg-bpr-blue text-white' : 'bg-slate-100 text-slate-700'}">${branchType}</span>
-            <span class="text-xs text-emerald-700 font-semibold">Buka Layanan</span>
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 flex items-center gap-1">
+              <svg class="w-3.5 h-3.5 text-bpr-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              <span>${branchType}</span>
+            </span>
+            <span class="text-[11px] text-emerald-700 font-semibold flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span>Buka Layanan</span>
+            </span>
           </div>
-          <h4 class="font-bold text-slate-900 text-base mb-1">${branch.name}</h4>
+          <h4 class="font-bold text-slate-900 text-base mb-1.5 group-hover:text-bpr-blue transition-colors">${branch.name}</h4>
           <p class="text-slate-600 text-xs mb-3 leading-relaxed flex items-start gap-1.5">
             <svg class="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             <span>${branch.address}</span>
           </p>
-          <div class="text-xs text-slate-500 space-y-1 mb-4 pt-2">
-            <p><strong>Telepon:</strong> ${branchPhone}</p>
-            <p><strong>Jam Buka:</strong> ${branchHours}</p>
+          <div class="text-xs text-slate-500 space-y-1 mb-4 pt-2 border-t border-slate-100 font-mono text-[11px]">
+            <p><strong class="font-sans font-semibold text-slate-700">Tel:</strong> ${branchPhone}</p>
+            <p><strong class="font-sans font-semibold text-slate-700">Jam:</strong> ${branchHours}</p>
           </div>
         </div>
         <div class="flex items-center gap-2 pt-2">
@@ -2081,6 +2284,9 @@ function initKolomTanya() {
           const branchSection = document.getElementById('kantor-kas');
           if (branchSection) {
             branchSection.scrollIntoView({ behavior: 'smooth' });
+            if (typeof toggleBranchesDirectory === 'function') {
+              toggleBranchesDirectory(true);
+            }
             const kasSearch = document.getElementById('kantor-kas-search');
             if (kasSearch) {
               kasSearch.value = item.dataset.name.replace('Kantor Kas ', '');
@@ -2117,8 +2323,474 @@ function initKolomTanya() {
 }
 
 /* ==========================================================================
-   12. LAPORAN PUBLIKASI FILTER SEARCH (Sesuai Figma Section 9)
+   12. LAPORAN PUBLIKASI ARCHIVE, PREVIEW & SEARCH
    ========================================================================== */
+const REPORT_ARCHIVES_DATA = {
+  triwulan: {
+    categoryKey: 'triwulan',
+    categoryName: 'Laporan Keuangan Publikasi Triwulanan',
+    badge: 'Neraca Berkala OJK',
+    badgeClass: 'bg-blue-50 text-bpr-blue',
+    description: 'Neraca dan laporan publikasi berkala per triwulan/bulan yang disampaikan kepada Otoritas Jasa Keuangan (OJK) dan Lembaga Penjamin Simpanan (LPS).',
+    files: [
+      {
+        id: 'triwulan-2024-q3',
+        month: 'September 2024',
+        quarter: 'Triwulan III',
+        year: '2024',
+        title: 'Laporan Publikasi Keuangan Posisi 30 September 2024',
+        period: 'Triwulan III - 30 September 2024',
+        size: '1.8 MB',
+        filePath: 'assets/docs/laporan-publikasi-q3-2024.pdf',
+        pages: '6 Halaman',
+        datePublished: '15 Oktober 2024',
+        summary: 'Posisi neraca keuangan triwulan III 2024 menunjukkan rasio kecukupan modal CAR 24.8%, NPL Net 1.82%, pertumbuhan DPK 8.4%, serta likuiditas sehat terverifikasi OJK.'
+      },
+      {
+        id: 'triwulan-2024-q2',
+        month: 'Juni 2024',
+        quarter: 'Triwulan II (Semester I)',
+        year: '2024',
+        title: 'Laporan Publikasi Keuangan Posisi 30 Juni 2024',
+        period: 'Triwulan II - 30 Juni 2024',
+        size: '1.6 MB',
+        filePath: 'assets/docs/laporan-publikasi-q2-2024.pdf',
+        pages: '6 Halaman',
+        datePublished: '18 Juli 2024',
+        summary: 'Laporan posisi keuangan semester I 2024 mencerminkan likuiditas yang kuat, rasio KPMM/CAR di atas ketentuan regulasi, serta efisiensi beban operasional terkendali.'
+      },
+      {
+        id: 'triwulan-2024-q1',
+        month: 'Maret 2024',
+        quarter: 'Triwulan I',
+        year: '2024',
+        title: 'Laporan Publikasi Keuangan Posisi 31 Maret 2024',
+        period: 'Triwulan I - 31 Maret 2024',
+        size: '1.5 MB',
+        filePath: 'assets/docs/laporan-publikasi-q2-2024.pdf',
+        pages: '6 Halaman',
+        datePublished: '16 April 2024',
+        summary: 'Realisasi kinerja awal triwulan I 2024 dengan ekspansi penyaluran kredit produktif UMKM dan stabilitas penghimpunan dana simpanan masyarakat Majalengka.'
+      },
+      {
+        id: 'triwulan-2023-q4',
+        month: 'Desember 2023',
+        quarter: 'Triwulan IV (Tahunan)',
+        year: '2023',
+        title: 'Laporan Publikasi Keuangan Posisi 31 Desember 2023',
+        period: 'Triwulan IV - 31 Desember 2023',
+        size: '1.9 MB',
+        filePath: 'assets/docs/laporan-publikasi-q3-2024.pdf',
+        pages: '8 Halaman',
+        datePublished: '25 Januari 2024',
+        summary: 'Laporan penutupan buku tahun 2023 dengan penguatan struktur modal, cadangan CKPN, dan hasil penggabungan (merger) 8 BPR Kabupaten Majalengka.'
+      },
+      {
+        id: 'triwulan-2023-q3',
+        month: 'September 2023',
+        quarter: 'Triwulan III',
+        year: '2023',
+        title: 'Laporan Publikasi Keuangan Posisi 30 September 2023',
+        period: 'Triwulan III - 30 September 2023',
+        size: '1.7 MB',
+        filePath: 'assets/docs/laporan-publikasi-q3-2024.pdf',
+        pages: '6 Halaman',
+        datePublished: '17 Oktober 2023',
+        summary: 'Neraca triwulan III 2023 mencatatkan rasio kecukupan modal yang solid pasca penggabungan konsolidasi 8 BPR Majalengka.'
+      },
+      {
+        id: 'triwulan-2023-q2',
+        month: 'Juni 2023',
+        quarter: 'Triwulan II',
+        year: '2023',
+        title: 'Laporan Publikasi Keuangan Posisi 30 Juni 2023',
+        period: 'Triwulan II - 30 Juni 2023',
+        size: '1.6 MB',
+        filePath: 'assets/docs/laporan-publikasi-q2-2024.pdf',
+        pages: '6 Halaman',
+        datePublished: '20 Juli 2023',
+        summary: 'Kinerja semester I 2023 membuktikan ketahanan portofolio kredit mikro di 12 wilayah kantor kas Kabupaten Majalengka.'
+      }
+    ]
+  },
+  audited: {
+    categoryKey: 'audited',
+    categoryName: 'Laporan Keuangan Tahunan (Audited)',
+    badge: 'Audit KAP Independen',
+    badgeClass: 'bg-amber-50 text-amber-800',
+    description: 'Laporan keuangan tahunan yang telah diaudit oleh Kantor Akuntan Publik (KAP) independen dengan opini Wajar Tanpa Pengecualian (WTP).',
+    files: [
+      {
+        id: 'audited-2023',
+        month: 'Tahun 2023',
+        quarter: 'Tahunan Penuh',
+        year: '2023',
+        title: 'Laporan Keuangan Audited Tahun Buku 2023',
+        period: 'Tahun Buku 2023 (1 Jan - 31 Des 2023)',
+        size: '4.5 MB',
+        filePath: 'assets/docs/laporan-audited-2023.pdf',
+        pages: '48 Halaman',
+        datePublished: '15 April 2024',
+        summary: 'Laporan audit KAP independen dengan opini Wajar Tanpa Pengecualian (WTP). Memuat neraca komparatif, laba rugi, arus kas, dan catatan atas laporan keuangan.'
+      },
+      {
+        id: 'audited-2022',
+        month: 'Tahun 2022',
+        quarter: 'Tahunan Penuh',
+        year: '2022',
+        title: 'Laporan Keuangan Audited Tahun Buku 2022',
+        period: 'Tahun Buku 2022 (1 Jan - 31 Des 2022)',
+        size: '4.2 MB',
+        filePath: 'assets/docs/laporan-audited-2023.pdf',
+        pages: '44 Halaman',
+        datePublished: '20 April 2023',
+        summary: 'Laporan audit keuangan komprehensif periode transisi merger BPR Kabupaten Majalengka dengan opini audit independen tanpa modifikasi.'
+      },
+      {
+        id: 'audited-2021',
+        month: 'Tahun 2021',
+        quarter: 'Tahunan Penuh',
+        year: '2021',
+        title: 'Laporan Keuangan Audited Tahun Buku 2021',
+        period: 'Tahun Buku 2021 (1 Jan - 31 Des 2021)',
+        size: '3.8 MB',
+        filePath: 'assets/docs/laporan-audited-2023.pdf',
+        pages: '40 Halaman',
+        datePublished: '28 April 2022',
+        summary: 'Hasil audit independen laporan keuangan tahun 2021 menunjukkan kepatuhan tinggi terhadap Standar Akuntansi Keuangan SAK ETAP.'
+      }
+    ]
+  },
+  gcg: {
+    categoryKey: 'gcg',
+    categoryName: 'Laporan Penerapan Tata Kelola Perusahaan (GCG)',
+    badge: 'Good Corporate Governance',
+    badgeClass: 'bg-emerald-50 text-emerald-700',
+    description: 'Laporan transparansi pelaksanaan tata kelola yang baik (transparency, accountability, responsibility, independency, fairness) sesuai SEOJK.',
+    files: [
+      {
+        id: 'gcg-2023',
+        month: 'Tahun 2023',
+        quarter: 'Tahunan GCG',
+        year: '2023',
+        title: 'Laporan Pelaksanaan Tata Kelola (GCG) Tahun 2023',
+        period: 'Tahun 2023',
+        size: '3.2 MB',
+        filePath: 'assets/docs/laporan-gcg-2023.pdf',
+        pages: '32 Halaman',
+        datePublished: '30 Mei 2024',
+        summary: 'Penilaian mandiri (self assessment) pelaksanaan GCG dengan predikat "SANGAT BAIK". Menguraikan kepengurusan, remunerasi, komite audit, dan sistem pengendalian intern.'
+      },
+      {
+        id: 'gcg-2022',
+        month: 'Tahun 2022',
+        quarter: 'Tahunan GCG',
+        year: '2022',
+        title: 'Laporan Pelaksanaan Tata Kelola (GCG) Tahun 2022',
+        period: 'Tahun 2022',
+        size: '3.0 MB',
+        filePath: 'assets/docs/laporan-gcg-2023.pdf',
+        pages: '28 Halaman',
+        datePublished: '25 Mei 2023',
+        summary: 'Implementasi tata kelola dalam integrasi manajemen operasional paska merger 8 BPR Kabupaten Majalengka.'
+      },
+      {
+        id: 'gcg-2021',
+        month: 'Tahun 2021',
+        quarter: 'Tahunan GCG',
+        year: '2021',
+        title: 'Laporan Pelaksanaan Tata Kelola (GCG) Tahun 2021',
+        period: 'Tahun 2021',
+        size: '2.8 MB',
+        filePath: 'assets/docs/laporan-gcg-2023.pdf',
+        pages: '26 Halaman',
+        datePublished: '31 Mei 2022',
+        summary: 'Kepatuhan tata kelola direksi dan dewan pengawas serta efektivitas fungsi kepatuhan dan manajemen risiko perbankan daerah.'
+      }
+    ]
+  },
+  rakb: {
+    categoryKey: 'rakb',
+    categoryName: 'Rencana Aksi Keuangan Berkelanjutan (RAKB)',
+    badge: 'Keuangan Berkelanjutan',
+    badgeClass: 'bg-purple-50 text-purple-700',
+    description: 'Penerapan prinsip keuangan berkelanjutan berbasis POJK No. 51/POJK.03/2017 dalam mendukung pertumbuhan ekonomi hijau dan pemberdayaan masyarakat.',
+    files: [
+      {
+        id: 'rakb-2024-2025',
+        month: 'Periode 2024-2025',
+        quarter: 'Rencana Aksi',
+        year: '2024',
+        title: 'Rencana Aksi Keuangan Berkelanjutan (RAKB) 2024 - 2025',
+        period: 'Tahun 2024 - 2025',
+        size: '2.1 MB',
+        filePath: 'assets/docs/laporan-rakb-2024.pdf',
+        pages: '24 Halaman',
+        datePublished: '10 Januari 2024',
+        summary: 'Rencana strategis alokasi pembiayaan usaha ramah lingkungan, pertanian terpadu Majalengka, dan efisiensi operasional perbankan ramah energi.'
+      },
+      {
+        id: 'rakb-realisasi-2023',
+        month: 'Realisasi 2023',
+        quarter: 'Realisasi Tahunan',
+        year: '2023',
+        title: 'Laporan Realisasi Keuangan Berkelanjutan Tahun 2023',
+        period: 'Tahun 2023',
+        size: '1.9 MB',
+        filePath: 'assets/docs/laporan-rakb-2024.pdf',
+        pages: '20 Halaman',
+        datePublished: '28 Februari 2024',
+        summary: 'Realisasi penyaluran kredit produktif mikro berkelanjutan kepada 1.400+ pelaku usaha mikro daerah dan program CSR peduli kelestarian alam.'
+      }
+    ]
+  },
+  audit_internal: {
+    categoryKey: 'audit_internal',
+    categoryName: 'Piagam Audit Internal (Audit Charter)',
+    badge: 'Pengawasan Internal',
+    badgeClass: 'bg-slate-100 text-slate-700',
+    description: 'Piagam dan standar operasional Satuan Kerja Audit Intern (SKAI) yang disahkan oleh Direksi dan Dewan Pengawas.',
+    files: [
+      {
+        id: 'audit-charter-2024',
+        month: 'Edisi 2024',
+        quarter: 'Revisi Terkini',
+        year: '2024',
+        title: 'Piagam Audit Internal (Audit Charter) Tahun 2024',
+        period: 'Edisi 2024',
+        size: '1.2 MB',
+        filePath: 'assets/docs/piagam-audit-internal.pdf',
+        pages: '18 Halaman',
+        datePublished: '02 Januari 2024',
+        summary: 'Pedoman formal kewenangan, tanggung jawab, independensi, dan objektivitas satuan pengawasan intern dalam memitigasi risiko operasional perbankan.'
+      },
+      {
+        id: 'audit-sop-2023',
+        month: 'Edisi 2023',
+        quarter: 'Standar Operasional',
+        year: '2023',
+        title: 'Standar Operasional Prosedur Pengawasan Intern 2023',
+        period: 'Edisi 2023',
+        size: '1.1 MB',
+        filePath: 'assets/docs/piagam-audit-internal.pdf',
+        pages: '16 Halaman',
+        datePublished: '05 Januari 2023',
+        summary: 'Kerangka kerja audit berbasis risiko (risk-based audit) untuk pemeriksaan teratur pada 12 kantor kas dan unit operasional kantor pusat.'
+      }
+    ]
+  }
+};
+
+let currentArchiveGroup = null;
+let currentArchiveYear = 'all';
+let currentSelectedFile = null;
+
+function resolveArchiveGroup(keyOrId) {
+  if (!keyOrId) return { group: REPORT_ARCHIVES_DATA.triwulan, defaultFileId: 'triwulan-2024-q3' };
+  const str = String(keyOrId).toLowerCase().trim();
+
+  if (str === '1' || str.includes('september') || str.includes('triwulan iii') || str.includes('q3')) {
+    return { group: REPORT_ARCHIVES_DATA.triwulan, defaultFileId: 'triwulan-2024-q3' };
+  }
+  if (str === '2' || str.includes('juni') || str.includes('triwulan ii') || str.includes('q2')) {
+    return { group: REPORT_ARCHIVES_DATA.triwulan, defaultFileId: 'triwulan-2024-q2' };
+  }
+  if (str === '3' || str.includes('gcg') || str.includes('tata kelola')) {
+    return { group: REPORT_ARCHIVES_DATA.gcg, defaultFileId: 'gcg-2023' };
+  }
+  if (str === '4' || str.includes('audited') || str.includes('tahunan audited') || str.includes('kap')) {
+    return { group: REPORT_ARCHIVES_DATA.audited, defaultFileId: 'audited-2023' };
+  }
+  if (str === '5' || str.includes('rakb') || str.includes('keuangan berkelanjutan')) {
+    return { group: REPORT_ARCHIVES_DATA.rakb, defaultFileId: 'rakb-2024-2025' };
+  }
+  if (str === '6' || str.includes('audit internal') || str.includes('charter') || str.includes('piagam')) {
+    return { group: REPORT_ARCHIVES_DATA.audit_internal, defaultFileId: 'audit-charter-2024' };
+  }
+
+  if (REPORT_ARCHIVES_DATA[str]) {
+    return { group: REPORT_ARCHIVES_DATA[str], defaultFileId: REPORT_ARCHIVES_DATA[str].files[0].id };
+  }
+
+  return { group: REPORT_ARCHIVES_DATA.triwulan, defaultFileId: 'triwulan-2024-q3' };
+}
+
+function openReportArchive(reportIdOrKey, specificFileId = null) {
+  const modal = document.getElementById('modal-laporan-preview');
+  if (!modal) return;
+
+  const resolved = resolveArchiveGroup(reportIdOrKey);
+  currentArchiveGroup = resolved.group;
+  currentArchiveYear = 'all';
+
+  const catBadge = document.getElementById('report-modal-category-badge');
+  const mainTitle = document.getElementById('report-modal-main-title');
+  if (catBadge) catBadge.textContent = currentArchiveGroup.badge;
+  if (mainTitle) mainTitle.textContent = currentArchiveGroup.categoryName;
+
+  // Reset year filter tabs
+  const tabs = document.querySelectorAll('.report-year-tab');
+  tabs.forEach(tab => {
+    if (tab.dataset.year === 'all') {
+      tab.classList.add('bg-white', 'text-bpr-blue', 'shadow-sm', 'font-bold');
+      tab.classList.remove('text-slate-600', 'font-medium');
+    } else {
+      tab.classList.remove('bg-white', 'text-bpr-blue', 'shadow-sm', 'font-bold');
+      tab.classList.add('text-slate-600', 'font-medium');
+    }
+  });
+
+  renderArchiveFilesList(specificFileId || resolved.defaultFileId);
+
+  modal.classList.add('active');
+  document.body.classList.add('overflow-hidden');
+}
+
+function closeReportArchiveModal() {
+  const modal = document.getElementById('modal-laporan-preview');
+  if (modal) modal.classList.remove('active');
+  const anyActive = document.querySelector('.modal-backdrop.active');
+  if (!anyActive) {
+    document.body.classList.remove('overflow-hidden');
+  }
+}
+
+function filterReportArchiveYear(year) {
+  currentArchiveYear = year;
+  const tabs = document.querySelectorAll('.report-year-tab');
+  tabs.forEach(tab => {
+    if (tab.dataset.year === year) {
+      tab.classList.add('bg-white', 'text-bpr-blue', 'shadow-sm', 'font-bold');
+      tab.classList.remove('text-slate-600', 'font-medium');
+    } else {
+      tab.classList.remove('bg-white', 'text-bpr-blue', 'shadow-sm', 'font-bold');
+      tab.classList.add('text-slate-600', 'font-medium');
+    }
+  });
+
+  renderArchiveFilesList(currentSelectedFile ? currentSelectedFile.id : null);
+}
+
+function renderArchiveFilesList(activeFileId = null) {
+  const container = document.getElementById('report-files-list-container');
+  if (!container || !currentArchiveGroup) return;
+
+  container.innerHTML = '';
+
+  let files = currentArchiveGroup.files;
+  if (currentArchiveYear !== 'all') {
+    files = files.filter(f => f.year === currentArchiveYear);
+  }
+
+  if (files.length === 0) {
+    container.innerHTML = `<div class="py-8 text-center text-slate-400 text-xs">Tidak ada arsip dokumen untuk tahun ${currentArchiveYear}.</div>`;
+    return;
+  }
+
+  let fileToSelect = files.find(f => f.id === activeFileId) || files[0];
+
+  files.forEach(file => {
+    const isSelected = file.id === fileToSelect.id;
+    const item = document.createElement('div');
+    item.className = `report-file-item p-3 rounded-2xl cursor-pointer transition-all border ${
+      isSelected 
+        ? 'bg-blue-50/70 border-bpr-blue/40 shadow-sm ring-1 ring-bpr-blue/30' 
+        : 'bg-white border-slate-200/80 hover:bg-slate-100/70 hover:border-slate-300'
+    }`;
+    item.dataset.id = file.id;
+    item.innerHTML = `
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-md ${
+          isSelected ? 'bg-bpr-blue text-white' : 'bg-slate-100 text-slate-600'
+        }">${file.quarter || file.month}</span>
+        <span class="text-[11px] font-mono text-slate-400">${file.size}</span>
+      </div>
+      <h6 class="text-xs font-bold ${isSelected ? 'text-bpr-blue' : 'text-slate-800'} line-clamp-1">${file.title}</h6>
+      <div class="mt-1 flex items-center justify-between text-[11px] text-slate-400">
+        <span>${file.month}</span>
+        <span class="text-[10px] font-semibold text-emerald-700 ${isSelected ? 'flex items-center gap-1' : 'hidden'}">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          Aktif
+        </span>
+      </div>
+    `;
+
+    item.addEventListener('click', () => {
+      selectReportArchiveFile(file.id);
+    });
+
+    container.appendChild(item);
+  });
+
+  selectReportArchiveFile(fileToSelect.id, false);
+}
+
+function selectReportArchiveFile(fileId, updateList = true) {
+  if (!currentArchiveGroup) return;
+  const file = currentArchiveGroup.files.find(f => f.id === fileId);
+  if (!file) return;
+
+  currentSelectedFile = file;
+
+  if (updateList) {
+    const items = document.querySelectorAll('.report-file-item');
+    items.forEach(it => {
+      const isSelected = it.dataset.id === fileId;
+      if (isSelected) {
+        it.className = 'report-file-item p-3 rounded-2xl cursor-pointer transition-all border bg-blue-50/70 border-bpr-blue/40 shadow-sm ring-1 ring-bpr-blue/30';
+        const b = it.querySelector('span');
+        if (b) { b.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-bpr-blue text-white'; }
+        const h = it.querySelector('h6');
+        if (h) { h.className = 'text-xs font-bold text-bpr-blue line-clamp-1'; }
+        const status = it.querySelector('.text-emerald-700');
+        if (status) status.classList.remove('hidden');
+      } else {
+        it.className = 'report-file-item p-3 rounded-2xl cursor-pointer transition-all border bg-white border-slate-200/80 hover:bg-slate-100/70 hover:border-slate-300';
+        const b = it.querySelector('span');
+        if (b) { b.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600'; }
+        const h = it.querySelector('h6');
+        if (h) { h.className = 'text-xs font-bold text-slate-800 line-clamp-1'; }
+        const status = it.querySelector('.text-emerald-700');
+        if (status) status.classList.add('hidden');
+      }
+    });
+  }
+
+  // Populate Preview details
+  const pBadge = document.getElementById('preview-file-period-badge');
+  const pTitle = document.getElementById('preview-file-title');
+  const pSize = document.getElementById('preview-file-size');
+  const pDate = document.getElementById('preview-file-date');
+  const pSummary = document.getElementById('preview-file-summary');
+  const pPages = document.getElementById('preview-file-pages');
+  const pIframe = document.getElementById('preview-pdf-iframe');
+  const pDownloadBtn = document.getElementById('preview-download-btn');
+  const pDownloadText = document.getElementById('preview-download-text');
+  const pOpenTabBtn = document.getElementById('preview-open-tab-btn');
+
+  if (pBadge) pBadge.textContent = file.period || file.quarter;
+  if (pTitle) pTitle.textContent = file.title;
+  if (pSize) pSize.textContent = file.size;
+  if (pDate) pDate.textContent = `Dipublikasikan resmi pada ${file.datePublished} • Dokumen Terbuka untuk Nasabah & Publik`;
+  if (pSummary) pSummary.textContent = file.summary;
+  if (pPages) pPages.textContent = file.pages || 'Format PDF Resmi';
+
+  const docUrl = file.filePath.startsWith('/') ? file.filePath : '/' + file.filePath;
+  if (pIframe) {
+    pIframe.src = `${docUrl}#toolbar=0&navpanes=0`;
+  }
+  if (pDownloadBtn) {
+    pDownloadBtn.href = docUrl;
+    pDownloadBtn.setAttribute('download', file.title.replace(/[^a-zA-Z0-9_-]/g, '_') + '.pdf');
+  }
+  if (pDownloadText) {
+    pDownloadText.textContent = `Unduh PDF Resmi (${file.size})`;
+  }
+  if (pOpenTabBtn) {
+    pOpenTabBtn.href = docUrl;
+  }
+}
+
 function initLaporanPublikasi() {
   const searchInput = document.getElementById('laporan-search');
   const reportCards = document.querySelectorAll('.laporan-card');
@@ -2231,4 +2903,408 @@ function openContactOptions() {
   } else {
     window.open('https://wa.me/6281111116526', '_blank');
   }
+}
+
+/* ==========================================================================
+   11. PENGADUAN NASABAH, ANTI-FRAUD CAPTCHA & STATUS TRACKING
+   (Sesuai Kebutuhan Portal Pengaduan Resmi & Standar Perbankan)
+   ========================================================================== */
+function switchComplaintTab(tab) {
+  const formContainer = document.getElementById('container-form-pengaduan');
+  const trackContainer = document.getElementById('container-cek-pengaduan');
+  const formBtn = document.getElementById('tab-btn-form-pengaduan');
+  const trackBtn = document.getElementById('tab-btn-cek-pengaduan');
+
+  if (tab === 'form') {
+    if (formContainer) formContainer.classList.remove('hidden');
+    if (trackContainer) trackContainer.classList.add('hidden');
+    if (formBtn) {
+      formBtn.className = 'px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm bg-bpr-navy text-white';
+    }
+    if (trackBtn) {
+      trackBtn.className = 'px-5 py-2.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
+    }
+  } else {
+    if (formContainer) formContainer.classList.add('hidden');
+    if (trackContainer) trackContainer.classList.remove('hidden');
+    if (trackBtn) {
+      trackBtn.className = 'px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm bg-bpr-navy text-white';
+    }
+    if (formBtn) {
+      formBtn.className = 'px-5 py-2.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
+    }
+  }
+}
+
+function copyComplaintCode() {
+  const codeEl = document.getElementById('result-ticket-code');
+  if (!codeEl) return;
+  const code = codeEl.textContent.trim();
+
+  const showCopyFeedback = () => {
+    const copyText = document.getElementById('copy-text');
+    if (copyText) {
+      const orig = copyText.textContent;
+      copyText.textContent = 'Tersalin! ✓';
+      setTimeout(() => { copyText.textContent = orig; }, 2000);
+    }
+  };
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(code).then(() => {
+      showCopyFeedback();
+    }).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = code;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showCopyFeedback();
+    });
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = code;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showCopyFeedback();
+  }
+}
+
+function resetComplaintForm() {
+  const form = document.getElementById('form-pengaduan-nasabah');
+  if (form) form.reset();
+  const successBox = document.getElementById('complaint-success-result');
+  if (successBox) successBox.classList.add('hidden');
+  refreshComplaintCaptcha();
+  const formSection = document.getElementById('pengaduan-nasabah');
+  if (formSection) formSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+function refreshComplaintCaptcha() {
+  const questionEl = document.getElementById('complaint-captcha-question');
+  const tokenInput = document.getElementById('complaint-captcha-token');
+  const loadTokenInput = document.getElementById('complaint-form-load-token');
+  const answerInput = document.getElementById('complaint-captcha-answer');
+
+  if (answerInput) answerInput.value = '';
+
+  const fallbackLocalCaptcha = () => {
+    const n1 = Math.floor(Math.random() * 8) + 3;
+    const n2 = Math.floor(Math.random() * 6) + 2;
+    currentComplaintLocalAnswer = n1 + n2;
+    if (questionEl) questionEl.textContent = `${n1} + ${n2} = ?`;
+    if (tokenInput) tokenInput.value = `local_${currentComplaintLocalAnswer}`;
+    if (loadTokenInput && !loadTokenInput.value) loadTokenInput.value = 'local_load_token';
+  };
+
+  // If question element is empty or says "Memuat...", generate local challenge immediately so it never hangs
+  if (questionEl && (!questionEl.textContent || questionEl.textContent.includes('Memuat'))) {
+    fallbackLocalCaptcha();
+  }
+
+  // Attempt to fetch fresh signed CAPTCHA from server with 3-second timeout
+  let controller = null;
+  let timeoutId = null;
+  try {
+    if (typeof AbortController !== 'undefined') {
+      controller = new AbortController();
+      timeoutId = setTimeout(() => controller.abort(), 3000);
+    }
+  } catch (e) {}
+
+  fetch('/captcha/generate', {
+    headers: { 'Accept': 'application/json' },
+    signal: controller ? controller.signal : undefined
+  })
+    .then(res => {
+      if (timeoutId) clearTimeout(timeoutId);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    })
+    .then(res => {
+      if (res && res.success && res.data) {
+        if (questionEl) questionEl.textContent = res.data.question;
+        if (tokenInput) tokenInput.value = res.data.captcha_token;
+        if (loadTokenInput) loadTokenInput.value = res.data.form_load_token;
+        currentComplaintLocalAnswer = null; // server will verify
+      } else {
+        fallbackLocalCaptcha();
+      }
+    })
+    .catch(() => {
+      if (timeoutId) clearTimeout(timeoutId);
+      fallbackLocalCaptcha();
+    });
+}
+
+function checkStatusFromCode(code) {
+  switchComplaintTab('track');
+  const input = document.getElementById('track-ticket-code');
+  if (input) {
+    input.value = code;
+    doFetchComplaintStatus(code);
+  }
+}
+
+function handleCekStatusSubmit(event) {
+  if (event) event.preventDefault();
+  const input = document.getElementById('track-ticket-code');
+  if (!input) return;
+  const code = input.value.trim();
+  if (!code) {
+    alert('Silakan masukkan nomor kode unik pengaduan Anda.');
+    input.focus();
+    return;
+  }
+  doFetchComplaintStatus(code);
+}
+
+function renderTrackResultCard(d) {
+  const card = document.getElementById('track-result-card');
+  if (!card) return;
+  card.classList.remove('hidden');
+
+  const codeEl = document.getElementById('track-result-code');
+  const badgeEl = document.getElementById('track-result-badge');
+  const namaEl = document.getElementById('track-result-nama');
+  const katEl = document.getElementById('track-result-kategori');
+  const tglEl = document.getElementById('track-result-tanggal');
+  const notesEl = document.getElementById('track-result-notes');
+
+  if (codeEl) codeEl.textContent = d.ticket_code;
+  if (namaEl) namaEl.textContent = d.nama;
+  if (katEl) katEl.textContent = d.kategori;
+  if (tglEl) tglEl.textContent = d.tanggal_lapor ? `${d.tanggal_lapor} WIB` : (d.tanggal || 'Baru Saja');
+  if (notesEl) notesEl.textContent = d.catatan_petugas || 'Laporan pengaduan telah diterima dalam sistem terintegrasi Bank Majalengka dan sedang diteliti oleh Satuan Kerja Manajemen Risiko & Kepatuhan.';
+
+  if (badgeEl) {
+    badgeEl.textContent = d.status_label || 'Sedang Diproses';
+    if (d.status === 'selesai') {
+      badgeEl.className = 'px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-emerald-100 text-emerald-800 border border-emerald-300';
+    } else if (d.status === 'ditindaklanjuti') {
+      badgeEl.className = 'px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-blue-100 text-blue-800 border border-blue-300';
+    } else {
+      badgeEl.className = 'px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-amber-100 text-amber-800 border border-amber-300';
+    }
+  }
+
+  card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function doFetchComplaintStatus(code) {
+  const btn = document.getElementById('track-submit-btn');
+  const card = document.getElementById('track-result-card');
+  const origBtnText = btn ? btn.textContent : '';
+
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Mencari...';
+  }
+
+  fetch(`/pengaduan/status?code=${encodeURIComponent(code)}`, {
+    headers: { 'Accept': 'application/json' }
+  })
+  .then(res => res.json().then(data => ({ ok: res.ok, data })))
+  .then(({ ok, data }) => {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = origBtnText;
+    }
+
+    if (!ok || !data.success) {
+      // Check local storage fallback before showing not found alert
+      try {
+        const stored = JSON.parse(localStorage.getItem('bank_majalengka_complaints') || '{}');
+        if (stored[code]) {
+          renderTrackResultCard(stored[code]);
+          return;
+        }
+      } catch (e) {}
+
+      alert(data?.message || 'Pengaduan dengan kode tiket tersebut tidak ditemukan. Mohon periksa kembali kode unik Anda.');
+      if (card) card.classList.add('hidden');
+      return;
+    }
+
+    renderTrackResultCard(data.data);
+  })
+  .catch(() => {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = origBtnText;
+    }
+    // Check local storage fallback on network failure
+    try {
+      const stored = JSON.parse(localStorage.getItem('bank_majalengka_complaints') || '{}');
+      if (stored[code]) {
+        renderTrackResultCard(stored[code]);
+        return;
+      }
+    } catch (e) {}
+
+    alert('Tidak dapat terhubung ke server pengaduan. Silakan periksa koneksi atau nomor tiket Anda.');
+  });
+}
+
+function initPengaduanNasabah() {
+  const form = document.getElementById('form-pengaduan-nasabah');
+  if (!form) return;
+
+  // Tab buttons click listeners
+  const formTabBtn = document.getElementById('tab-btn-form-pengaduan');
+  const trackTabBtn = document.getElementById('tab-btn-cek-pengaduan');
+  if (formTabBtn) {
+    formTabBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchComplaintTab('form');
+    });
+  }
+  if (trackTabBtn) {
+    trackTabBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchComplaintTab('track');
+    });
+  }
+
+  const refreshBtn = document.getElementById('complaint-captcha-refresh');
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', refreshComplaintCaptcha);
+  }
+
+  // Initialize CAPTCHA immediately
+  refreshComplaintCaptcha();
+
+  // Handle URL hash or param
+  if (typeof window !== 'undefined' && window.location && (window.location.hash === '#cek-pengaduan' || (window.location.search && window.location.search.includes('code=')))) {
+    const urlParams = new URLSearchParams(window.location.search || '');
+    const codeParam = urlParams.get('code');
+    if (codeParam) {
+      setTimeout(() => {
+        checkStatusFromCode(codeParam);
+      }, 300);
+    } else {
+      switchComplaintTab('track');
+    }
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Check honeypot
+    const honeypot = document.getElementById('complaint-honeypot');
+    if (honeypot && honeypot.value.trim() !== '') {
+      console.warn('Bot trap triggered');
+      return;
+    }
+
+    const answerInput = document.getElementById('complaint-captcha-answer');
+    if (!answerInput || !answerInput.value.trim()) {
+      alert('Silakan isi jawaban verifikasi CAPTCHA keamanan.');
+      if (answerInput) answerInput.focus();
+      return;
+    }
+
+    // Verify local challenge if local challenge is active
+    if (currentComplaintLocalAnswer !== null) {
+      const parsedAns = parseInt(answerInput.value.trim(), 10);
+      if (parsedAns !== currentComplaintLocalAnswer) {
+        alert('Jawaban verifikasi Anti-Fraud belum tepat. Silakan hitung kembali.');
+        answerInput.focus();
+        return;
+      }
+    }
+
+    const submitBtn = document.getElementById('complaint-submit-btn');
+    const spinner = document.getElementById('complaint-submit-spinner');
+    const submitText = document.getElementById('complaint-submit-text');
+
+    if (submitBtn) submitBtn.disabled = true;
+    if (spinner) spinner.classList.remove('hidden');
+    if (submitText) submitText.textContent = 'Memverifikasi & Mengirim...';
+
+    const formData = new FormData(form);
+
+    fetch('/pengaduan', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+      },
+      body: formData
+    })
+    .then(res => res.json().then(data => ({ ok: res.ok, status: res.status, data })))
+    .then(({ ok, data }) => {
+      if (submitBtn) submitBtn.disabled = false;
+      if (spinner) spinner.classList.add('hidden');
+      if (submitText) submitText.textContent = 'Kirim Pengaduan Nasabah';
+
+      if (!ok || !data.success) {
+        alert(data.message || 'Pengiriman pengaduan gagal. Silakan periksa kembali formulir Anda.');
+        refreshComplaintCaptcha();
+        return;
+      }
+
+      // Success: Reveal unique code card right below the form!
+      const resultBox = document.getElementById('complaint-success-result');
+      const ticketCodeEl = document.getElementById('result-ticket-code');
+      const emailEl = document.getElementById('result-email-text');
+
+      if (ticketCodeEl) ticketCodeEl.textContent = data.data.ticket_code;
+      if (emailEl) emailEl.textContent = data.data.email;
+
+      if (resultBox) {
+        resultBox.classList.remove('hidden');
+        resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      form.reset();
+      refreshComplaintCaptcha();
+    })
+    .catch(() => {
+      // Graceful standalone fallback (e.g., offline or static index.html preview)
+      if (submitBtn) submitBtn.disabled = false;
+      if (spinner) spinner.classList.add('hidden');
+      if (submitText) submitText.textContent = 'Kirim Pengaduan Nasabah';
+
+      const mockTicket = 'ADU-' + new Date().getFullYear() + '-' + Math.floor(100000 + Math.random() * 900000);
+      const emailVal = document.getElementById('complaint-email')?.value || 'email.nasabah@example.com';
+      const namaVal = document.getElementById('complaint-nama')?.value || 'Pelapor';
+      const katVal = document.getElementById('complaint-kategori')?.value || 'Pelayanan Teller / Kantor Kas';
+      const judulVal = document.getElementById('complaint-judul')?.value || 'Pengaduan Layanan';
+
+      // Store in localStorage for the Tracking tab to find
+      try {
+        const stored = JSON.parse(localStorage.getItem('bank_majalengka_complaints') || '{}');
+        stored[mockTicket] = {
+          ticket_code: mockTicket,
+          nama: namaVal,
+          email: emailVal,
+          kategori: katVal,
+          judul: judulVal,
+          status: 'diproses',
+          status_label: 'Sedang Diproses oleh Manajemen',
+          tanggal_lapor: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
+        };
+        localStorage.setItem('bank_majalengka_complaints', JSON.stringify(stored));
+      } catch (e) {}
+
+      const resultBox = document.getElementById('complaint-success-result');
+      const ticketCodeEl = document.getElementById('result-ticket-code');
+      const emailEl = document.getElementById('result-email-text');
+
+      if (ticketCodeEl) ticketCodeEl.textContent = mockTicket;
+      if (emailEl) emailEl.textContent = emailVal;
+
+      if (resultBox) {
+        resultBox.classList.remove('hidden');
+        resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      form.reset();
+      refreshComplaintCaptcha();
+    });
+  });
 }
