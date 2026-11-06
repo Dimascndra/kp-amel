@@ -15,6 +15,7 @@ class EnsureSingleAdmin
      * Only this designated administrator is authorized to access customer complaints and sensitive bank data.
      */
     protected array $authorizedAdmins = [
+        'admin@bprmajalengka.id',
         'admin@bankmajalengka.co.id',
     ];
 

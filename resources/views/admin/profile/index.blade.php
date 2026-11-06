@@ -138,7 +138,7 @@
           <div>
             <label for="email" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Email Login Administrator</label>
             <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required
-              placeholder="admin@bankmajalengka.co.id"
+              placeholder="Masukkan email administrator"
               class="w-full px-3.5 py-2.5 rounded-xl border @error('email') border-red-300 bg-red-50/50 @else border-slate-200 @enderror text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-bpr-blue font-mono">
             <p class="text-[11px] text-slate-400 mt-1">Email ini digunakan sebagai akun masuk utama pada halaman login.</p>
             @error('email')

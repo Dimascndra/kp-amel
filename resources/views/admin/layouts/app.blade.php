@@ -137,7 +137,7 @@
           </div>
           <div class="overflow-hidden text-left">
             <p class="text-xs font-bold truncate group-hover:text-amber-300 transition-colors">{{ auth()->user()->name ?? 'Admin BPR' }}</p>
-            <p class="text-[10px] text-blue-300 truncate">{{ auth()->user()->email ?? 'admin@bankmajalengka.co.id' }}</p>
+            <p class="text-[10px] text-blue-300 truncate">{{ auth()->user()->email ?? '' }}</p>
           </div>
         </a>
         <form method="POST" action="{{ route('admin.logout') }}">
